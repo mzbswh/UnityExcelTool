@@ -1,0 +1,12 @@
+D:\Project\pasture\Tools\police\data\tools\ExcelParseTool\ExcelParseTool\obj\Release\ExcelParseTool.csproj.CoreCompileInputs.cache
+D:\Project\pasture\Tools\police\data\tools\ExcelParseTool\ExcelParseTool\bin\Release\ExcelParseTool.exe.config
+D:\Project\pasture\Tools\police\data\tools\ExcelParseTool\ExcelParseTool\bin\Release\ExcelParseTool.exe
+D:\Project\pasture\Tools\police\data\tools\ExcelParseTool\ExcelParseTool\bin\Release\ExcelParseTool.pdb
+D:\Project\pasture\Tools\police\data\tools\ExcelParseTool\ExcelParseTool\bin\Release\ICSharpCode.SharpZipLib.dll
+D:\Project\pasture\Tools\police\data\tools\ExcelParseTool\ExcelParseTool\bin\Release\NPOI.dll
+D:\Project\pasture\Tools\police\data\tools\ExcelParseTool\ExcelParseTool\bin\Release\NPOI.OOXML.dll
+D:\Project\pasture\Tools\police\data\tools\ExcelParseTool\ExcelParseTool\bin\Release\NPOI.OpenXml4Net.dll
+D:\Project\pasture\Tools\police\data\tools\ExcelParseTool\ExcelParseTool\bin\Release\NPOI.OpenXmlFormats.dll
+D:\Project\pasture\Tools\police\data\tools\ExcelParseTool\ExcelParseTool\obj\Release\ExcelParseTool.csproj.CopyComplete
+D:\Project\pasture\Tools\police\data\tools\ExcelParseTool\ExcelParseTool\obj\Release\ExcelParseTool.exe
+D:\Project\pasture\Tools\police\data\tools\ExcelParseTool\ExcelParseTool\obj\Release\ExcelParseTool.pdb
