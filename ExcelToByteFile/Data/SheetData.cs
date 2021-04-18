@@ -134,7 +134,7 @@ namespace ExcelToByteFile
 
         public void Export(string path)
         {
-			ExportMgr.ExportFile(path);
+			ExportMgr.ExportFile(path, this);
         }
 
 		/// <summary>

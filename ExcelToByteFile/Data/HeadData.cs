@@ -5,7 +5,7 @@ using System.Text;
 namespace ExcelToByteFile
 {
     /// <summary>
-    /// sheet表头部
+    /// sheet表头部，每列都对应一个头数据
     /// </summary>
     public class HeadData
     {
@@ -30,7 +30,7 @@ namespace ExcelToByteFile
 		public string Comment { get; }
 
 		/// <summary>
-		/// 注释列
+		/// 是否是注释列
 		/// </summary>
 		public bool IsNotes { get; }
 
