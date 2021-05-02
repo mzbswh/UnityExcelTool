@@ -9,12 +9,7 @@ namespace ExcelToByteFile
         /// <summary>
         /// 分隔符
         /// </summary>
-        public const char splitChar = '|';
-
-        /// <summary>
-        /// 键值对符号 key>value
-        /// </summary>
-        public const char keyToValChar = '>';
+        public const char splitChar = ',';
 
         /// <summary>
         /// 注释符号
@@ -44,5 +39,19 @@ namespace ExcelToByteFile
         public const string doubleType = "double";
         public const string listType = "list";
         public const string dictType = "dict";
+    }
+
+    public enum ValueType
+    {
+        Bool,
+        Byte,
+        Short,
+        Int,
+        Float,
+        String,
+        Long,
+        Double,
+        List,
+        Dictionary
     }
 }

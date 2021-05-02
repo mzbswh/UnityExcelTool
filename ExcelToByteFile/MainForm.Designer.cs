@@ -40,6 +40,7 @@ namespace ExcelToByteFile
             this.btn_selectLogOutputDir = new System.Windows.Forms.Button();
             this.lab_logOutputDir = new System.Windows.Forms.Label();
             this.dialog_selectFolder = new System.Windows.Forms.FolderBrowserDialog();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // btn_selectFiles
@@ -128,11 +129,20 @@ namespace ExcelToByteFile
             this.lab_logOutputDir.TabIndex = 8;
             this.lab_logOutputDir.Text = "输出路径";
             // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(7, 477);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(535, 190);
+            this.textBox1.TabIndex = 9;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(826, 718);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.lab_logOutputDir);
             this.Controls.Add(this.btn_selectLogOutputDir);
             this.Controls.Add(this.label2);
@@ -165,5 +175,6 @@ namespace ExcelToByteFile
         private System.Windows.Forms.Button btn_selectLogOutputDir;
         private System.Windows.Forms.Label lab_logOutputDir;
         private System.Windows.Forms.FolderBrowserDialog dialog_selectFolder;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }

@@ -8,133 +8,186 @@ using NPOI.HSSF.UserModel;
 
 namespace ExcelToByteFile
 {
+	/// <summary>
+	/// sheet表一行数据
+	/// </summary>
+	public struct RowData
+    {
+		/// <summary>
+		/// 行号
+		/// </summary>
+		public int RowNum { get; }
+
+		/// <summary>
+		/// 一行的数据类
+		/// </summary>
+		public IRow Row { get; }
+
+		/// <summary>
+		/// 单元格数据列表
+		/// </summary>
+		public List<string> ValueList { get; }
+
+		public RowData(int rowNum, IRow row, List<string> valList)
+		{
+			RowNum = rowNum;
+			Row = row;
+			ValueList = valList;
+		}
+	}
+
+	/// <summary>
+	/// sheet表头部数据，每个数据列都对应一个头数据
+	/// </summary>
+	public struct HeadData
+    {
+		/// <summary>
+		/// 名称
+		/// </summary>
+		public string Name { get; }
+
+		/// <summary>
+		/// 类型
+		/// </summary>
+		public string Type { get; }
+
+		/// <summary>
+		/// 类型备注
+		/// </summary>
+		public string Comment { get; }
+
+		/// <summary>
+		/// 所在第几列
+		/// </summary>
+		public int CellNum { get; }
+
+		public HeadData(string name, string type, string comment, int cellNum)
+		{
+			Name = name;
+			Type = type;
+			Comment = comment;
+			CellNum = cellNum;
+		}
+	}
+
     /// <summary>
     /// excel里一个sheet的数据类
     /// </summary>
     public class SheetData
     {
         /// <summary>
-        /// 页表名称
+        /// Sheet名称
         /// </summary>
         public string SheetName { get; }
 
+		/// <summary>
+		/// Sheet所属的WorkBook
+		/// </summary>
         private IWorkbook _workbook = null;
 
+		/// <summary>
+		/// Sheet表引用
+		/// </summary>
         private ISheet _sheet = null;
 
 		/// <summary>
-		/// 表格头部数据
+		/// 公式计算器
+		/// </summary>
+		private XSSFFormulaEvaluator _evaluator = null;
+
+		public XSSFFormulaEvaluator Evaluator { get { return _evaluator; } }
+
+		/// <summary>
+		/// 表格头部数据, 从左到右顺序存储
 		/// </summary>
 		public readonly List<HeadData> heads = new List<HeadData>();
 
-		public readonly List<TableData> tables = new List<TableData>();
+		/// <summary>
+		/// 表格所有行数据, 自上而下顺序存储
+		/// </summary>
+		public readonly List<RowData> rows = new List<RowData>();
 
-		// 公式计算器
-		private XSSFFormulaEvaluator _evaluator = null;
-
-		public SheetData(string sheetName)
+		public SheetData(string sheetName, IWorkbook workbook, ISheet sheet, XSSFFormulaEvaluator evaluator)
         {
             SheetName = sheetName;
-        }
+			_workbook = workbook;
+			_sheet = sheet;
+			_evaluator = evaluator;
+		}
 
         /// <summary>
         /// 加载sheet
         /// </summary>
-        public void Load(IWorkbook workbook, ISheet sheet)
+        public void Load()
         {
-			_workbook = workbook;
-			_sheet = sheet;
-
 			// 检测合并单元格
-			int MergedCount = _sheet.NumMergedRegions;
-			for (int i = 0; i < MergedCount; i++)
-			{
-				var region = sheet.GetMergedRegion(i);
-				throw new Exception($"导表工具不支持合并单元格，请移除合并单元格：{region.FormatAsString()}");
-			}
+			int merge = _sheet.NumMergedRegions;
+			if (merge > 0) throw new Exception($"不支持合并单元格，请移除后从新生成：{_sheet.GetMergedRegion(0).FormatAsString()}");
 
-			// 公式计算器
-			_evaluator = new XSSFFormulaEvaluator(_workbook);
-
-			int firstRowNum = sheet.FirstRowNum;
+			int curRow = _sheet.FirstRowNum;		// 当前行数
 
 			// 数据头一共三行
-			IRow row1 = sheet.GetRow(firstRowNum); //类型
-			IRow row2 = sheet.GetRow(++firstRowNum); //名称
-			IRow row3 = sheet.GetRow(++firstRowNum); //备注
-
-			// 检测策划备注行
-			while (true)
-			{
-				int checkRow = firstRowNum + 1;
-				if (checkRow > sheet.LastRowNum)
-					break;
-				IRow row = sheet.GetRow(checkRow);
-				if (IsNoteRow(row))
-					++firstRowNum;
-				else
-					break;
+			if (_sheet.LastRowNum < ConstDefine.headRowNum)
+            {
+				throw new Exception($"行数错误");
 			}
+			IRow typeRow = _sheet.GetRow(curRow++);		//类型
+			IRow nameRow = _sheet.GetRow(curRow++);		//名称
+			IRow commentRow = _sheet.GetRow(curRow++);  //备注
 
-			// 组织头部数据
-			for (int cellNum = row1.FirstCellNum; cellNum < row1.LastCellNum; cellNum++)
+			int endCol = typeRow.LastCellNum;
+			// 获取数据类型信息
+			for (int index = typeRow.FirstCellNum; index < endCol; index++)
 			{
-				ICell row1cell = row1.GetCell(cellNum);
-				ICell row2cell = row2.GetCell(cellNum);
-				ICell row3cell = row3.GetCell(cellNum);
+				ICell typeCell = typeRow.GetCell(index);
+				ICell nameCell = nameRow.GetCell(index);
+				ICell commentCell = commentRow.GetCell(index);
 
 				// 检测重复的列
-				string headName = GetCellValue(row1cell);
-				bool isNotesRow = headName.Contains(ConstDefine.noteChar);
-				if (isNotesRow == false)
+				string type = ExcelTools.GetCellValue(typeCell, _evaluator);
+				string name = ExcelTools.GetCellValue(nameCell, _evaluator);
+				string comment = ExcelTools.GetCellValue(commentCell, _evaluator);
+				bool isNotesCol = type.Contains(ConstDefine.noteChar);
+				if (!isNotesCol)
 				{
-					if (string.IsNullOrEmpty(headName))
-						throw new Exception($"检测到空列：第{++cellNum}列");
-					if (IsContainsHead(headName))
-						throw new Exception($"检测到重复列 : {headName}");
-				}
+					if (string.IsNullOrEmpty(type))
+						throw new Exception($"检测到空列：第{index}列");
+					else if (!DataTypeHelper.IsValidType(type))
+						throw new Exception($"错误的数据类型：第{index}列, {type}");
+					else if (IsNameExist(name))
+						throw new Exception($"检测到重复变量名称 : 第{index}列, {name}");
 
-				// 创建Wrapper
-				string type = GetCellValue(row1cell);
-				string name = GetCellValue(row2cell);
-				string comment = GetCellValue(row3cell);
-				HeadData wrapper = new HeadData(cellNum, name, type, comment);
-				heads.Add(wrapper);
+					HeadData head = new HeadData(name, type, comment, index);
+					heads.Add(head);
+				}
 			}
 
 			// 如果没有ID列
-			if (IsContainsHead(ConstDefine.idColName) == false)
+			if (!IsNameExist(ConstDefine.idColName))
 			{
 				throw new Exception("表格必须设立一个 'id' 列.");
 			}
 
 			// 所有数据行
-			int tableBeginRowNum = ++firstRowNum; //Table初始行
-			for (int rowNum = tableBeginRowNum; rowNum <= sheet.LastRowNum; rowNum++)
+			int tableBeginRowNum = ++curRow; //Table初始行
+			for (int rowNum = tableBeginRowNum; rowNum <= _sheet.LastRowNum; rowNum++)
 			{
-				IRow row = sheet.GetRow(rowNum);
+				IRow row = _sheet.GetRow(rowNum);
 
-				// 如果是结尾行
-				if (IsEndRow(row))
-					break;
+				// 如果是注释行，就跳过
+				if (IsNoteRow(row)) continue;
+                // 如果是结尾行
+                if (IsEndRow(row)) break;
 
-				TableData wrapper = new TableData(rowNum, row);
-				wrapper.CacheAllCellValue(this);
-				tables.Add(wrapper);
+				List<string> vals = ExcelTools.GetOneRowData(this, row); 
+				RowData rowData = new RowData(rowNum, row, vals);
+				rows.Add(rowData);
 			}
-
-			//// 创建所有注册的导出器
-			//for (int i = 0; i < ExportHandler.ExportTypes.Count; i++)
-			//{
-			//	Type type = ExportHandler.ExportTypes[i];
-			//	BaseExporter exporter = (BaseExporter)Activator.CreateInstance(type, this);
-			//	_exporters.Add(exporter);
-			//}
 		}
 
         public void Export(string path)
         {
-			ExportMgr.ExportFile(path, this);
+			ExportMgr.ExportOneSheet(path, this);
         }
 
 		/// <summary>
@@ -145,16 +198,20 @@ namespace ExcelToByteFile
 		public bool IsNoteRow(IRow row)
         {
 			ICell firstCell = row.GetCell(row.FirstCellNum);
-			string value = GetCellValue(firstCell);
+			string value = ExcelTools.GetCellValue(firstCell, _evaluator);
 			return value.ToLower().Contains(ConstDefine.noteChar);
 		}
 
-		public bool IsContainsHead(string headName)
+		/// <summary>
+		/// 此变量名称是否已经存在
+		/// </summary>
+		/// <param name="headName"></param>
+		/// <returns></returns>
+		public bool IsNameExist(string name)
         {
 			for (int i = 0; i < heads.Count; i++)
 			{
-				if (heads[i].Name == headName)
-					return true;
+				if (heads[i].Name == name) return true;
 			}
 			return false;
 		}
@@ -173,7 +230,7 @@ namespace ExcelToByteFile
 			if (firstCell == null)
 				return true;
 
-			string value = GetCellValue(firstCell);
+			string value = ExcelTools.GetCellValue(firstCell, _evaluator);
 			if (string.IsNullOrEmpty(value))
 				return true;
 
@@ -187,50 +244,6 @@ namespace ExcelToByteFile
 		public ISheet GetSheet()
 		{
 			return _sheet;
-		}
-
-		/// <summary>
-		/// 获取单元格的值
-		/// </summary>
-		/// <param name="cell"></param>
-		/// <returns></returns>
-		public string GetCellValue(ICell cell)
-        {
-			// 注意：内容为空的单元格有时候会为空对象
-			if (cell == null)
-				return string.Empty;
-
-			if (cell.CellType == CellType.Blank)
-			{
-				return string.Empty;
-			}
-			else if (cell.CellType == CellType.Numeric)
-			{
-				return cell.NumericCellValue.ToString();
-			}
-			else if (cell.CellType == CellType.String)
-			{
-				return cell.StringCellValue;
-			}
-			else if (cell.CellType == CellType.Boolean)
-			{
-				return cell.BooleanCellValue.ToString().ToLower();
-			}
-			else if (cell.CellType == CellType.Formula)
-			{
-				// 注意：公式只支持数值和字符串类型
-				var formulaValue = _evaluator.Evaluate(cell);
-				if (formulaValue.CellType == CellType.Numeric)
-					return formulaValue.NumberValue.ToString();
-				else if (formulaValue.CellType == CellType.String)
-					return formulaValue.StringValue;
-				else
-					throw new Exception($"未支持的公式类型 : {formulaValue.CellType}");
-			}
-			else
-			{
-				throw new Exception($"未支持的单元格类型 : {cell.CellType}");
-			}
 		}
     }
 }

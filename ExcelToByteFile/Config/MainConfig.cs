@@ -28,6 +28,16 @@ namespace ExcelToByteFile
         public string logOutputDir;
 
 		/// <summary>
+		/// 是否自动补全
+		/// </summary>
+		public bool autoCompletion;
+
+		/// <summary>
+		/// 自动补全的值
+		/// </summary>
+		public string autoCompletionVal;
+
+		/// <summary>
 		/// 存储在本地的配置文件名称
 		/// </summary>
 		private const string configFileStoreName = "ExcelExport.data";

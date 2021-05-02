@@ -8,7 +8,6 @@ namespace ExcelToByteFile
 {
     public class ExportMgr
     {
-
         public static void Export(List<string> fileList)
         {
             // 加载选择的Excel文件列表
@@ -20,23 +19,21 @@ namespace ExcelToByteFile
                 {
                     if (excelFile.Export())
                     {
-                        //// 导出成功后，我们解析表格的多语言数据
-                        //var data = LanguageMgr.ParseLanguage(excelFile);
-                        //LanguageMgr.Instance.CacheLanguage(data);
+                        
                     }
                 }
                 excelFile.Dispose();
             }
         }
 
-        public static void ExportFile(string path, SheetData _sheet)
+        public static void ExportOneSheet(string path, SheetData sheet)
         {
             ByteBuffer fileBuffer = new ByteBuffer(1024*1024*128);
             ByteBuffer tableBuffer = new ByteBuffer(1024*256);
 
-            for (int i = 0; i < _sheet.tables.Count; i++)
+            for (int i = 0; i < sheet.rows.Count; i++)
             {
-                TableData table = _sheet.tables[i];
+                RowData table = sheet.rows[i];
 
                 // 写入行标记
                 fileBuffer.WriteShort(0x2b2b);
@@ -45,9 +42,9 @@ namespace ExcelToByteFile
                 tableBuffer.Clear();
 
                 // 写入数据
-                for (int j = 0; j < _sheet.heads.Count; j++)
+                for (int j = 0; j < sheet.heads.Count; j++)
                 {
-                    HeadData head = _sheet.heads[j];
+                    HeadData head = sheet.heads[j];
                     string value = table.GetCellValue(head.CellNum);
                     WriteCell(tableBuffer, head, value, "");
                 }
@@ -55,7 +52,7 @@ namespace ExcelToByteFile
                 // 检测数据大小有效性
                 int tabSize = tableBuffer.ReadableBytes;
                 if (tabSize == 0)
-                    throw new Exception($"{_sheet.SheetName} tableBuffer readable bytes is zero.");
+                    throw new Exception($"{sheet.SheetName} tableBuffer readable bytes is zero.");
 
                 // 写入到总缓存
                 fileBuffer.WriteInt(tabSize);
@@ -63,7 +60,7 @@ namespace ExcelToByteFile
             }
 
             // 创建文件
-            string filePath = StringHelper.MakeSaveFullPath(path, $"{_sheet.SheetName}.bytes");
+            string filePath = StringHelper.MakeSaveFullPath(path, $"{sheet.SheetName}.bytes");
             using (FileStream fs = new FileStream(filePath, FileMode.Create))
             {
                 byte[] data = fileBuffer.GetBuffer();
@@ -160,13 +157,5 @@ namespace ExcelToByteFile
 				throw new Exception($"Not support head type {head.Type}");
 			}
 		}
-
-		public static void RunCommand(string[] args)
-        {
-            MainConfig.Ins.Init();
-            MainConfig.Ins.ReadConfig();
-            Export(args.ToList());
-        }
-
     }
 }

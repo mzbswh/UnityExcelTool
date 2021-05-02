@@ -1,4 +1,9 @@
-﻿using System;
+﻿//**************************************************
+// The MIT License
+// Copyright©2021
+//**************************************************
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
@@ -35,6 +40,11 @@ namespace ExcelToByteFile
         private IWorkbook _workbook = null;
 
         /// <summary>
+		/// 公式计算器, 一个表格对应一个公式计算器
+		/// </summary>
+		private XSSFFormulaEvaluator _evaluator = null;
+
+        /// <summary>
         /// 文件流
         /// </summary>
         private FileStream _stream = null;
@@ -65,11 +75,13 @@ namespace ExcelToByteFile
                     throw new Exception($"未支持的Excel文件类型 : {extension}");
                 }
 
+                _evaluator = new XSSFFormulaEvaluator(_workbook);
+
                 for (int i = 0; i < _workbook.NumberOfSheets; i++)
                 {
                     ISheet sheet = _workbook.GetSheetAt(i);
-                    SheetData sheetData = new SheetData(sheet.SheetName);
-                    sheetData.Load(_workbook, sheet);
+                    SheetData sheetData = new SheetData(sheet.SheetName, _workbook, sheet, _evaluator);
+                    sheetData.Load();
                     sheetDataList.Add(sheetData);
                 }
 
