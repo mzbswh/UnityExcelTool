@@ -6,21 +6,34 @@ using System.IO;
 
 namespace ExcelToByteFile
 {
-    public class ExportMgr
+	public class ConfigDefine
+	{
+		public const int fileStreamMaxLen = 1024 * 1024 * 128;  // 最大128MB
+        public const int sheetStreamMaxLen = 1024 * 1024 * 10;  // 最大10MB
+		public const int rowStreamMaxLen = 1024 * 128;          // 最大128k
+	}
+
+	public class ExportMgr
     {
+        static ByteBuffer fileBuffer = new ByteBuffer(ConfigDefine.fileStreamMaxLen);
+
         public static void Export(List<string> fileList)
         {
+            List<FileData> fileDatas = new List<FileData>();
             // 加载选择的Excel文件列表
             for (int i = 0; i < fileList.Count; i++)
             {
+                fileBuffer.Clear();
                 string filePath = fileList[i];
                 ExcelData excelFile = new ExcelData(filePath);
                 if (excelFile.Load())
                 {
-                    if (excelFile.Export())
-                    {
-                        
-                    }
+                    FileData fileData = new FileData(excelFile);
+                    fileDatas.Add(fileData);
+                    int heapStart = fileData.GetAlignedDataTotalSize();
+                    fileBuffer.SetHeapIndexStartPos(heapStart);
+
+                    excelFile.Export();
                 }
                 excelFile.Dispose();
             }
@@ -28,35 +41,16 @@ namespace ExcelToByteFile
 
         public static void ExportOneSheet(string path, SheetData sheet)
         {
-            ByteBuffer fileBuffer = new ByteBuffer(1024*1024*128);
-            ByteBuffer tableBuffer = new ByteBuffer(1024*256);
-
             for (int i = 0; i < sheet.rows.Count; i++)
             {
-                RowData table = sheet.rows[i];
-
-                // 写入行标记
-                fileBuffer.WriteShort(0x2b2b);
-
-                // 清空缓存
-                tableBuffer.Clear();
-
+                RowData row = sheet.rows[i];
                 // 写入数据
                 for (int j = 0; j < sheet.heads.Count; j++)
                 {
                     HeadData head = sheet.heads[j];
-                    string value = table.GetCellValue(head.CellNum);
-                    WriteCell(tableBuffer, head, value, "");
+                    string value = row[j];
+                    WriteCell(fileBuffer, head, value);
                 }
-
-                // 检测数据大小有效性
-                int tabSize = tableBuffer.ReadableBytes;
-                if (tabSize == 0)
-                    throw new Exception($"{sheet.SheetName} tableBuffer readable bytes is zero.");
-
-                // 写入到总缓存
-                fileBuffer.WriteInt(tabSize);
-                fileBuffer.WriteBytes(tableBuffer.ReadBytes(tabSize));
             }
 
             // 创建文件
@@ -69,93 +63,99 @@ namespace ExcelToByteFile
             }
         }
 
-		private static void WriteCell(ByteBuffer buffer, HeadData head, string value, string createLogo)
+		private static void WriteCell(ByteBuffer buffer, HeadData head, string value)
 		{
-			if (head.IsNotes )//|| head.Logo.Contains(createLogo) == false)
-				return;
-
-			if (head.Type == "int")
-			{
-				buffer.WriteInt(StringConvert.StringToValue<int>(value));
-			}
-			else if (head.Type == "long")
-			{
-				buffer.WriteLong(StringConvert.StringToValue<long>(value));
-			}
-			else if (head.Type == "float")
-			{
-				buffer.WriteFloat(StringConvert.StringToValue<float>(value));
-			}
-			else if (head.Type == "double")
-			{
-				buffer.WriteDouble(StringConvert.StringToValue<double>(value));
-			}
-
-			else if (head.Type == "List<int>")
-			{
-				buffer.WriteListInt(StringConvert.StringToValueList<int>(value, ConstDefine.splitChar));
-			}
-			else if (head.Type == "List<long>")
-			{
-				buffer.WriteListLong(StringConvert.StringToValueList<long>(value, ConstDefine.splitChar));
-			}
-			else if (head.Type == "List<float>")
-			{
-				buffer.WriteListFloat(StringConvert.StringToValueList<float>(value, ConstDefine.splitChar));
-			}
-			else if (head.Type == "List<double>")
-			{
-				buffer.WriteListDouble(StringConvert.StringToValueList<double>(value, ConstDefine.splitChar));
-			}
-
-			// bool
-			else if (head.Type == "bool")
-			{
-				buffer.WriteBool(StringConvert.StringToBool(value));
-			}
-
-			// string
-			else if (head.Type == "string")
-			{
-				buffer.WriteUTF(value);
-			}
-			else if (head.Type == "List<string>")
-			{
-				buffer.WriteListUTF(StringConvert.StringToStringList(value, ConstDefine.splitChar));
-			}
-
-			// NOTE：多语言在字节流会是哈希值
-			else if (head.Type == "language")
-			{
-				buffer.WriteInt(value.GetHashCode());
-			}
-			else if (head.Type == "List<language>")
-			{
-				List<string> langList = StringConvert.StringToStringList(value, ConstDefine.splitChar);
-				List<int> hashList = new List<int>();
-				for (int i = 0; i < langList.Count; i++)
-				{
-					hashList.Add(langList[i].GetHashCode());
-				}
-				buffer.WriteListInt(hashList);
-			}
-
-			// wrapper
-			else if (head.Type.Contains("class"))
-			{
-				buffer.WriteUTF(value);
-			}
-
-			// enum
-			else if (head.Type.Contains("enum"))
-			{
-				buffer.WriteInt(StringConvert.StringToValue<int>(value));
-			}
-
-			else
-			{
-				throw new Exception($"Not support head type {head.Type}");
+			switch (head.Type)
+            {
+                case TypeDefine.sbyteType:
+                    buffer.WriteSbyte(StringConvert.StringToValue<sbyte>(value));
+                    break;
+                case TypeDefine.uintType:
+                    buffer.WriteUInt(StringConvert.StringToValue<uint>(value));
+                    break;
+                case TypeDefine.ulongType:
+                    buffer.WriteULong(StringConvert.StringToValue<ulong>(value));
+                    break;
+                case TypeDefine.ushortType:
+                    buffer.WriteUShort(StringConvert.StringToValue<ushort>(value));
+                    break;
+                case TypeDefine.boolType:
+					buffer.WriteBool(StringConvert.StringToBool(value));
+					break;
+				case TypeDefine.byteType:
+					buffer.WriteByte(StringConvert.StringToValue<byte>(value));
+					break;
+				case TypeDefine.shortType:
+					buffer.WriteShort(StringConvert.StringToValue<short>(value));
+					break;
+				case TypeDefine.intType:
+					buffer.WriteInt(StringConvert.StringToValue<int>(value));
+					break;
+				case TypeDefine.floatType:
+					buffer.WriteFloat(StringConvert.StringToValue<float>(value));
+					break;
+				case TypeDefine.stringType:
+					buffer.WriteString(value);
+					break;
+				case TypeDefine.longType:
+					buffer.WriteLong(StringConvert.StringToValue<long>(value));
+					break;
+				case TypeDefine.doubleType:
+					buffer.WriteDouble(StringConvert.StringToValue<double>(value));
+					break;
+				case TypeDefine.listType:
+					WriteList(buffer, head.SubType[0], value);
+					break;
+                case TypeDefine.dictType:
+                    WriteDict(buffer, head.SubType, value);
+                    break;
+				default: throw new Exception($"Not support head type {head.Type}");
 			}
 		}
-    }
+
+		private static void WriteList(ByteBuffer buffer, string subType, string value)
+        {
+			switch(subType)
+            {
+                case TypeDefine.sbyteType:
+                    buffer.WriteListSByte(StringConvert.StringToValueList<sbyte>(value, ConstDefine.splitChar));
+                    break;
+                case TypeDefine.uintType:
+                    buffer.WriteListUInt(StringConvert.StringToValueList<uint>(value, ConstDefine.splitChar));
+                    break;
+                case TypeDefine.ulongType:
+                    buffer.WriteListULong(StringConvert.StringToValueList<ulong>(value, ConstDefine.splitChar));
+                    break;
+                case TypeDefine.ushortType:
+                    buffer.WriteListUShort(StringConvert.StringToValueList<ushort>(value, ConstDefine.splitChar));
+                    break;
+                case TypeDefine.boolType:
+                    buffer.WriteListBool(StringConvert.StringToValueList<bool>(value, ConstDefine.splitChar));
+                    break;
+                case TypeDefine.byteType:
+                    buffer.WriteListByte(StringConvert.StringToValueList<byte>(value, ConstDefine.splitChar));
+                    break;
+                case TypeDefine.shortType:
+                    buffer.WriteListShort(StringConvert.StringToValueList<short>(value, ConstDefine.splitChar));
+                    break;
+                case TypeDefine.intType:
+                    buffer.WriteListInt(StringConvert.StringToValueList<int>(value, ConstDefine.splitChar));
+                    break;
+                case TypeDefine.floatType:
+                    buffer.WriteListFloat(StringConvert.StringToValueList<float>(value, ConstDefine.splitChar)); break;
+                case TypeDefine.stringType:
+                    buffer.WriteListString(StringConvert.StringToStringList(value, ConstDefine.splitChar)); break;
+                case TypeDefine.longType:
+                    buffer.WriteListLong(StringConvert.StringToValueList<long>(value, ConstDefine.splitChar)); break;
+                case TypeDefine.doubleType:
+                    buffer.WriteListDouble(StringConvert.StringToValueList<double>(value, ConstDefine.splitChar)); break;
+            }
+        }
+
+        private static void WriteDict(ByteBuffer buffer, string[] subType, string value)
+        {
+
+        }
+
+	}
 }

@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text;
+using System.Diagnostics;
 
 namespace ExcelToByteFile
 {
@@ -15,7 +16,8 @@ namespace ExcelToByteFile
 		private int _writerIndex = 0;
 		private int _markedReaderIndex = 0;
 		private int _markedWriterIndex = 0;
-
+		private int _heapIndex = 0;     // 模拟c#引用堆，存储引用类型实际数据
+		private int _heapStart = 0;		// 堆的起始索引
 
 		/// <summary>
 		/// 字节缓冲区
@@ -59,6 +61,16 @@ namespace ExcelToByteFile
 			_writerIndex = 0;
 			_markedReaderIndex = 0;
 			_markedWriterIndex = 0;
+		}
+
+		/// <summary>
+		/// 设置引用类型索引起始位置
+		/// </summary>
+		/// <param name="pos"></param>
+		public void SetHeapIndexStartPos(int pos)
+        {
+			_heapIndex = pos;
+			_heapStart = pos;
 		}
 
 		/// <summary>
@@ -344,190 +356,272 @@ namespace ExcelToByteFile
 
 		#region 写入操作
 		[Conditional("DEBUG")]
-		private void CheckWriterIndex(int length)
+		private void CheckWriterIndex(int length, bool writeToHeap = false)
 		{
-			if (_writerIndex + length > Capacity)
+			if (writeToHeap)
+            {
+				if (_heapIndex + length > Capacity) 
+					throw new IndexOutOfRangeException();
+			}
+			else if (_writerIndex + length > _heapStart)
 			{
 				throw new IndexOutOfRangeException();
 			}
 		}
 
-		public void WriteBytes(byte[] data)
+		public void WriteBytes(byte[] data, bool writeToHeap = false)
 		{
-			WriteBytes(data, 0, data.Length);
+			WriteBytes(data, 0, data.Length, writeToHeap);
 		}
-		public void WriteBytes(byte[] data, int offset, int count)
+		public void WriteBytes(byte[] data, int offset, int count, bool writeToHeap = false)
 		{
 			CheckWriterIndex(count);
-			Buffer.BlockCopy(data, offset, _buffer, _writerIndex, count);
-			_writerIndex += count;
+			if (writeToHeap)
+            {
+				Buffer.BlockCopy(data, offset, _buffer, _heapIndex, count);
+				_heapIndex += count;
+			}
+			else
+            {
+				Buffer.BlockCopy(data, offset, _buffer, _writerIndex, count);
+				_writerIndex += count;
+			}
 		}
-		public void WriteBool(bool value)
+		public void WriteBool(bool value, bool writeToHeap = false)
 		{
-			WriteByte((byte)(value ? 1 : 0));
+			WriteByte((byte)(value ? 1 : 0), writeToHeap);
 		}
-		public void WriteByte(byte value)
+		public void WriteByte(byte value, bool writeToHeap = false)
 		{
 			CheckWriterIndex(1);
-			_buffer[_writerIndex++] = value;
+			if (writeToHeap) _buffer[_heapIndex++] = value;
+			else _buffer[_writerIndex++] = value;
 		}
-		public void WriteSbyte(sbyte value)
+		public void WriteSbyte(sbyte value, bool writeToHeap = false)
 		{
 			// 注意：从sbyte强转到byte不会有数据变化或丢失
-			WriteByte((byte)value);
+			WriteByte((byte)value, writeToHeap);
 		}
-		public void WriteShort(short value)
+		public void WriteShort(short value, bool writeToHeap = false)
 		{
 			byte[] bytes = BitConverter.GetBytes(value);
-			WriteBytes(bytes);
+			WriteBytes(bytes, writeToHeap);
 		}
-		public void WriteUShort(ushort value)
+		public void WriteUShort(ushort value, bool writeToHeap = false)
 		{
 			byte[] bytes = BitConverter.GetBytes(value);
-			WriteBytes(bytes);
+			WriteBytes(bytes, writeToHeap);
 		}
-		public void WriteInt(int value)
+		public void WriteInt(int value, bool writeToHeap = false)
 		{
 			byte[] bytes = BitConverter.GetBytes(value);
-			WriteBytes(bytes);
+			WriteBytes(bytes, writeToHeap);
 		}
-		public void WriteUInt(uint value)
+		public void WriteUInt(uint value, bool writeToHeap = false)
 		{
 			byte[] bytes = BitConverter.GetBytes(value);
-			WriteBytes(bytes);
+			WriteBytes(bytes, writeToHeap);
 		}
-		public void WriteLong(long value)
+		public void WriteLong(long value, bool writeToHeap = false)
 		{
 			byte[] bytes = BitConverter.GetBytes(value);
-			WriteBytes(bytes);
+			WriteBytes(bytes, writeToHeap);
 		}
-		public void WriteULong(ulong value)
+		public void WriteULong(ulong value, bool writeToHeap = false)
 		{
 			byte[] bytes = BitConverter.GetBytes(value);
-			WriteBytes(bytes);
+			WriteBytes(bytes, writeToHeap);
 		}
-		public void WriteFloat(float value)
+		public void WriteFloat(float value, bool writeToHeap = false)
 		{
 			byte[] bytes = BitConverter.GetBytes(value);
-			WriteBytes(bytes);
+			WriteBytes(bytes, writeToHeap);
 		}
-		public void WriteDouble(double value)
+		public void WriteDouble(double value, bool writeToHeap = false)
 		{
 			byte[] bytes = BitConverter.GetBytes(value);
-			WriteBytes(bytes);
+			WriteBytes(bytes, writeToHeap);
 		}
-		public void WriteUTF(string value)
+		public void WriteString(string value, bool onlyWriteToHeap = false)
 		{
 			byte[] bytes = Encoding.UTF8.GetBytes(value);
 			int num = bytes.Length + 1; // 注意：字符串末尾写入结束符
 			if (num > ushort.MaxValue)
 				throw new FormatException($"String length cannot be greater than {ushort.MaxValue} !");
 
-			WriteUShort(Convert.ToUInt16(num));
-			WriteBytes(bytes);
-			WriteByte((byte)'\0');
+			if (!onlyWriteToHeap) WriteInt(_heapIndex);	// 写入堆索引地址
+			WriteUShort(Convert.ToUInt16(num), true);
+			WriteBytes(bytes, true);
+			WriteByte((byte)'\0', true);
 		}
 
-		public void WriteListInt(List<int> values)
-		{
+		public void WriteListBool(List<bool> ls)
+        {
 			int count = 0;
-			if (values != null)
-				count = values.Count;
+			if (ls != null)
+				count = ls.Count;
 
-			WriteInt(count);
+			WriteInt(_heapIndex);
+			WriteUShort((ushort)count, true);
 			for (int i = 0; i < count; i++)
 			{
-				WriteInt(values[i]);
+				WriteBool(ls[i], true);
 			}
 		}
-		public void WriteListLong(List<long> values)
+		public void WriteListByte(List<byte> ls)
 		{
 			int count = 0;
-			if (values != null)
-				count = values.Count;
+			if (ls != null)
+				count = ls.Count;
 
-			WriteInt(count);
+			WriteInt(_heapIndex);
+			WriteUShort((ushort)count, true);
 			for (int i = 0; i < count; i++)
 			{
-				WriteLong(values[i]);
+				WriteByte(ls[i], true);
 			}
 		}
-		public void WriteListFloat(List<float> values)
+		public void WriteListShort(List<short> ls)
 		{
 			int count = 0;
-			if (values != null)
-				count = values.Count;
+			if (ls != null)
+				count = ls.Count;
 
-			WriteInt(count);
+			WriteInt(_heapIndex);
+			WriteUShort((ushort)count, true);
 			for (int i = 0; i < count; i++)
 			{
-				WriteFloat(values[i]);
+				WriteShort(ls[i], true);
 			}
 		}
-		public void WriteListDouble(List<double> values)
+		public void WriteListInt(List<int> ls)
 		{
 			int count = 0;
-			if (values != null)
-				count = values.Count;
+			if (ls != null)
+				count = ls.Count;
 
-			WriteInt(count);
+			WriteInt(_heapIndex);
+			WriteUShort((ushort)count, true);
 			for (int i = 0; i < count; i++)
 			{
-				WriteDouble(values[i]);
+				WriteInt(ls[i], true);
 			}
 		}
-		public void WriteListUTF(List<string> values)
+		public void WriteListFloat(List<float> ls)
 		{
 			int count = 0;
-			if (values != null)
-				count = values.Count;
+			if (ls != null)
+				count = ls.Count;
 
-			WriteInt(count);
+			WriteInt(_heapIndex);
+			WriteUShort((ushort)count, true);
 			for (int i = 0; i < count; i++)
 			{
-				WriteUTF(values[i]);
+				WriteFloat(ls[i], true);
 			}
 		}
+		public void WriteListLong(List<long> ls)
+		{
+			int count = 0;
+			if (ls != null)
+				count = ls.Count;
 
-#if MOTION_SERVER
-		public void WriteVector2(Vector2 value)
-		{
-			WriteFloat(value.X);
-			WriteFloat(value.Y);
+			WriteInt(_heapIndex);
+			WriteUShort((ushort)count, true);
+			for (int i = 0; i < count; i++)
+			{
+				WriteLong(ls[i], true);
+			}
 		}
-		public void WriteVector3(Vector3 value)
+		public void WriteListDouble(List<double> ls)
 		{
-			WriteFloat(value.X);
-			WriteFloat(value.Y);
-			WriteFloat(value.Z);
+			int count = 0;
+			if (ls != null)
+				count = ls.Count;
+
+			WriteInt(_heapIndex);
+			WriteUShort((ushort)count, true);
+			for (int i = 0; i < count; i++)
+			{
+				WriteDouble(ls[i], true);
+			}
 		}
-		public void WriteVector4(Vector4 value)
+		public void WriteListSByte(List<sbyte> ls)
 		{
-			WriteFloat(value.X);
-			WriteFloat(value.Y);
-			WriteFloat(value.Z);
-			WriteFloat(value.W);
+			int count = 0;
+			if (ls != null)
+				count = ls.Count;
+
+			WriteInt(_heapIndex);
+			WriteUShort((ushort)count, true);
+			for (int i = 0; i < count; i++)
+			{
+				WriteSbyte(ls[i], true);
+			}
 		}
-#else
-		public void WriteVector2(Vector2 value)
+		public void WriteListUInt(List<uint> ls)
 		{
-			WriteFloat(value.x);
-			WriteFloat(value.y);
+			int count = 0;
+			if (ls != null)
+				count = ls.Count;
+
+			WriteInt(_heapIndex);
+			WriteUShort((ushort)count, true);
+			for (int i = 0; i < count; i++)
+			{
+				WriteUInt(ls[i], true);
+			}
 		}
-		public void WriteVector3(Vector3 value)
+		public void WriteListULong(List<ulong> ls)
 		{
-			WriteFloat(value.x);
-			WriteFloat(value.y);
-			WriteFloat(value.z);
+			int count = 0;
+			if (ls != null)
+				count = ls.Count;
+
+			WriteInt(_heapIndex);
+			WriteUShort((ushort)count, true);
+			for (int i = 0; i < count; i++)
+			{
+				WriteULong(ls[i], true);
+			}
 		}
-		public void WriteVector4(Vector4 value)
+		public void WriteListUShort(List<ushort> ls)
 		{
-			WriteFloat(value.x);
-			WriteFloat(value.y);
-			WriteFloat(value.z);
-			WriteFloat(value.w);
+			int count = 0;
+			if (ls != null)
+				count = ls.Count;
+
+			WriteInt(_heapIndex);
+			WriteUShort((ushort)count, true);
+			for (int i = 0; i < count; i++)
+			{
+				WriteUShort(ls[i], true);
+			}
 		}
-#endif
+		public void WriteListString(List<string> ls)
+		{
+			int count = 0;
+			if (ls != null) count = ls.Count;
+
+			int lsStart = _heapIndex;
+			int len = count * 4;
+			_heapIndex += len; 
+			int tmpHeapIndex = _heapIndex;
+			WriteInt(lsStart);	// list地址
+			for (int i = 0; i < count; i++)
+			{
+				_heapIndex = tmpHeapIndex;  // 回复此时应该写入的堆位置
+				int strIndex = _heapIndex;
+				WriteString(ls[i], true);
+				tmpHeapIndex = _heapIndex;  // 暂存此时的堆位置
+				_heapIndex = lsStart + i * 4;
+				WriteInt(strIndex, true);
+			}
+			_heapIndex = tmpHeapIndex; // 回复到正确的索引位置
+		}
+
+
+
 		#endregion
 
 		/// <summary>

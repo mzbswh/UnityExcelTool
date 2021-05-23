@@ -128,7 +128,7 @@ namespace ExcelToByteFile
             {
                 for (int i = 0; i < sheetDataList.Count; i++)
                 {
-                    ExportInternal(sheetDataList[i]);
+                    sheetDataList[i].Export(GlobalConfig.Ins.byteFileOutputDir);
                 }
             }
             catch (Exception ex)
@@ -137,15 +137,6 @@ namespace ExcelToByteFile
                 return false;
             }
             return true;
-        }
-
-        /// <summary>
-        /// 导出单个Sheet
-        /// </summary>
-        /// <param name="sheet"></param>
-        private void ExportInternal(SheetData sheet)
-        {
-            sheet.Export(MainConfig.Ins.byteFileOutputDir);
         }
     }
 }

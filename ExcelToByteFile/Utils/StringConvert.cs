@@ -145,5 +145,31 @@ namespace ExcelToByteFile
 			List<float> values = StringToValueList<float>(str, separator);
 			return new Vector3(values[0], values[1], values[2]);
 		}
+
+		public static Dictionary<T1, T2> StringToDict<T1, T2>(string str)
+        {
+			Dictionary<T1, T2> dict = new Dictionary<T1, T2>();
+
+            str = str.Replace(" ", "");
+			string pat = @"(?<!\\),";
+			string[] ss = Regex.Split(s, pat);
+			string pattern = @"{(?<oneData>\w+,\w+)}(,{(?<oneData>\w+,\w+)})*";
+
+            Match m = Regex.Match(str, pattern);
+            foreach (var val in m.Groups["oneData"].Captures)
+            {
+				string[] pair = val.ToString().Split(',');
+
+            }
+
+            string[] splits = str.Split(separator);
+			foreach (string split in splits)
+			{
+				if (!String.IsNullOrEmpty(split))
+				{
+					result.Add((T)Convert.ChangeType(split, typeof(T)));
+				}
+			}
+		}
 	}
 }

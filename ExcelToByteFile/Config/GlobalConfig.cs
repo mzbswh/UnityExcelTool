@@ -6,11 +6,11 @@ using System.Windows.Forms;
 
 namespace ExcelToByteFile
 {
-    public class MainConfig
+    public class GlobalConfig
     {
-        public static MainConfig Ins = new MainConfig();
+        public static GlobalConfig Ins = new GlobalConfig();
 
-        private MainConfig() { }
+        private GlobalConfig() { }
 
         /// <summary>
         /// 上次选择Excel时的路径路径

@@ -6,9 +6,8 @@ using System.Text;
 
 namespace ExcelToByteFile
 {
-    public class ExcelTools
+    public class ExcelTool
     {
-        
         /// <summary>
         /// 获取一个sheet里的一行数据（仅有效数据，不包含注释列）
         /// </summary>
@@ -27,26 +26,15 @@ namespace ExcelToByteFile
                 // 如果开启了自动补全功能且是可以自动补全的类型，就设置其值		
                 if (string.IsNullOrEmpty(value))
                 {
-                    if (MainConfig.Ins.autoCompletion)
+                    if (GlobalConfig.Ins.autoCompletion)
                     {
                         string type = sheet.heads[i].Type;
-                        switch (type)
-                        {
-                            case TypeDefine.boolType:
-                            case TypeDefine.byteType:
-                            case TypeDefine.shortType:
-                            case TypeDefine.intType:
-                            case TypeDefine.floatType:
-                            case TypeDefine.stringType:
-                            case TypeDefine.longType:
-                            case TypeDefine.doubleType:
-                                value = MainConfig.Ins.autoCompletionVal;
-                                break;
-                        }
-                        throw new Exception($"此单元格数值不能为空，第{cellNum}列");
+                        if (DataTypeHelper.IsBaseType(type))
+                            value = GlobalConfig.Ins.autoCompletionVal;
+                        else
+                            throw new Exception($"此单元格数值不能为空，第{cellNum}列");
                     }
                 }
-
                 ls.Add(value);
             }
             return ls;

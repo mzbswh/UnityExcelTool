@@ -70,6 +70,7 @@ namespace ExcelToByteFile
             this.btn_generate.TabIndex = 2;
             this.btn_generate.Text = "生成";
             this.btn_generate.UseVisualStyleBackColor = true;
+            this.btn_generate.Click += new System.EventHandler(this.OnClick_Generate);
             // 
             // label1
             // 

@@ -4,6 +4,12 @@ using System.Text;
 
 namespace ExcelToByteFile
 {
+	public struct Vector3<T>
+    {
+		public T x, y, z;
+		
+    }
+
 	public struct Vector4
 	{
 		public float x;

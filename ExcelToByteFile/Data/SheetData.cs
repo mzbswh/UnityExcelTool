@@ -8,68 +8,6 @@ using NPOI.HSSF.UserModel;
 
 namespace ExcelToByteFile
 {
-	/// <summary>
-	/// sheet表一行数据
-	/// </summary>
-	public struct RowData
-    {
-		/// <summary>
-		/// 行号
-		/// </summary>
-		public int RowNum { get; }
-
-		/// <summary>
-		/// 一行的数据类
-		/// </summary>
-		public IRow Row { get; }
-
-		/// <summary>
-		/// 单元格数据列表
-		/// </summary>
-		public List<string> ValueList { get; }
-
-		public RowData(int rowNum, IRow row, List<string> valList)
-		{
-			RowNum = rowNum;
-			Row = row;
-			ValueList = valList;
-		}
-	}
-
-	/// <summary>
-	/// sheet表头部数据，每个数据列都对应一个头数据
-	/// </summary>
-	public struct HeadData
-    {
-		/// <summary>
-		/// 名称
-		/// </summary>
-		public string Name { get; }
-
-		/// <summary>
-		/// 类型
-		/// </summary>
-		public string Type { get; }
-
-		/// <summary>
-		/// 类型备注
-		/// </summary>
-		public string Comment { get; }
-
-		/// <summary>
-		/// 所在第几列
-		/// </summary>
-		public int CellNum { get; }
-
-		public HeadData(string name, string type, string comment, int cellNum)
-		{
-			Name = name;
-			Type = type;
-			Comment = comment;
-			CellNum = cellNum;
-		}
-	}
-
     /// <summary>
     /// excel里一个sheet的数据类
     /// </summary>
@@ -106,6 +44,11 @@ namespace ExcelToByteFile
 		/// 表格所有行数据, 自上而下顺序存储
 		/// </summary>
 		public readonly List<RowData> rows = new List<RowData>();
+
+		/// <summary>
+		/// 解析类型
+		/// </summary>
+		public byte ParseType { get; private set; }
 
 		public SheetData(string sheetName, IWorkbook workbook, ISheet sheet, XSSFFormulaEvaluator evaluator)
         {
@@ -144,9 +87,9 @@ namespace ExcelToByteFile
 				ICell commentCell = commentRow.GetCell(index);
 
 				// 检测重复的列
-				string type = ExcelTools.GetCellValue(typeCell, _evaluator);
-				string name = ExcelTools.GetCellValue(nameCell, _evaluator);
-				string comment = ExcelTools.GetCellValue(commentCell, _evaluator);
+				string type = ExcelTool.GetCellValue(typeCell, _evaluator);
+				string name = ExcelTool.GetCellValue(nameCell, _evaluator);
+				string comment = ExcelTool.GetCellValue(commentCell, _evaluator);
 				bool isNotesCol = type.Contains(ConstDefine.noteChar);
 				if (!isNotesCol)
 				{
@@ -157,7 +100,9 @@ namespace ExcelToByteFile
 					else if (IsNameExist(name))
 						throw new Exception($"检测到重复变量名称 : 第{index}列, {name}");
 
-					HeadData head = new HeadData(name, type, comment, index);
+					string processedType = DataTypeHelper.GetProcessedType(type);
+					string[] subType = DataTypeHelper.GetSubType(type);
+					HeadData head = new HeadData(name, processedType, subType, comment, index);
 					heads.Add(head);
 				}
 			}
@@ -179,10 +124,11 @@ namespace ExcelToByteFile
                 // 如果是结尾行
                 if (IsEndRow(row)) break;
 
-				List<string> vals = ExcelTools.GetOneRowData(this, row); 
+				List<string> vals = ExcelTool.GetOneRowData(this, row); 
 				RowData rowData = new RowData(rowNum, row, vals);
 				rows.Add(rowData);
 			}
+			ParseType = 0;
 		}
 
         public void Export(string path)
@@ -198,7 +144,7 @@ namespace ExcelToByteFile
 		public bool IsNoteRow(IRow row)
         {
 			ICell firstCell = row.GetCell(row.FirstCellNum);
-			string value = ExcelTools.GetCellValue(firstCell, _evaluator);
+			string value = ExcelTool.GetCellValue(firstCell, _evaluator);
 			return value.ToLower().Contains(ConstDefine.noteChar);
 		}
 
@@ -230,7 +176,7 @@ namespace ExcelToByteFile
 			if (firstCell == null)
 				return true;
 
-			string value = ExcelTools.GetCellValue(firstCell, _evaluator);
+			string value = ExcelTool.GetCellValue(firstCell, _evaluator);
 			if (string.IsNullOrEmpty(value))
 				return true;
 

@@ -29,6 +29,10 @@ namespace ExcelToByteFile
 
     public class TypeDefine
     {
+        public const string sbyteType = "sbyte";
+        public const string ushortType = "ushort";
+        public const string uintType = "uint";
+        public const string ulongType = "ulong";
         public const string boolType = "bool";
         public const string byteType = "byte";
         public const string shortType = "short";

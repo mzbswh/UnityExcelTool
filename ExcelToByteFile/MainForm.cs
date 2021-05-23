@@ -26,7 +26,7 @@ namespace ExcelToByteFile
         /// </summary>
         private void OnClick_SelectFiles(object sender, EventArgs e)
         {
-            dialog_selectFile.InitialDirectory = MainConfig.Ins.lastSelectExcelPath;
+            dialog_selectFile.InitialDirectory = GlobalConfig.Ins.lastSelectExcelPath;
             dialog_selectFile.Filter = "Excel文件(*.xls;*.xlsx)|*.xls;*.xlsx";
             DialogResult result = dialog_selectFile.ShowDialog();
             if (result == DialogResult.OK)
@@ -36,7 +36,7 @@ namespace ExcelToByteFile
 
                 // 更新最近一次打开的目录
                 int lastIndex = dialog_selectFile.FileName.LastIndexOf("\\");
-                MainConfig.Ins.lastSelectExcelPath = dialog_selectFile.FileName.Substring(0, lastIndex);
+                GlobalConfig.Ins.lastSelectExcelPath = dialog_selectFile.FileName.Substring(0, lastIndex);
 
                 // 将文件路径添加到列表
                 for (int i = 0; i < dialog_selectFile.FileNames.Length; i++)
@@ -52,8 +52,8 @@ namespace ExcelToByteFile
         /// </summary>
         private void OnClick_SelectByteFileOutputDir(object sender, EventArgs e)
         {
-            MainConfig.Ins.byteFileOutputDir = OpenSelectFolderDialog(MainConfig.Ins.byteFileOutputDir);
-            lab_byteFileOutputDir.Text = MainConfig.Ins.byteFileOutputDir;
+            GlobalConfig.Ins.byteFileOutputDir = OpenSelectFolderDialog(GlobalConfig.Ins.byteFileOutputDir);
+            lab_byteFileOutputDir.Text = GlobalConfig.Ins.byteFileOutputDir;
         }
 
         /// <summary>
@@ -61,14 +61,14 @@ namespace ExcelToByteFile
         /// </summary>
         private void OnClick_SelectLogOutputDir(object sender, EventArgs e)
         {
-            MainConfig.Ins.logOutputDir = OpenSelectFolderDialog(MainConfig.Ins.logOutputDir);
-            lab_logOutputDir.Text = MainConfig.Ins.logOutputDir;
+            GlobalConfig.Ins.logOutputDir = OpenSelectFolderDialog(GlobalConfig.Ins.logOutputDir);
+            lab_logOutputDir.Text = GlobalConfig.Ins.logOutputDir;
         }
 
         /// <summary>
         /// 点击生成/导出 按钮
         /// </summary>
-        private void OnClick_Generte(object sender, EventArgs e)
+        private void OnClick_Generate(object sender, EventArgs e)
         {
             // 获取选择的Excel文件列表
             List<string> fileList = new List<string>();
