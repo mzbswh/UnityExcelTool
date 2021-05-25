@@ -99,6 +99,16 @@ namespace ExcelToByteFile
             }
             return selectPath;
         }
-
+        
+        public void LogMessage(string msg, Color col)
+        {
+            if (!string.IsNullOrEmpty(logTextBox.Text)) msg = Environment.NewLine + msg;
+            logTextBox.SelectionStart = logTextBox.TextLength;
+            logTextBox.SelectionLength = 0;
+            logTextBox.SelectionColor = col;
+            logTextBox.AppendText(msg);
+            logTextBox.SelectionColor = logTextBox.ForeColor;
+            logTextBox.ScrollToCaret();
+        }
     }
 }

@@ -40,7 +40,7 @@ namespace ExcelToByteFile
             this.btn_selectLogOutputDir = new System.Windows.Forms.Button();
             this.lab_logOutputDir = new System.Windows.Forms.Label();
             this.dialog_selectFolder = new System.Windows.Forms.FolderBrowserDialog();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.logTextBox = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
             // btn_selectFiles
@@ -55,16 +55,19 @@ namespace ExcelToByteFile
             // 
             // lsBox_selectedFiles
             // 
+            this.lsBox_selectedFiles.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lsBox_selectedFiles.FormattingEnabled = true;
             this.lsBox_selectedFiles.ItemHeight = 21;
             this.lsBox_selectedFiles.Location = new System.Drawing.Point(168, 14);
             this.lsBox_selectedFiles.Name = "lsBox_selectedFiles";
-            this.lsBox_selectedFiles.Size = new System.Drawing.Size(636, 256);
+            this.lsBox_selectedFiles.Size = new System.Drawing.Size(594, 298);
             this.lsBox_selectedFiles.TabIndex = 1;
             // 
             // btn_generate
             // 
-            this.btn_generate.Location = new System.Drawing.Point(625, 617);
+            this.btn_generate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_generate.Location = new System.Drawing.Point(583, 610);
             this.btn_generate.Name = "btn_generate";
             this.btn_generate.Size = new System.Drawing.Size(150, 50);
             this.btn_generate.TabIndex = 2;
@@ -130,20 +133,22 @@ namespace ExcelToByteFile
             this.lab_logOutputDir.TabIndex = 8;
             this.lab_logOutputDir.Text = "输出路径";
             // 
-            // textBox1
+            // logTextBox
             // 
-            this.textBox1.Location = new System.Drawing.Point(7, 477);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(535, 190);
-            this.textBox1.TabIndex = 9;
+            this.logTextBox.Location = new System.Drawing.Point(12, 470);
+            this.logTextBox.Name = "logTextBox";
+            this.logTextBox.ReadOnly = true;
+            this.logTextBox.Size = new System.Drawing.Size(542, 190);
+            this.logTextBox.TabIndex = 10;
+            this.logTextBox.Text = "";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(826, 718);
-            this.Controls.Add(this.textBox1);
+            this.AutoSize = true;
+            this.ClientSize = new System.Drawing.Size(784, 711);
+            this.Controls.Add(this.logTextBox);
             this.Controls.Add(this.lab_logOutputDir);
             this.Controls.Add(this.btn_selectLogOutputDir);
             this.Controls.Add(this.label2);
@@ -154,7 +159,9 @@ namespace ExcelToByteFile
             this.Controls.Add(this.lsBox_selectedFiles);
             this.Controls.Add(this.btn_selectFiles);
             this.Font = new System.Drawing.Font("Microsoft YaHei UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(4);
+            this.MinimumSize = new System.Drawing.Size(800, 750);
             this.Name = "MainForm";
             this.Text = "Excel转字节文件";
             this.Load += new System.EventHandler(this.MainForm_Load);
@@ -176,6 +183,6 @@ namespace ExcelToByteFile
         private System.Windows.Forms.Button btn_selectLogOutputDir;
         private System.Windows.Forms.Label lab_logOutputDir;
         private System.Windows.Forms.FolderBrowserDialog dialog_selectFolder;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.RichTextBox logTextBox;
     }
 }

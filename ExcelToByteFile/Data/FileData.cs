@@ -93,23 +93,12 @@ namespace ExcelToByteFile
             int len = 0;
             for (int i = 0; i < data.Count; i++)
             {
-                switch (data[i].Type)
-                {
-                    case TypeDefine.sbyteType: len += 1; break;
-                    case TypeDefine.boolType: len += 1; break;
-                    case TypeDefine.byteType: len += 1; break;
-                    case TypeDefine.dictType: len += 4; break;
-                    case TypeDefine.doubleType: len += 8; break;
-                    case TypeDefine.floatType: len += 4; break;
-                    case TypeDefine.intType: len += 4; break;
-                    case TypeDefine.listType: len += 4; break;
-                    case TypeDefine.longType: len += 8; break;
-                    case TypeDefine.shortType: len += 2; break;
-                    case TypeDefine.stringType: len += 4; break;
-                    case TypeDefine.uintType: len += 4; break;
-                    case TypeDefine.ulongType: len += 8; break;
-                    case TypeDefine.ushortType: len += 2; break;
-                }
+                string type = data[i].Type;
+                if (DataTypeHelper.IsBaseType(type))
+                    len += GetBaseTypeLength(type);
+                else if (DataTypeHelper.IsListType(type))
+                    len += 4;
+                else len += GetDictTypeLength(data[i].SubType);
             }
             return len;
         }
@@ -125,27 +114,44 @@ namespace ExcelToByteFile
             offs.Add(0);    // 第一列的偏移一定是0
             for (int i = 0; i < data.Count; i++)
             {
-                switch (data[i].Type)
-                {
-                    case TypeDefine.sbyteType: offs.Add(1); break;
-                    case TypeDefine.boolType: offs.Add(1); break;
-                    case TypeDefine.byteType: offs.Add(1); break;
-                    case TypeDefine.dictType: offs.Add(4); break;
-                    case TypeDefine.doubleType: offs.Add(8); break;
-                    case TypeDefine.floatType: offs.Add(4); break;
-                    case TypeDefine.intType: offs.Add(4); break;
-                    case TypeDefine.listType: offs.Add(4); break;
-                    case TypeDefine.longType: offs.Add(8); break;
-                    case TypeDefine.shortType: offs.Add(2); break;
-                    case TypeDefine.stringType: offs.Add(4); break;
-                    case TypeDefine.uintType: offs.Add(4); break;
-                    case TypeDefine.ulongType: offs.Add(8); break;
-                    case TypeDefine.ushortType: offs.Add(2); break;
-                    
-                }
+                string type = data[i].Type;
+                if (DataTypeHelper.IsBaseType(type))
+                    offs.Add(GetBaseTypeLength(type));
+                else if (DataTypeHelper.IsListType(type))
+                    offs.Add(4);
+                else offs.Add(GetDictTypeLength(data[i].SubType));
             }
             offs.RemoveAt(offs.Count - 1);  // 移除最后一个
             return offs;
+        }
+
+        private int GetDictTypeLength(string[] subType)
+        {
+            return GetBaseTypeLength(subType[0]) + GetBaseTypeLength(subType[1]);
+        }
+
+        private int GetBaseTypeLength(string type)
+        {
+            switch (type)
+            {
+                case TypeDefine.sbyteType: 
+                case TypeDefine.boolType: 
+                case TypeDefine.byteType:
+                    return 1;
+                case TypeDefine.shortType:
+                case TypeDefine.ushortType:
+                    return 2;
+                case TypeDefine.floatType:
+                case TypeDefine.intType:
+                case TypeDefine.stringType:
+                case TypeDefine.uintType:
+                    return 4;
+                case TypeDefine.doubleType: 
+                case TypeDefine.longType: 
+                case TypeDefine.ulongType:
+                    return 8;
+                default: return 0;
+            }
         }
 
         /// <summary>

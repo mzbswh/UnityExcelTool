@@ -67,8 +67,11 @@ namespace ExcelToByteFile
 			int merge = _sheet.NumMergedRegions;
 			if (merge > 0) throw new Exception($"不支持合并单元格，请移除后从新生成：{_sheet.GetMergedRegion(0).FormatAsString()}");
 
-			int curRow = _sheet.FirstRowNum;		// 当前行数
-
+			int curRow = _sheet.FirstRowNum;        // 当前行数
+			for (int i = 0; i < 20; i++)
+            {
+				Log.LogError($"第一行 {curRow} 最后一行 {_sheet.LastRowNum}");
+			}
 			// 数据头一共三行
 			if (_sheet.LastRowNum < ConstDefine.headRowNum)
             {
@@ -85,7 +88,7 @@ namespace ExcelToByteFile
 				ICell typeCell = typeRow.GetCell(index);
 				ICell nameCell = nameRow.GetCell(index);
 				ICell commentCell = commentRow.GetCell(index);
-
+				
 				// 检测重复的列
 				string type = ExcelTool.GetCellValue(typeCell, _evaluator);
 				string name = ExcelTool.GetCellValue(nameCell, _evaluator);

@@ -69,12 +69,13 @@ namespace ExcelToByteFile
 		/// <summary>
 		/// 字符串转为字符串列表
 		/// </summary>
-		public static List<string> StringToStringList(string str, char separator)
+		public static List<string> StringToStringList(string str)
 		{
 			List<string> result = new List<string>();
 			if (!String.IsNullOrEmpty(str))
 			{
-				string[] splits = str.Split(separator);
+				string pat = @"(?<!\\),";
+				string[] splits = Regex.Split(str, pat);
 				foreach (string split in splits)
 				{
 					if (!String.IsNullOrEmpty(split))
@@ -151,25 +152,22 @@ namespace ExcelToByteFile
 			Dictionary<T1, T2> dict = new Dictionary<T1, T2>();
 
             str = str.Replace(" ", "");
-			string pat = @"(?<!\\),";
-			string[] ss = Regex.Split(s, pat);
-			string pattern = @"{(?<oneData>\w+,\w+)}(,{(?<oneData>\w+,\w+)})*";
-
-            Match m = Regex.Match(str, pattern);
-            foreach (var val in m.Groups["oneData"].Captures)
+			string pat = @"(?<=(?<!\\)\}),";
+			string[] elems = Regex.Split(str, pat);
+			//string pattern = @"{(?<oneData>\w+,\w+)}(,{(?<oneData>\w+,\w+)})*";
+			string pat2 = @"(?<!\\),";
+            foreach (var elem in elems)
             {
-				string[] pair = val.ToString().Split(',');
-
-            }
-
-            string[] splits = str.Split(separator);
-			foreach (string split in splits)
-			{
-				if (!String.IsNullOrEmpty(split))
-				{
-					result.Add((T)Convert.ChangeType(split, typeof(T)));
-				}
+				string s = elem.Substring(1, elem.Length - 2);	 // 去两边大括号
+				string[] keyValPair = Regex.Split(s, pat2);   // 分隔
+				string key = keyValPair[0].Replace("\\}", "}");
+				key = key.Replace("\\,", ",");
+				string val = keyValPair[1].Replace("\\}", "}");
+				val = val.Replace("\\,", ",");
+				dict.Add((T1)Convert.ChangeType(key, typeof(T1)), (T2)Convert.ChangeType(val, typeof(T2)));
 			}
+
+			return dict;
 		}
 	}
 }

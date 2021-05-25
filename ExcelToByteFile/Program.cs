@@ -8,6 +8,7 @@ namespace ExcelToByteFile
 {
     static class Program
     {
+        public static MainForm mainForm = new MainForm();
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
@@ -16,14 +17,14 @@ namespace ExcelToByteFile
         {
             if (args.Length > 0)
             {
-                ExportMgr.RunCommand(args);
+                //ExportMgr.RunCommand(args);
             }
             else
             {
                 Application.SetHighDpiMode(HighDpiMode.SystemAware);
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new MainForm());
+                Application.Run(mainForm);
             }
         }
     }

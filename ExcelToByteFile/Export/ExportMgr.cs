@@ -144,7 +144,7 @@ namespace ExcelToByteFile
                 case TypeDefine.floatType:
                     buffer.WriteListFloat(StringConvert.StringToValueList<float>(value, ConstDefine.splitChar)); break;
                 case TypeDefine.stringType:
-                    buffer.WriteListString(StringConvert.StringToStringList(value, ConstDefine.splitChar)); break;
+                    buffer.WriteListString(StringConvert.StringToStringList(value)); break;
                 case TypeDefine.longType:
                     buffer.WriteListLong(StringConvert.StringToValueList<long>(value, ConstDefine.splitChar)); break;
                 case TypeDefine.doubleType:
