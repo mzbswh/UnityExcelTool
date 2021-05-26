@@ -23,14 +23,29 @@ namespace ExcelToByteFile
             Program.mainForm.LogMessage(prefix + msg, Color.Black);
         }
 
+        public static void LogNormal(object msg)
+        {
+            Program.mainForm.LogMessage(prefix + msg.ToString(), Color.Black);
+        }
+
         public static void LogWarning(string msg)
         {
             Program.mainForm.LogMessage(prefix + "Warning: " + msg, Color.Orange);
         }
 
+        public static void LogWarning(object msg)
+        {
+            Program.mainForm.LogMessage(prefix + "Warning: " + msg.ToString(), Color.Orange);
+        }
+
         public static void LogError(string msg)
         {
             Program.mainForm.LogMessage(prefix + "Error: " + msg, Color.Red);
+        }
+
+        public static void LogError(object msg)
+        {
+            Program.mainForm.LogMessage(prefix + "Error: " + msg.ToString(), Color.Red);
         }
     }
 

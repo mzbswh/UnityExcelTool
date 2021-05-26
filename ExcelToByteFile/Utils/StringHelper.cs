@@ -75,5 +75,12 @@ namespace ExcelToByteFile
 				return string.Empty;
 			}
 		}
+
+		public static string GetExportFileName(ExcelData excel, SheetData sheetData)
+        {
+			if (excel.sheetDataList.Count == 1)
+				return excel.ExcelName;
+			else return excel.ExcelName + "_" + sheetData.SheetName;
+		}
 	}
 }

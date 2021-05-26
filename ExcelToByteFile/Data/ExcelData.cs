@@ -80,7 +80,7 @@ namespace ExcelToByteFile
                 for (int i = 0; i < _workbook.NumberOfSheets; i++)
                 {
                     ISheet sheet = _workbook.GetSheetAt(i);
-                    SheetData sheetData = new SheetData(sheet.SheetName, _workbook, sheet, _evaluator);
+                    SheetData sheetData = new SheetData(_workbook, sheet, _evaluator, ExcelName);
                     sheetData.Load();
                     sheetDataList.Add(sheetData);
                 }

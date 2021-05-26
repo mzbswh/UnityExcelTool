@@ -54,7 +54,7 @@ namespace ExcelToByteFile
             }
 
             // 创建文件
-            string filePath = StringHelper.MakeSaveFullPath(path, $"{sheet.SheetName}.bytes");
+            string filePath = StringHelper.MakeSaveFullPath(path, $"{sheet.GetExportFileName()}.bytes");
             using (FileStream fs = new FileStream(filePath, FileMode.Create))
             {
                 byte[] data = fileBuffer.GetBuffer();
@@ -154,7 +154,7 @@ namespace ExcelToByteFile
 
         private static void WriteDict(ByteBuffer buffer, string[] subType, string value)
         {
-
+            
         }
 
 	}

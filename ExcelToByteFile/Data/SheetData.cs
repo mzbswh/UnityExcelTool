@@ -13,6 +13,11 @@ namespace ExcelToByteFile
     /// </summary>
     public class SheetData
     {
+		/// <summary>
+		/// 所属Excel的名称, 用于设置导出名称
+		/// </summary>
+		public string ExcelName { get; }
+
         /// <summary>
         /// Sheet名称
         /// </summary>
@@ -50,9 +55,10 @@ namespace ExcelToByteFile
 		/// </summary>
 		public byte ParseType { get; private set; }
 
-		public SheetData(string sheetName, IWorkbook workbook, ISheet sheet, XSSFFormulaEvaluator evaluator)
+		public SheetData(IWorkbook workbook, ISheet sheet, XSSFFormulaEvaluator evaluator, string excelName)
         {
-            SheetName = sheetName;
+			ExcelName = excelName;
+			SheetName = sheet.SheetName;
 			_workbook = workbook;
 			_sheet = sheet;
 			_evaluator = evaluator;
@@ -68,10 +74,7 @@ namespace ExcelToByteFile
 			if (merge > 0) throw new Exception($"不支持合并单元格，请移除后从新生成：{_sheet.GetMergedRegion(0).FormatAsString()}");
 
 			int curRow = _sheet.FirstRowNum;        // 当前行数
-			for (int i = 0; i < 20; i++)
-            {
-				Log.LogError($"第一行 {curRow} 最后一行 {_sheet.LastRowNum}");
-			}
+
 			// 数据头一共三行
 			if (_sheet.LastRowNum < ConstDefine.headRowNum)
             {
@@ -79,7 +82,7 @@ namespace ExcelToByteFile
 			}
 			IRow typeRow = _sheet.GetRow(curRow++);		//类型
 			IRow nameRow = _sheet.GetRow(curRow++);		//名称
-			IRow commentRow = _sheet.GetRow(curRow++);  //备注
+			IRow commentRow = _sheet.GetRow(curRow++);  //备注: 可能为空
 
 			int endCol = typeRow.LastCellNum;
 			// 获取数据类型信息
@@ -87,7 +90,7 @@ namespace ExcelToByteFile
 			{
 				ICell typeCell = typeRow.GetCell(index);
 				ICell nameCell = nameRow.GetCell(index);
-				ICell commentCell = commentRow.GetCell(index);
+				ICell commentCell = commentRow?.GetCell(index);
 				
 				// 检测重复的列
 				string type = ExcelTool.GetCellValue(typeCell, _evaluator);
@@ -117,10 +120,9 @@ namespace ExcelToByteFile
 			}
 
 			// 所有数据行
-			int tableBeginRowNum = ++curRow; //Table初始行
-			for (int rowNum = tableBeginRowNum; rowNum <= _sheet.LastRowNum; rowNum++)
+			for (; curRow <= _sheet.LastRowNum; curRow++)
 			{
-				IRow row = _sheet.GetRow(rowNum);
+				IRow row = _sheet.GetRow(curRow);
 
 				// 如果是注释行，就跳过
 				if (IsNoteRow(row)) continue;
@@ -128,7 +130,7 @@ namespace ExcelToByteFile
                 if (IsEndRow(row)) break;
 
 				List<string> vals = ExcelTool.GetOneRowData(this, row); 
-				RowData rowData = new RowData(rowNum, row, vals);
+				RowData rowData = new RowData(curRow, row, vals);
 				rows.Add(rowData);
 			}
 			ParseType = 0;
@@ -194,5 +196,12 @@ namespace ExcelToByteFile
 		{
 			return _sheet;
 		}
-    }
+
+		public string GetExportFileName()
+		{
+			if (_workbook.NumberOfSheets == 1)
+				return ExcelName;
+			else return ExcelName + "_" + SheetName;
+		}
+	}
 }

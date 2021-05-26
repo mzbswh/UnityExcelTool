@@ -87,6 +87,29 @@ namespace ExcelToByteFile
 			return result;
 		}
 
+		public static Dictionary<T1, T2> StringToDict<T1, T2>(string str)
+		{
+			Dictionary<T1, T2> dict = new Dictionary<T1, T2>();
+
+			str = str.Replace(" ", "");
+			string pat = @"(?<=(?<!\\)\}\s*),";
+			string[] elems = Regex.Split(str, pat);
+			//string pattern = @"{(?<oneData>\w+,\w+)}(,{(?<oneData>\w+,\w+)})*";
+			string pat2 = @"(?<!\\),";
+			foreach (var elem in elems)
+			{
+				string s = elem.Substring(1, elem.Length - 2);   // 去两边大括号
+				string[] keyValPair = Regex.Split(s, pat2);   // 分隔
+				string key = keyValPair[0].Replace("\\}", "}");
+				key = key.Replace("\\,", ",");
+				string val = keyValPair[1].Replace("\\}", "}");
+				val = val.Replace("\\,", ",");
+				dict.Add((T1)Convert.ChangeType(key, typeof(T1)), (T2)Convert.ChangeType(val, typeof(T2)));
+			}
+
+			return dict;
+		}
+
 		/// <summary>
 		/// 转换为枚举
 		/// 枚举索引转换为枚举类型
@@ -147,27 +170,6 @@ namespace ExcelToByteFile
 			return new Vector3(values[0], values[1], values[2]);
 		}
 
-		public static Dictionary<T1, T2> StringToDict<T1, T2>(string str)
-        {
-			Dictionary<T1, T2> dict = new Dictionary<T1, T2>();
-
-            str = str.Replace(" ", "");
-			string pat = @"(?<=(?<!\\)\}),";
-			string[] elems = Regex.Split(str, pat);
-			//string pattern = @"{(?<oneData>\w+,\w+)}(,{(?<oneData>\w+,\w+)})*";
-			string pat2 = @"(?<!\\),";
-            foreach (var elem in elems)
-            {
-				string s = elem.Substring(1, elem.Length - 2);	 // 去两边大括号
-				string[] keyValPair = Regex.Split(s, pat2);   // 分隔
-				string key = keyValPair[0].Replace("\\}", "}");
-				key = key.Replace("\\,", ",");
-				string val = keyValPair[1].Replace("\\}", "}");
-				val = val.Replace("\\,", ",");
-				dict.Add((T1)Convert.ChangeType(key, typeof(T1)), (T2)Convert.ChangeType(val, typeof(T2)));
-			}
-
-			return dict;
-		}
+		
 	}
 }
