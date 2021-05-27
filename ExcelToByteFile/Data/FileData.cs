@@ -63,7 +63,7 @@ namespace ExcelToByteFile
             {
                 string type = data[i].Type;
                 if (DataTypeHelper.IsBaseType(type))
-                    len += GetBaseTypeLength(type);
+                    len += DataTypeHelper.GetBaseTypeLen(type);
                 else if (DataTypeHelper.IsListType(type))
                     len += 4;
                 else len += 8;
@@ -91,30 +91,6 @@ namespace ExcelToByteFile
             }
             offs.RemoveAt(offs.Count - 1);  // 移除最后一个
             return offs;
-        }
-
-        private int GetBaseTypeLength(string type)
-        {
-            switch (type)
-            {
-                case TypeDefine.sbyteType: 
-                case TypeDefine.boolType: 
-                case TypeDefine.byteType:
-                    return 1;
-                case TypeDefine.shortType:
-                case TypeDefine.ushortType:
-                    return 2;
-                case TypeDefine.floatType:
-                case TypeDefine.intType:
-                case TypeDefine.stringType:
-                case TypeDefine.uintType:
-                    return 4;
-                case TypeDefine.doubleType: 
-                case TypeDefine.longType: 
-                case TypeDefine.ulongType:
-                    return 8;
-                default: return 0;
-            }
         }
     }
 }

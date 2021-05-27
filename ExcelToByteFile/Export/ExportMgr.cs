@@ -16,10 +16,11 @@ namespace ExcelToByteFile
 	public class ExportMgr
     {
         static ByteBuffer fileBuffer = new ByteBuffer(ConfigDefine.fileStreamMaxLen);
+        static List<FileData> fileDatas = new List<FileData>();
 
         public static void Export(List<string> fileList)
         {
-            List<FileData> fileDatas = new List<FileData>();
+            fileDatas.Clear();
             // 加载选择的Excel文件列表
             for (int i = 0; i < fileList.Count; i++)
             {
@@ -28,11 +29,6 @@ namespace ExcelToByteFile
                 ExcelData excelFile = new ExcelData(filePath);
                 if (excelFile.Load())
                 {
-                    FileData fileData = new FileData(excelFile);
-                    fileDatas.Add(fileData);
-                    int heapStart = fileData.GetAlignedDataTotalSize();
-                    fileBuffer.SetHeapIndexStartPos(heapStart);
-
                     excelFile.Export();
                 }
                 excelFile.Dispose();
@@ -41,6 +37,11 @@ namespace ExcelToByteFile
 
         public static void ExportOneSheet(string path, SheetData sheet)
         {
+            FileData fileData = new FileData(sheet);
+            fileDatas.Add(fileData);
+            int heapStart = fileData.FileLength;
+            fileBuffer.SetHeapIndexStartPos(heapStart); // 设置引用类型起始地址
+
             for (int i = 0; i < sheet.rows.Count; i++)
             {
                 RowData row = sheet.rows[i];
@@ -154,7 +155,8 @@ namespace ExcelToByteFile
 
         private static void WriteDict(ByteBuffer buffer, string[] subType, string value)
         {
-            
+            var dict = StringConvert.StringToDict<string, string>(value);
+            buffer.WriteDict(dict, subType[0], subType[1]);
         }
 
 	}

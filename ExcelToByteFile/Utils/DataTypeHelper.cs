@@ -113,5 +113,49 @@ namespace ExcelToByteFile
             }
             return subType;
         }
+
+        public static Type GetType(string baseType)
+        {
+            switch (baseType)
+            {
+                case TypeDefine.boolType: return typeof(bool);
+                case TypeDefine.sbyteType: return typeof(sbyte);
+                case TypeDefine.byteType: return typeof(byte);
+                case TypeDefine.shortType: return typeof(short);
+                case TypeDefine.ushortType: return typeof(ushort);
+                case TypeDefine.uintType: return typeof(uint);
+                case TypeDefine.intType: return typeof(int);
+                case TypeDefine.floatType: return typeof(float);
+                case TypeDefine.ulongType: return typeof(ulong);
+                case TypeDefine.longType: return typeof(long);
+                case TypeDefine.doubleType: return typeof(double);
+                case TypeDefine.stringType: return typeof(string);
+                default: return null;
+            }
+        }
+
+        public static int GetBaseTypeLen(string baseType)
+        {
+            switch (baseType)
+            {
+                case TypeDefine.sbyteType:
+                case TypeDefine.boolType:
+                case TypeDefine.byteType:
+                    return 1;
+                case TypeDefine.shortType:
+                case TypeDefine.ushortType:
+                    return 2;
+                case TypeDefine.floatType:
+                case TypeDefine.intType:
+                case TypeDefine.stringType:
+                case TypeDefine.uintType:
+                    return 4;
+                case TypeDefine.doubleType:
+                case TypeDefine.longType:
+                case TypeDefine.ulongType:
+                    return 8;
+                default: return 0;
+            }
+        }
     }
 }

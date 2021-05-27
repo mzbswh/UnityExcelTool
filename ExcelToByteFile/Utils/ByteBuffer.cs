@@ -8,7 +8,7 @@ namespace ExcelToByteFile
 {
 	public static class WriteListHelper<T>
     {
-		public static Action<List<T>, bool> WriteList;
+		public static Action<List<T>> WriteList;
     }
 
 	/// <summary>
@@ -43,18 +43,18 @@ namespace ExcelToByteFile
 
 		private void InitWriteListHelper()
         {
-			WriteListHelper<bool>.WriteList = (ls, b) => { WriteListBool(ls, b); };
-			WriteListHelper<sbyte>.WriteList = (ls, b) => { WriteListSByte(ls, b); };
-			WriteListHelper<byte>.WriteList = (ls, b) => { WriteListByte(ls, b); };
-			WriteListHelper<ushort>.WriteList = (ls, b) => { WriteListUShort(ls, b); };
-			WriteListHelper<short>.WriteList = (ls, b) => { WriteListShort(ls, b); };
-			WriteListHelper<uint>.WriteList = (ls, b) => { WriteListUInt(ls, b); };
-			WriteListHelper<int>.WriteList = (ls, b) => { WriteListInt(ls, b); };
-			WriteListHelper<float>.WriteList = (ls, b) => { WriteListFloat(ls, b); };
-			WriteListHelper<ulong>.WriteList = (ls, b) => { WriteListULong(ls, b); };
-			WriteListHelper<long>.WriteList = (ls, b) => { WriteListLong(ls, b); };
-			WriteListHelper<double>.WriteList = (ls, b) => { WriteListDouble(ls, b); };
-			WriteListHelper<string>.WriteList = (ls, b) => { WriteListString(ls, b); };
+			WriteListHelper<bool>.WriteList = (ls) => { WriteListBool(ls); };
+			WriteListHelper<sbyte>.WriteList = (ls) => { WriteListSByte(ls); };
+			WriteListHelper<byte>.WriteList = (ls) => { WriteListByte(ls); };
+			WriteListHelper<ushort>.WriteList = (ls) => { WriteListUShort(ls); };
+			WriteListHelper<short>.WriteList = (ls) => { WriteListShort(ls); };
+			WriteListHelper<uint>.WriteList = (ls) => { WriteListUInt(ls); };
+			WriteListHelper<int>.WriteList = (ls) => { WriteListInt(ls); };
+			WriteListHelper<float>.WriteList = (ls) => { WriteListFloat(ls); };
+			WriteListHelper<ulong>.WriteList = (ls) => { WriteListULong(ls); };
+			WriteListHelper<long>.WriteList = (ls) => { WriteListLong(ls); };
+			WriteListHelper<double>.WriteList = (ls) => { WriteListDouble(ls); };
+			WriteListHelper<string>.WriteList = (ls) => { WriteListString(ls); };
 		}
 
 		/// <summary>
@@ -476,162 +476,215 @@ namespace ExcelToByteFile
 			WriteByte((byte)'\0', true);
 		}
 
-		public void WriteListBool(List<bool> ls, bool writeToStack = true)
+		public void WriteListBool(List<bool> ls)
         {
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			if (writeToStack) WriteUInt((uint)_heapIndex);
+			WriteUInt((uint)_heapIndex);
 			WriteUShort((ushort)count, true);
 			for (int i = 0; i < count; i++)
 			{
 				WriteBool(ls[i], true);
 			}
 		}
-		public void WriteListByte(List<byte> ls, bool writeToStack = true)
+		public void WriteListByte(List<byte> ls)
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			if (writeToStack) WriteUInt((uint)_heapIndex);
+			WriteUInt((uint)_heapIndex);
 			WriteUShort((ushort)count, true);
 			for (int i = 0; i < count; i++)
 			{
 				WriteByte(ls[i], true);
 			}
 		}
-		public void WriteListShort(List<short> ls, bool writeToStack = true)
+		public void WriteListShort(List<short> ls)
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			if (writeToStack) WriteUInt((uint)_heapIndex);
+			WriteUInt((uint)_heapIndex);
 			WriteUShort((ushort)count, true);
 			for (int i = 0; i < count; i++)
 			{
 				WriteShort(ls[i], true);
 			}
 		}
-		public void WriteListInt(List<int> ls, bool writeToStack = true)
+		public void WriteListInt(List<int> ls)
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			if (writeToStack) WriteUInt((uint)_heapIndex);
+			WriteUInt((uint)_heapIndex);
 			WriteUShort((ushort)count, true);
 			for (int i = 0; i < count; i++)
 			{
 				WriteInt(ls[i], true);
 			}
 		}
-		public void WriteListFloat(List<float> ls, bool writeToStack = true)
+		public void WriteListFloat(List<float> ls)
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			if (writeToStack) WriteUInt((uint)_heapIndex);
+			WriteUInt((uint)_heapIndex);
 			WriteUShort((ushort)count, true);
 			for (int i = 0; i < count; i++)
 			{
 				WriteFloat(ls[i], true);
 			}
 		}
-		public void WriteListLong(List<long> ls, bool writeToStack = true)
+		public void WriteListLong(List<long> ls)
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			if (writeToStack) WriteUInt((uint)_heapIndex);
+			WriteUInt((uint)_heapIndex);
 			WriteUShort((ushort)count, true);
 			for (int i = 0; i < count; i++)
 			{
 				WriteLong(ls[i], true);
 			}
 		}
-		public void WriteListDouble(List<double> ls, bool writeToStack = true)
+		public void WriteListDouble(List<double> ls)
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			if (writeToStack) WriteUInt((uint)_heapIndex);
+			WriteUInt((uint)_heapIndex);
 			WriteUShort((ushort)count, true);
 			for (int i = 0; i < count; i++)
 			{
 				WriteDouble(ls[i], true);
 			}
 		}
-		public void WriteListSByte(List<sbyte> ls, bool writeToStack = true)
+		public void WriteListSByte(List<sbyte> ls)
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			if (writeToStack) WriteUInt((uint)_heapIndex);
+			WriteUInt((uint)_heapIndex);
 			WriteUShort((ushort)count, true);
 			for (int i = 0; i < count; i++)
 			{
 				WriteSbyte(ls[i], true);
 			}
 		}
-		public void WriteListUInt(List<uint> ls, bool writeToStack = true)
+		public void WriteListUInt(List<uint> ls)
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			if (writeToStack) WriteUInt((uint)_heapIndex);
+			WriteUInt((uint)_heapIndex);
 			WriteUShort((ushort)count, true);
 			for (int i = 0; i < count; i++)
 			{
 				WriteUInt(ls[i], true);
 			}
 		}
-		public void WriteListULong(List<ulong> ls, bool writeToStack = true)
+		public void WriteListULong(List<ulong> ls)
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			if (writeToStack) WriteUInt((uint)_heapIndex);
+			WriteUInt((uint)_heapIndex);
 			WriteUShort((ushort)count, true);
 			for (int i = 0; i < count; i++)
 			{
 				WriteULong(ls[i], true);
 			}
 		}
-		public void WriteListUShort(List<ushort> ls, bool writeToStack = true)
+		public void WriteListUShort(List<ushort> ls)
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			if (writeToStack) WriteUInt((uint)_heapIndex);
+			WriteUInt((uint)_heapIndex);
 			WriteUShort((ushort)count, true);
 			for (int i = 0; i < count; i++)
 			{
 				WriteUShort(ls[i], true);
 			}
 		}
-		public void WriteListString(List<string> ls, bool writeToStack = true)
+		public void WriteListString(List<string> ls)
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
+			WriteUInt((uint)_heapIndex);   // list地址
+			WriteUShort((ushort)count, true);
 
-			int lsStart = _heapIndex;
-			int len = count * 4;
-			_heapIndex += len; 
-			int tmpHeapIndex = _heapIndex;
-			if (writeToStack) WriteUInt((uint)lsStart);	// list地址
+			/*int lsStart = _heapIndex;      // 存储列表开始索引（第一个元素所在位置）
+            _heapIndex += count * 4;
+            int realHeapIndex = _heapIndex;// 此时指向第一个要写入的字符串的位置
+            for (int i = 0; i < count; i++)
+            {
+                _heapIndex = lsStart + i * 4;  // 先写入地址
+                WriteUInt((uint)_heapIndex, true);
+                _heapIndex = realHeapIndex;
+                WriteString(ls[i], true);
+                realHeapIndex = _heapIndex;    // 暂存此时的堆位置
+            }*/
+
 			for (int i = 0; i < count; i++)
-			{
-				_heapIndex = tmpHeapIndex;  // 回复此时应该写入的堆位置
-				int strIndex = _heapIndex;
-				WriteString(ls[i], true);
-				tmpHeapIndex = _heapIndex;  // 暂存此时的堆位置
-				_heapIndex = lsStart + i * 4;
-				WriteInt(strIndex, true);
-			}
-			_heapIndex = tmpHeapIndex; // 回复到正确的索引位置
-		}
-		public void WriteList<T>(List<T> ls, bool writeToStack = true)
+            {
+                WriteString(ls[i], true);
+            }
+        }
+		public void WriteList<T>(List<T> ls)
         {
-			WriteListHelper<T>.WriteList(ls, writeToStack);
+			WriteListHelper<T>.WriteList(ls);
         }
 
-		public void WriteDict<K, V>(Dictionary<K, V> dict)
+		public void WriteDict(Dictionary<string, string> dict, string keyType, string valType)
         {
-			List<K> Keys = new List<K>(dict.Keys);
-			List<V> Vals = new List<V>(dict.Values);
-			WriteListHelper<K>.WriteList(Keys, false);
-			WriteListHelper<V>.WriteList(Vals, false);
+			int count = 0;
+			if (dict != null) count = dict.Count;
+
+			WriteUInt((uint)_heapIndex);
+			WriteUShort((ushort)count, true);   // 先写入长度
+			int KeyStart = _heapIndex;
+			int valStart = KeyStart + DataTypeHelper.GetBaseTypeLen(keyType) * count;
+			int realIndex = valStart + DataTypeHelper.GetBaseTypeLen(valType) * count;
+			foreach (var pair in dict)
+            {
+				WriteBaseTypeToHeap(pair.Key, keyType);
+				WriteBaseTypeToHeap(pair.Value, valType);
+            }
 		}
 
-		
+		private void WriteBaseTypeToHeap(string value, string type)
+        {
+			switch (type)
+			{
+				case TypeDefine.boolType:
+					WriteBool(Convert.ToBoolean(value), true);
+					break;
+				case TypeDefine.sbyteType:
+					WriteSbyte(Convert.ToSByte(value), true);
+					break;
+				case TypeDefine.byteType:
+					WriteByte(Convert.ToByte(value), true);
+					break;
+				case TypeDefine.ushortType:
+					WriteUShort(Convert.ToUInt16(value), true);
+					break;
+				case TypeDefine.shortType:
+					WriteShort(Convert.ToInt16(value), true);
+					break;
+				case TypeDefine.uintType:
+					WriteUInt(Convert.ToUInt32(value), true);
+					break;
+				case TypeDefine.intType:
+					WriteInt(Convert.ToInt32(value), true);
+					break;
+				case TypeDefine.floatType:
+					WriteFloat(Convert.ToSingle(value), true);
+					break;
+				case TypeDefine.ulongType:
+					WriteULong(Convert.ToUInt64(value), true);
+					break;
+				case TypeDefine.longType:
+					WriteLong(Convert.ToInt64(value), true);
+					break;
+				case TypeDefine.doubleType:
+					WriteDouble(Convert.ToDouble(value), true);
+					break;
+				case TypeDefine.stringType:
+					WriteString(value, true);
+					break;
+			}
+		}
 
 		#endregion
 
