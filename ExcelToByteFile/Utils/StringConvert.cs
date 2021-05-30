@@ -106,16 +106,10 @@ namespace ExcelToByteFile
 				string key = keyValPair[0].Trim();
 				string val = keyValPair[1].Trim();
 
-				if (key.StartsWith('\"'))
-				{
-					key = key[1..^1];
-					key = key.Replace("\\,", ",");
-				}
-				if (val.StartsWith('\"'))
-				{
-					val = val[1..^1];
-					val = val.Replace("\\,", ",");
-				}
+				if (key.StartsWith('\"')) key = key[1..^1];
+				if (val.StartsWith('\"')) val = val[1..^1];
+				key = key.Replace("\\,", ",");
+				val = val.Replace("\\,", ",");
 				dict.Add((T1)Convert.ChangeType(key, typeof(T1)), (T2)Convert.ChangeType(val, typeof(T2)));
 			}
 			return dict;

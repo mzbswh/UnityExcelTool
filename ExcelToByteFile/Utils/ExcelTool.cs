@@ -3,6 +3,7 @@ using NPOI.XSSF.UserModel;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Forms;
 
 namespace ExcelToByteFile
 {
@@ -29,10 +30,16 @@ namespace ExcelToByteFile
                     if (GlobalConfig.Ins.autoCompletion)
                     {
                         string type = sheet.heads[i].Type;
-                        if (DataTypeHelper.IsBaseType(type))
+                        if (DataTypeHelper.IsBaseType(type) && type != TypeDefine.stringType)
                             value = GlobalConfig.Ins.autoCompletionVal;
+                        else if (type == TypeDefine.stringType)
+                            value = string.Empty;
                         else
-                            throw new Exception($"此单元格数值不能为空，第{cellNum}列");
+                        {
+                            MessageBox.Show($"此单元格数值不能为空，第{cellNum}列");
+                            Environment.Exit(1);
+                        }
+                            
                     }
                 }
                 ls.Add(value);
@@ -60,13 +67,21 @@ namespace ExcelToByteFile
                     {
                         // 公式只支持数值和字符串类型
                         var val = evaluator.Evaluate(cell);
-                        if (val.CellType == CellType.Numeric) 
+                        if (val.CellType == CellType.Numeric)
                             return val.NumberValue.ToString();
                         else if (val.CellType == CellType.String)
                             return val.StringValue;
-                        else throw new Exception($"未支持的公式类型 : {val.CellType}");
+                        else
+                        {
+                            MessageBox.Show($"未支持的公式类型 : {val.CellType}");
+                            Environment.Exit(1);
+                            return string.Empty;
+                        }
                     }
-                default: throw new Exception($"未支持的单元格类型 : {cell.CellType}");
+                default:
+                    MessageBox.Show($"未支持的单元格类型 : {cell.CellType}");
+                    Environment.Exit(1);
+                    return string.Empty;
             }
         }
     }

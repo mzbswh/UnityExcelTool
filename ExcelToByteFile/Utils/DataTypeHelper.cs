@@ -14,7 +14,7 @@ namespace ExcelToByteFile
         /// <returns></returns>
         public static bool IsValidType(string type)
         {
-            if (IsListType(type) || IsDictType(type) || IsBaseType(type))
+            if (IsBaseType(type) || IsListType(type) || IsDictType(type))
                 return true;
             else return false;
         }

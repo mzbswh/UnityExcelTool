@@ -24,7 +24,7 @@ namespace ExcelToByteFile
         /// <summary>
         /// excel头部固定行数
         /// </summary>
-        public const int headRowNum = 3; 
+        public const int headFixedRowNum = 3; 
     }
 
     public class TypeDefine
@@ -47,6 +47,7 @@ namespace ExcelToByteFile
 
     public enum TypeToken
     {
+        Null = 0,
         SByte = 1,
         Byte = 2,
         Bool = 3,

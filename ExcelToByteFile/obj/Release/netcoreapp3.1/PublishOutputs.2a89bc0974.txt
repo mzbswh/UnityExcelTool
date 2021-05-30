@@ -1,0 +1,11 @@
+C:\Users\mzbswh\Desktop\Excel\ExcelToByteFile\ExcelToByteFile\bin\Release\netcoreapp3.1\publish\ExcelToByteFile.exe
+C:\Users\mzbswh\Desktop\Excel\ExcelToByteFile\ExcelToByteFile\bin\Release\netcoreapp3.1\publish\ExcelToByteFile.dll
+C:\Users\mzbswh\Desktop\Excel\ExcelToByteFile\ExcelToByteFile\bin\Release\netcoreapp3.1\publish\ExcelToByteFile.deps.json
+C:\Users\mzbswh\Desktop\Excel\ExcelToByteFile\ExcelToByteFile\bin\Release\netcoreapp3.1\publish\ExcelToByteFile.runtimeconfig.json
+C:\Users\mzbswh\Desktop\Excel\ExcelToByteFile\ExcelToByteFile\bin\Release\netcoreapp3.1\publish\ExcelToByteFile.pdb
+C:\Users\mzbswh\Desktop\Excel\ExcelToByteFile\ExcelToByteFile\bin\Release\netcoreapp3.1\publish\NPOI.OOXML.dll
+C:\Users\mzbswh\Desktop\Excel\ExcelToByteFile\ExcelToByteFile\bin\Release\netcoreapp3.1\publish\NPOI.OpenXml4Net.dll
+C:\Users\mzbswh\Desktop\Excel\ExcelToByteFile\ExcelToByteFile\bin\Release\netcoreapp3.1\publish\NPOI.OpenXmlFormats.dll
+C:\Users\mzbswh\Desktop\Excel\ExcelToByteFile\ExcelToByteFile\bin\Release\netcoreapp3.1\publish\NPOI.dll
+C:\Users\mzbswh\Desktop\Excel\ExcelToByteFile\ExcelToByteFile\bin\Release\netcoreapp3.1\publish\BouncyCastle.Crypto.dll
+C:\Users\mzbswh\Desktop\Excel\ExcelToByteFile\ExcelToByteFile\bin\Release\netcoreapp3.1\publish\ICSharpCode.SharpZipLib.dll

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace ExcelToByteFile
 {
@@ -132,7 +133,7 @@ namespace ExcelToByteFile
 		/// </summary>
 		public int ReadableBytes
 		{
-			get { return _writerIndex - _readerIndex; }
+			get { return _heapIndex - _readerIndex; }
 		}
 
 		/// <summary>
@@ -466,21 +467,21 @@ namespace ExcelToByteFile
 		public void WriteString(string value, bool onlyWriteToHeap = false)
 		{
 			byte[] bytes = Encoding.UTF8.GetBytes(value);
-			int num = bytes.Length + 1; // 注意：字符串末尾写入结束符
+			int num = bytes.Length; // + 1; // 注意：字符串末尾写入结束符
 			if (num > ushort.MaxValue)
 				throw new FormatException($"String length cannot be greater than {ushort.MaxValue} !");
 
-			if (!onlyWriteToHeap) WriteUInt((uint)_heapIndex);	// 写入堆索引地址
+			if (!onlyWriteToHeap) WriteInt(_heapIndex);	// 写入堆索引地址
 			WriteUShort(Convert.ToUInt16(num), true);
 			WriteBytes(bytes, true);
-			WriteByte((byte)'\0', true);
+			//WriteByte((byte)'\0', true);
 		}
 
 		public void WriteListBool(List<bool> ls)
         {
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			WriteUInt((uint)_heapIndex);
+			WriteInt(_heapIndex);
 			WriteUShort((ushort)count, true);
 			for (int i = 0; i < count; i++)
 			{
@@ -491,7 +492,7 @@ namespace ExcelToByteFile
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			WriteUInt((uint)_heapIndex);
+			WriteInt(_heapIndex);
 			WriteUShort((ushort)count, true);
 			for (int i = 0; i < count; i++)
 			{
@@ -502,7 +503,7 @@ namespace ExcelToByteFile
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			WriteUInt((uint)_heapIndex);
+			WriteInt(_heapIndex);
 			WriteUShort((ushort)count, true);
 			for (int i = 0; i < count; i++)
 			{
@@ -513,7 +514,7 @@ namespace ExcelToByteFile
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			WriteUInt((uint)_heapIndex);
+			WriteInt(_heapIndex);
 			WriteUShort((ushort)count, true);
 			for (int i = 0; i < count; i++)
 			{
@@ -524,7 +525,7 @@ namespace ExcelToByteFile
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			WriteUInt((uint)_heapIndex);
+			WriteInt(_heapIndex);
 			WriteUShort((ushort)count, true);
 			for (int i = 0; i < count; i++)
 			{
@@ -535,7 +536,7 @@ namespace ExcelToByteFile
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			WriteUInt((uint)_heapIndex);
+			WriteInt(_heapIndex);
 			WriteUShort((ushort)count, true);
 			for (int i = 0; i < count; i++)
 			{
@@ -546,7 +547,7 @@ namespace ExcelToByteFile
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			WriteUInt((uint)_heapIndex);
+			WriteInt(_heapIndex);
 			WriteUShort((ushort)count, true);
 			for (int i = 0; i < count; i++)
 			{
@@ -557,7 +558,7 @@ namespace ExcelToByteFile
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			WriteUInt((uint)_heapIndex);
+			WriteInt(_heapIndex);
 			WriteUShort((ushort)count, true);
 			for (int i = 0; i < count; i++)
 			{
@@ -568,7 +569,7 @@ namespace ExcelToByteFile
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			WriteUInt((uint)_heapIndex);
+			WriteInt(_heapIndex);
 			WriteUShort((ushort)count, true);
 			for (int i = 0; i < count; i++)
 			{
@@ -579,7 +580,7 @@ namespace ExcelToByteFile
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			WriteUInt((uint)_heapIndex);
+			WriteInt(_heapIndex);
 			WriteUShort((ushort)count, true);
 			for (int i = 0; i < count; i++)
 			{
@@ -590,7 +591,7 @@ namespace ExcelToByteFile
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			WriteUInt((uint)_heapIndex);
+			WriteInt(_heapIndex);
 			WriteUShort((ushort)count, true);
 			for (int i = 0; i < count; i++)
 			{
@@ -601,7 +602,7 @@ namespace ExcelToByteFile
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			WriteUInt((uint)_heapIndex);   // list地址
+			WriteInt(_heapIndex);   // list地址
 			WriteUShort((ushort)count, true);
 
 			/*int lsStart = _heapIndex;      // 存储列表开始索引（第一个元素所在位置）
@@ -631,15 +632,21 @@ namespace ExcelToByteFile
 			int count = 0;
 			if (dict != null) count = dict.Count;
 
-			WriteUInt((uint)_heapIndex);
+			WriteInt(_heapIndex);
 			WriteUShort((ushort)count, true);   // 先写入长度
-			int KeyStart = _heapIndex;
-			int valStart = KeyStart + DataTypeHelper.GetBaseTypeLen(keyType) * count;
-			int realIndex = valStart + DataTypeHelper.GetBaseTypeLen(valType) * count;
+			//int keyLen = DataTypeHelper.GetBaseTypeLen(keyType);
+			//int valLen = DataTypeHelper.GetBaseTypeLen(valType);
+			//int KeyStart = _heapIndex;
+			//int valStart = KeyStart + keyLen * count;
+			//int realIndex = valStart + valLen * count;
+			//int num = 0;
 			foreach (var pair in dict)
             {
+				//_heapIndex = KeyStart + num * keyLen;
 				WriteBaseTypeToHeap(pair.Key, keyType);
+				//_heapIndex = valStart + num * valLen;
 				WriteBaseTypeToHeap(pair.Value, valType);
+				//num++;
             }
 		}
 

@@ -15,7 +15,7 @@ namespace ExcelToByteFile
 		public string Name { get; }
 
 		/// <summary>
-		/// 类型
+		/// 类型: 基本类型 列表为list 字典为dict
 		/// </summary>
 		public string Type { get; }
 

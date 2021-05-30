@@ -5,6 +5,7 @@ using System.IO;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using NPOI.HSSF.UserModel;
+using System.Windows.Forms;
 
 namespace ExcelToByteFile
 {
@@ -70,20 +71,33 @@ namespace ExcelToByteFile
         public void Load()
         {
 			// 检测合并单元格
-			int merge = _sheet.NumMergedRegions;
-			if (merge > 0) throw new Exception($"不支持合并单元格，请移除后从新生成：{_sheet.GetMergedRegion(0).FormatAsString()}");
-
+			//int merge = _sheet.NumMergedRegions;
+			//if (merge > 0) throw new Exception($"不支持合并单元格，请移除后从新生成：{_sheet.GetMergedRegion(0).FormatAsString()}");
+			//Log.LogError($"不支持合并单元格，请移除后从新生成：{_sheet.GetMergedRegion(0).FormatAsString()}");
 			int curRow = _sheet.FirstRowNum;        // 当前行数
-
 			// 数据头一共三行
-			if (_sheet.LastRowNum < ConstDefine.headRowNum)
+			if (_sheet.LastRowNum < ConstDefine.headFixedRowNum - 1)
             {
-				throw new Exception($"行数错误");
+				//Log.LogError($"Excel: {ExcelName} Sheet: {SheetName} 行数错误");
+				MessageBox.Show($"Excel: {ExcelName} Sheet: {SheetName} 行数错误");
+				Environment.Exit(1);
 			}
-			IRow typeRow = _sheet.GetRow(curRow++);		//类型
-			IRow nameRow = _sheet.GetRow(curRow++);		//名称
-			IRow commentRow = _sheet.GetRow(curRow++);  //备注: 可能为空
 
+			IRow commentRow, typeRow, nameRow;
+			
+			if (GlobalConfig.Ins.commentInFirstRow)
+			{
+				//MessageBox.Show($"{ExcelName} {_sheet.GetRow(1) == null}");
+				commentRow = _sheet.GetRow(curRow++);  //备注: 可能为空
+				typeRow = _sheet.GetRow(curRow++);     //类型
+				nameRow = _sheet.GetRow(curRow++);     //名称
+			}
+			else
+            {
+				typeRow = _sheet.GetRow(curRow++);     //类型
+				nameRow = _sheet.GetRow(curRow++);     //名称
+				commentRow = _sheet.GetRow(curRow++);  //备注: 可能为空
+			}
 			int endCol = typeRow.LastCellNum;
 			// 获取数据类型信息
 			for (int index = typeRow.FirstCellNum; index < endCol; index++)
@@ -93,18 +107,31 @@ namespace ExcelToByteFile
 				ICell commentCell = commentRow?.GetCell(index);
 				
 				// 检测重复的列
-				string type = ExcelTool.GetCellValue(typeCell, _evaluator);
-				string name = ExcelTool.GetCellValue(nameCell, _evaluator);
+				string type = ExcelTool.GetCellValue(typeCell, _evaluator).Trim().ToLower();
+				string name = ExcelTool.GetCellValue(nameCell, _evaluator).Trim();
 				string comment = ExcelTool.GetCellValue(commentCell, _evaluator);
-				bool isNotesCol = type.Contains(ConstDefine.noteChar);
+				bool isNotesCol = (type.Contains(ConstDefine.noteChar)) 
+					|| (GlobalConfig.Ins.typeNullIsNoteCol && (type == string.Empty));
 				if (!isNotesCol)
 				{
 					if (string.IsNullOrEmpty(type))
-						throw new Exception($"检测到空列：第{index}列");
+                    {
+						//Log.LogError($"检测到空列：第{index}列");
+						MessageBox.Show($"检测到空列：第{index}列");
+						Environment.Exit(1);
+					}
 					else if (!DataTypeHelper.IsValidType(type))
-						throw new Exception($"错误的数据类型：第{index}列, {type}");
+                    {
+						//Log.LogError($"错误的数据类型：第{index}列, {type}");
+						MessageBox.Show($"错误的数据类型：第{index}列, {type}");
+						Environment.Exit(1);
+					}
 					else if (IsNameExist(name))
-						throw new Exception($"检测到重复变量名称 : 第{index}列, {name}");
+                    {
+						//Log.LogError($"检测到重复变量名称 : 第{index}列, {name}");
+						MessageBox.Show($"检测到重复变量名称 : 第{index}列, {name}");
+						Environment.Exit(1);
+					}
 
 					string processedType = DataTypeHelper.GetProcessedType(type);
 					string[] subType = DataTypeHelper.GetSubType(type);
@@ -116,14 +143,17 @@ namespace ExcelToByteFile
 			// 如果没有ID列
 			if (!IsNameExist(ConstDefine.idColName))
 			{
-				throw new Exception("表格必须设立一个 'id' 列.");
+				MessageBox.Show($"{ExcelName}_{SheetName}表格必须设立一个 'id' 列.");
+				Environment.Exit(1);
 			}
 
+			curRow += GlobalConfig.Ins.skipRowBeginRead;
 			// 所有数据行
 			for (; curRow <= _sheet.LastRowNum; curRow++)
 			{
 				IRow row = _sheet.GetRow(curRow);
 
+				if (row == null) continue;
 				// 如果是注释行，就跳过
 				if (IsNoteRow(row)) continue;
                 // 如果是结尾行
@@ -199,7 +229,7 @@ namespace ExcelToByteFile
 
 		public string GetExportFileName()
 		{
-			if (_workbook.NumberOfSheets == 1)
+			if (_workbook.NumberOfSheets == 1 || GlobalConfig.Ins.onlyOneSheet)
 				return ExcelName;
 			else return ExcelName + "_" + SheetName;
 		}

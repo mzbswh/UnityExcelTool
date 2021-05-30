@@ -72,12 +72,15 @@ namespace ExcelToByteFile
                 else
                 {
                     string extension = Path.GetExtension(ExcelPath);
-                    throw new Exception($"未支持的Excel文件类型 : {extension}");
+                    Log.LogError($"未支持的Excel文件类型 : {extension}");
+                    return false;
+                    //throw new Exception($"未支持的Excel文件类型 : {extension}");
                 }
 
                 _evaluator = new XSSFFormulaEvaluator(_workbook);
 
-                for (int i = 0; i < _workbook.NumberOfSheets; i++)
+                int len = GlobalConfig.Ins.onlyOneSheet ? 1 : _workbook.NumberOfSheets;
+                for (int i = 0; i < len; i++)
                 {
                     ISheet sheet = _workbook.GetSheetAt(i);
                     SheetData sheetData = new SheetData(_workbook, sheet, _evaluator, ExcelName);
@@ -87,11 +90,16 @@ namespace ExcelToByteFile
 
                 // 如果没有找到有效的工作页
                 if (sheetDataList.Count == 0)
-                    throw new Exception($"没有发现包含 {ExcelName} 的页签");
+                {
+                    MessageBox.Show($"没有发现 {ExcelName} 的页签");
+                    Environment.Exit(1);
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"表格[{ExcelName}]加载错误：{ex}");
+                
+                Log.LogError($"表格[{ExcelName}]加载错误：{ex}");
+                //throw new Exception($"表格[{ExcelName}]加载错误：{ex}");
                 return false;
             }
             return true;
@@ -133,6 +141,7 @@ namespace ExcelToByteFile
             }
             catch (Exception ex)
             {
+                //Log.LogError($"表格[{ExcelName}]导出错误：{ex}");
                 MessageBox.Show($"表格[{ExcelName}]导出错误：{ex}");
                 return false;
             }

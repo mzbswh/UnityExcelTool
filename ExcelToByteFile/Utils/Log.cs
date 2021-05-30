@@ -13,39 +13,60 @@ namespace ExcelToByteFile
         /// 向窗口下方的文本框发送消息
         /// </summary>
         /// <param name="msg"></param>
-        public static void LogMessage(string msg, Color col)
+        public static void LogMessage(string msg, Color col, bool newLine = true)
         {
-            Program.mainForm.LogMessage(prefix + msg, col);
+            if (Program.IsCommandLine)
+                Console.WriteLine(msg);
+            else
+                Program.mainForm.LogMessage(prefix + msg, col);
         }
 
         public static void LogNormal(string msg)
         {
-            Program.mainForm.LogMessage(prefix + msg, Color.Black);
+            if (Program.IsCommandLine)
+                Console.WriteLine(msg);
+            else
+                Program.mainForm.LogMessage(prefix + msg, Color.Black);
         }
 
         public static void LogNormal(object msg)
         {
-            Program.mainForm.LogMessage(prefix + msg.ToString(), Color.Black);
+            if (Program.IsCommandLine)
+                Console.WriteLine(msg);
+            else
+                Program.mainForm.LogMessage(prefix + msg.ToString(), Color.Black);
         }
 
         public static void LogWarning(string msg)
         {
-            Program.mainForm.LogMessage(prefix + "Warning: " + msg, Color.Orange);
+            if (Program.IsCommandLine)
+                Console.WriteLine(msg);
+            else
+                Program.mainForm.LogMessage(prefix + "Warning: " + msg, Color.Orange);
         }
 
         public static void LogWarning(object msg)
         {
-            Program.mainForm.LogMessage(prefix + "Warning: " + msg.ToString(), Color.Orange);
+            if (Program.IsCommandLine)
+                Console.WriteLine(msg);
+            else
+                Program.mainForm.LogMessage(prefix + "Warning: " + msg.ToString(), Color.Orange);
         }
 
         public static void LogError(string msg)
         {
-            Program.mainForm.LogMessage(prefix + "Error: " + msg, Color.Red);
+            if (Program.IsCommandLine)
+                Console.WriteLine(msg);
+            else
+                Program.mainForm.LogMessage(prefix + "Error: " + msg, Color.Red);
         }
 
         public static void LogError(object msg)
         {
-            Program.mainForm.LogMessage(prefix + "Error: " + msg.ToString(), Color.Red);
+            if (Program.IsCommandLine)
+                Console.WriteLine(msg);
+            else
+                Program.mainForm.LogMessage(prefix + "Error: " + msg.ToString(), Color.Red);
         }
     }
 
