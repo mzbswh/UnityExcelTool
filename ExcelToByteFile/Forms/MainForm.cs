@@ -274,5 +274,15 @@ namespace ExcelToByteFile
         {
             
         }
+
+        private void byteFileOutputDir_MouseHover(object sender, EventArgs e)
+        {
+            toolTip1.Show(byteFileOutputDir.Text, byteFileOutputDir);
+        }
+
+        private void codeFileOutputDir_MouseHover(object sender, EventArgs e)
+        {
+            toolTip1.Show(codeFileOutputDir.Text, codeFileOutputDir);
+        }
     }
 }

@@ -138,6 +138,10 @@ namespace ExcelToByteFile
                     sb1.Append(@"   public sealed class ");
                     sb1.AppendLine(info.FileName);
                     sb1.AppendLine(@"   {");
+                    sb2.Append(@"   ///<summary>");
+                    sb2.Append($"主列: " + info.VariableNames[info.IdColIndex] +
+                        $" [{info.GetTypeByToken(info.Tokens[info.IdColIndex])}]");
+                    sb2.AppendLine(@"</summary>");
                     sb2.AppendLine(@"   " + info.FileName + @" = " + i.ToString() + @",");
                     for (int j = 0; j < info.VariableNames.Count; j++)
                     {

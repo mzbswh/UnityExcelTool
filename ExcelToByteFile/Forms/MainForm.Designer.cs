@@ -60,6 +60,7 @@ namespace ExcelToByteFile
             this.idColName = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.defaultSkip)).BeginInit();
             this.panel1.SuspendLayout();
@@ -68,7 +69,7 @@ namespace ExcelToByteFile
             // 
             // btn_selectFiles
             // 
-            this.btn_selectFiles.Location = new System.Drawing.Point(22, 12);
+            this.btn_selectFiles.Location = new System.Drawing.Point(10, 12);
             this.btn_selectFiles.Name = "btn_selectFiles";
             this.btn_selectFiles.Size = new System.Drawing.Size(150, 50);
             this.btn_selectFiles.TabIndex = 0;
@@ -87,10 +88,10 @@ namespace ExcelToByteFile
             this.lsBox_selectedFiles.ContextMenuStrip = this.contextMenuStrip1;
             this.lsBox_selectedFiles.FormattingEnabled = true;
             this.lsBox_selectedFiles.ItemHeight = 21;
-            this.lsBox_selectedFiles.Location = new System.Drawing.Point(217, 0);
+            this.lsBox_selectedFiles.Location = new System.Drawing.Point(178, 0);
             this.lsBox_selectedFiles.Name = "lsBox_selectedFiles";
             this.lsBox_selectedFiles.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.lsBox_selectedFiles.Size = new System.Drawing.Size(543, 298);
+            this.lsBox_selectedFiles.Size = new System.Drawing.Size(582, 298);
             this.lsBox_selectedFiles.TabIndex = 1;
             this.lsBox_selectedFiles.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lsBox_selectedFiles_KeyDown);
             // 
@@ -149,6 +150,7 @@ namespace ExcelToByteFile
             this.byteFileOutputDir.Size = new System.Drawing.Size(74, 21);
             this.byteFileOutputDir.TabIndex = 5;
             this.byteFileOutputDir.Text = "输出路径";
+            this.byteFileOutputDir.MouseHover += new System.EventHandler(this.byteFileOutputDir_MouseHover);
             // 
             // typeNullIsNote
             // 
@@ -188,7 +190,7 @@ namespace ExcelToByteFile
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(22, 68);
+            this.button1.Location = new System.Drawing.Point(10, 68);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(150, 50);
             this.button1.TabIndex = 14;
@@ -256,6 +258,7 @@ namespace ExcelToByteFile
             this.codeFileOutputDir.Size = new System.Drawing.Size(74, 21);
             this.codeFileOutputDir.TabIndex = 20;
             this.codeFileOutputDir.Text = "输出路径";
+            this.codeFileOutputDir.MouseHover += new System.EventHandler(this.codeFileOutputDir_MouseHover);
             // 
             // commetInFirstRow
             // 
@@ -283,7 +286,7 @@ namespace ExcelToByteFile
             // 
             // intro
             // 
-            this.intro.Location = new System.Drawing.Point(48, 140);
+            this.intro.Location = new System.Drawing.Point(40, 139);
             this.intro.Name = "intro";
             this.intro.Size = new System.Drawing.Size(87, 32);
             this.intro.TabIndex = 23;
@@ -350,6 +353,8 @@ namespace ExcelToByteFile
             this.idColName.Name = "idColName";
             this.idColName.Size = new System.Drawing.Size(208, 28);
             this.idColName.TabIndex = 25;
+            this.idColName.Text = "id";
+            this.idColName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.idColName.TextChanged += new System.EventHandler(this.textBox1_TextChanged_1);
             // 
             // label5
@@ -430,5 +435,6 @@ namespace ExcelToByteFile
         private System.Windows.Forms.ToolStripMenuItem 删除;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox idColName;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
