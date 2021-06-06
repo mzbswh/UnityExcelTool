@@ -13,19 +13,40 @@ public static class ExcelDataAccess
         dataSource.ReadManifest();
     }
 
-    /// <param name="variableName">变量名称：对应表格的第几列（从0开始）</param>
-    public static T Get<T>(ExcelName excelName, int id, int variableName)
+    /// <param name="variableName">变量名称：值为此变量在这一列的的字节偏移</param>
+    public static T Get<T, IdType>(ExcelName excelName, IdType id, int variableName)
     {
-        return dataSource.Get<T>(excelName, id, variableName);
+        return dataSource.Get<T, IdType>(excelName, id, variableName);
     }
 
-    public static List<T> GetList<T>(ExcelName excelName, int id, int variableName)
+    public static List<T> GetList<T, IdType>(ExcelName excelName, IdType id, int variableName)
     {
-        return dataSource.GetList<T>(excelName, id, variableName);
+        return dataSource.GetList<T, IdType>(excelName, id, variableName);
     }
 
-    public static Dictionary<K, V> GetDict<K, V>(ExcelName excelName, int id, int variableName)
+    public static Dictionary<K, V> GetDict<K, V, IdType>(ExcelName excelName, IdType id, int variableName)
     {
-        return dataSource.GetDict<K ,V>(excelName, id, variableName);
+        return dataSource.GetDict<K ,V, IdType>(excelName, id, variableName);
+    }
+
+    public static Vector2 GetVector2<IdType>(ExcelName excelName, IdType id, int variableName)
+    {
+        return dataSource.GetVector2<IdType>(excelName, id, variableName);
+    }
+    public static Vector2Int GetVector2Int<IdType>(ExcelName excelName, IdType id, int variableName)
+    {
+        return dataSource.GetVector2Int<IdType>(excelName, id, variableName);
+    }
+    public static Vector3 GetVector3<IdType>(ExcelName excelName, IdType id, int variableName)
+    {
+        return dataSource.GetVector3<IdType>(excelName, id, variableName);
+    }
+    public static Vector3Int GetVector3Int<IdType>(ExcelName excelName, IdType id, int variableName)
+    {
+        return dataSource.GetVector3Int<IdType>(excelName, id, variableName);
+    }
+    public static Vector4 GetVector4<IdType>(ExcelName excelName, IdType id, int variableName)
+    {
+        return dataSource.GetVector4<IdType>(excelName, id, variableName);
     }
 }

@@ -63,9 +63,14 @@ namespace ExcelToByteFile
 		private const string configFileStoreName = "config.data";
 
 		/// <summary>
+		/// id列名称
+		/// </summary>
+		public string idColName = "id";
+
+		/// <summary>
 		/// 读取配置文件
 		/// </summary>
-        public void ReadConfig()
+		public void ReadConfig()
         {
 			string appPath = Application.StartupPath;
 			string configPath = Path.Combine(appPath, configFileStoreName);
@@ -97,6 +102,8 @@ namespace ExcelToByteFile
 				commentInFirstRow = str == "True";
 				str = sr.ReadLine();
 				onlyOneSheet = str == "True";
+				str = sr.ReadLine();
+				idColName = str;
 
 				sr.Dispose();
 				sr.Close();
@@ -139,6 +146,7 @@ namespace ExcelToByteFile
 				sw.WriteLine(skipRowBeginRead.ToString());
 				sw.WriteLine(commentInFirstRow.ToString());
 				sw.WriteLine(onlyOneSheet.ToString());
+				sw.WriteLine(idColName);
 
 				sw.Flush();
 				sw.Dispose();

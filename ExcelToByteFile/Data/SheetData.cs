@@ -79,8 +79,7 @@ namespace ExcelToByteFile
 			if (_sheet.LastRowNum < ConstDefine.headFixedRowNum - 1)
             {
 				//Log.LogError($"Excel: {ExcelName} Sheet: {SheetName} 行数错误");
-				MessageBox.Show($"Excel: {ExcelName} Sheet: {SheetName} 行数错误");
-				Environment.Exit(1);
+				Log.LogError($"Excel: {ExcelName} Sheet: {SheetName} 行数错误");
 			}
 
 			IRow commentRow, typeRow, nameRow;
@@ -117,23 +116,20 @@ namespace ExcelToByteFile
 					if (string.IsNullOrEmpty(type))
                     {
 						//Log.LogError($"检测到空列：第{index}列");
-						MessageBox.Show($"检测到空列：第{index}列");
-						Environment.Exit(1);
+						Log.LogError($"Excel: {ExcelName} Sheet: {SheetName} 检测到空列：第{index}列");
 					}
 					else if (!DataTypeHelper.IsValidType(type))
                     {
 						//Log.LogError($"错误的数据类型：第{index}列, {type}");
-						MessageBox.Show($"错误的数据类型：第{index}列, {type}");
-						Environment.Exit(1);
+						Log.LogError($"错误的数据类型：Excel: {ExcelName} Sheet: {SheetName} 第{index}列, {type}");
 					}
 					else if (IsNameExist(name))
                     {
 						//Log.LogError($"检测到重复变量名称 : 第{index}列, {name}");
-						MessageBox.Show($"检测到重复变量名称 : 第{index}列, {name}");
-						Environment.Exit(1);
+						Log.LogError($"检测到重复变量名称 : Excel: {ExcelName} Sheet: {SheetName} 第{index}列, {name}");
 					}
 
-					string processedType = DataTypeHelper.GetProcessedType(type);
+					string processedType = DataTypeHelper.GetMainType(type);
 					string[] subType = DataTypeHelper.GetSubType(type);
 					HeadData head = new HeadData(name, processedType, subType, comment, index);
 					heads.Add(head);
@@ -141,10 +137,9 @@ namespace ExcelToByteFile
 			}
 
 			// 如果没有ID列
-			if (!IsNameExist(ConstDefine.idColName))
+			if (!IsNameExist(GlobalConfig.Ins.idColName))
 			{
-				MessageBox.Show($"{ExcelName}_{SheetName}表格必须设立一个 'id' 列.");
-				Environment.Exit(1);
+				Log.LogError($"{ExcelName}_{SheetName}表格必须设立一个 'id' 列.");
 			}
 
 			curRow += GlobalConfig.Ins.skipRowBeginRead;

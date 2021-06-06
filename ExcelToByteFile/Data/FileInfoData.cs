@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace ExcelToByteFile
 {
@@ -28,6 +29,8 @@ namespace ExcelToByteFile
         public int ColCount { get { return Tokens.Count; } }
 
         public int FileLength { get { return RowCount * RowLength; } }
+
+        public int IdColIndex { get; }
 
         /// <summary>
         /// sheet里每列变量的偏移(相对行首)
@@ -59,6 +62,7 @@ namespace ExcelToByteFile
             Tokens = GetTypeToken(data.heads);
             VariableNames = GetVariable(data.heads);
             Comments = GetComment(data.heads);
+            IdColIndex = VariableNames.FindIndex((x) => x == GlobalConfig.Ins.idColName);
         }
 
         /// <summary>
@@ -71,12 +75,16 @@ namespace ExcelToByteFile
             int len = 0;
             for (int i = 0; i < data.Count; i++)
             {
-                string type = data[i].Type;
+                string type = data[i].MainType;
                 if (DataTypeHelper.IsBaseType(type))
                     len += DataTypeHelper.GetBaseTypeLen(type);
-                else if (DataTypeHelper.IsListType(type))
-                    len += 4;
-                else len += 4;
+                else if (type == TypeDefine.vecType)
+                {
+                    int dimension = int.Parse(data[i].SubType[0]);
+                    len += dimension * 4;
+                    // MessageBox.Show("di = " + dimension + "  len = " + len);
+                }
+                else len += 4;  // list 和 dict
             }
             return len;
         }
@@ -93,10 +101,16 @@ namespace ExcelToByteFile
             offs.Add(off);    // 第一列的偏移一定是0
             for (int i = 0; i < data.Count; i++)
             {
-                string type = data[i].Type;
+                string type = data[i].MainType;
                 if (DataTypeHelper.IsBaseType(type))
                 {
                     off += DataTypeHelper.GetBaseTypeLen(type);
+                }
+                else if (type == TypeDefine.vecType)
+                {
+                    int dimension = int.Parse(data[i].SubType[0]);
+                    int len = dimension * 4;
+                    off += len;
                 }
                 else off += 4;
                 offs.Add(off);
@@ -111,20 +125,27 @@ namespace ExcelToByteFile
             for (int i = 0; i < data.Count; i++)
             {
                 HeadData head = data[i];
-                if (head.Type == TypeDefine.listType)
+                if (head.MainType == TypeDefine.listType)
                 {
-                    int baseToken = GetTypeToken(head.Type);
+                    int baseToken = GetTypeToken(head.MainType);
                     int elemToken = GetTypeToken(head.SubType[0]);
                     ls.Add((baseToken + elemToken));
                 }
-                else if (head.Type == TypeDefine.dictType)
+                else if (head.MainType == TypeDefine.vecType)
                 {
-                    int baseToken = GetTypeToken(head.Type);
+                    int baseToken = GetTypeToken(head.MainType);
+                    int dimen = int.Parse(head.SubType[0]);
+                    int valToken = GetTypeToken(head.SubType[1]);
+                    ls.Add(baseToken + dimen * 100 + valToken);
+                }
+                else if (head.MainType == TypeDefine.dictType)
+                {
+                    int baseToken = GetTypeToken(head.MainType);
                     int keyToken = GetTypeToken(head.SubType[0]);
                     int valToken = GetTypeToken(head.SubType[1]);
                     ls.Add(baseToken + keyToken * 100 + valToken);
                 }
-                else ls.Add(GetTypeToken(head.Type));
+                else ls.Add(GetTypeToken(head.MainType));
             }
             return ls;
         }
@@ -167,17 +188,24 @@ namespace ExcelToByteFile
                 case TypeDefine.stringType: return (int)TypeToken.String;
                 case TypeDefine.listType: return (int)TypeToken.List;
                 case TypeDefine.dictType: return (int)TypeToken.Dictionary;
+                case TypeDefine.vecType: return (int)TypeToken.Vector;
                 default: return (int)TypeToken.Null;
             }
         }
 
         public string GetTypeByToken(int token)
         {
+            if (token >= (int)TypeToken.Vector)
+            {
+                int dimen = (token - 20000) / 100;
+                int valToken = (token - 20000) % 100;
+                return "Vector" + (dimen).ToString() + ((TypeToken)valToken).ToString() ;
+            }
             if (token >= (int)TypeToken.Dictionary)
             {
                 int keyToken = (token - 10000) / 100;
                 int valToken = (token - 10000) % 100;
-                return "dict&lt;" + ((TypeToken)keyToken).ToString() + " ,"
+                return "Dict&lt;" + ((TypeToken)keyToken).ToString() + " ,"
                     + ((TypeToken)valToken).ToString() + "&gt;";
             }
             else if (token >= (int)TypeToken.List)

@@ -8,27 +8,6 @@ namespace ExcelToByteFile
 	public static class StringConvert
 	{
 		/// <summary>
-		/// 正则表达式
-		/// </summary>
-		private static Regex REGEX = new Regex(@"\{[-+]?[0-9]+\.?[0-9]*\}", RegexOptions.IgnoreCase);
-
-		/// <summary>
-		/// 替换掉字符串里的特殊字符
-		/// </summary>
-		public static string ReplaceSpecialChar(string str)
-		{
-			return str.Replace("\\n", "\n").Replace("\\r", "'\r").Replace("\\t", "\t");
-		}
-
-		/// <summary>
-		/// 字符串转换为字符串
-		/// </summary>
-		public static string StringToString(string str)
-		{
-			return str;
-		}
-
-		/// <summary>
 		/// 字符串转换为BOOL
 		/// </summary>
 		public static bool StringToBool(string str)
@@ -49,7 +28,7 @@ namespace ExcelToByteFile
 		/// 字符串转换为数值列表
 		/// </summary>
 		/// <param name="separator">分隔符</param>
-		public static List<T> StringToValueList<T>(string str, char separator)
+		public static List<T> StringToList<T>(string str, char separator)
 		{
 			List<T> result = new List<T>();
 			if (!String.IsNullOrEmpty(str))
@@ -115,66 +94,66 @@ namespace ExcelToByteFile
 			return dict;
 		}
 
-		/// <summary>
-		/// 转换为枚举
-		/// 枚举索引转换为枚举类型
-		/// </summary>
-		public static T IndexToEnum<T>(string index) where T : IConvertible
-		{
-			int enumIndex = (int)Convert.ChangeType(index, typeof(int));
-			return IndexToEnum<T>(enumIndex);
+		public static Vector2Int StringToVec2Int(string str)
+        {
+			Vector2Int vec;
+			string[] s = str.Split(ConstDefine.splitChar);
+			int x = int.Parse(s[0].Trim());
+			int y = int.Parse(s[1].Trim());
+			vec = new Vector2Int(x, y);
+			return vec;
 		}
-
-		/// <summary>
-		/// 转换为枚举
-		/// 枚举索引转换为枚举类型
-		/// </summary>
-		public static T IndexToEnum<T>(int index) where T : IConvertible
+		public static Vector2 StringToVec2(string str)
 		{
-			if (Enum.IsDefined(typeof(T), index) == false)
-			{
-				throw new ArgumentException($"Enum {typeof(T)} is not defined index {index}");
-			}
-			return (T)Enum.ToObject(typeof(T), index);
+			Vector2 vec;
+			string[] s = str.Split(ConstDefine.splitChar);
+			float x = float.Parse(s[0].Trim());
+			float y = float.Parse(s[1].Trim());
+			vec = new Vector2(x, y);
+			return vec;
 		}
-
-		/// <summary>
-		/// 转换为枚举
-		/// 枚举名称转换为枚举类型
-		/// </summary>
-		public static T NameToEnum<T>(string name)
+		public static Vector3Int StringToVec3Int(string str)
 		{
-			if (Enum.IsDefined(typeof(T), name) == false)
-			{
-				throw new ArgumentException($"Enum {typeof(T)} is not defined name {name}");
-			}
-			return (T)Enum.Parse(typeof(T), name);
+			Vector3Int vec;
+			string[] s = str.Split(ConstDefine.splitChar);
+			int x = int.Parse(s[0].Trim());
+			int y = int.Parse(s[1].Trim());
+			int z = int.Parse(s[2].Trim());
+			vec = new Vector3Int(x, y, z);
+			return vec;
 		}
-
-		/// <summary>
-		/// 字符串转换为参数列表
-		/// </summary>
-		public static List<float> StringToParams(string str)
+		public static Vector3 StringToVec3(string str)
 		{
-			List<float> result = new List<float>();
-			MatchCollection matches = REGEX.Matches(str);
-			for (int i = 0; i < matches.Count; i++)
-			{
-				string value = matches[i].Value.Trim('{', '}');
-				result.Add(StringToValue<float>(value));
-			}
-			return result;
+			Vector3 vec;
+			string[] s = str.Split(ConstDefine.splitChar);
+			float x = float.Parse(s[0].Trim());
+			float y = float.Parse(s[1].Trim());
+			float z = float.Parse(s[2].Trim());
+			vec = new Vector3(x, y, z);
+			return vec;
 		}
-
-		/// <summary>
-		/// 字符串转换为向量
-		/// </summary>
-		public static Vector3 StringToVector3(string str, char separator)
+		public static Vector4Int StringToVec4Int(string str)
 		{
-			List<float> values = StringToValueList<float>(str, separator);
-			return new Vector3(values[0], values[1], values[2]);
+			Vector4Int vec;
+			string[] s = str.Split(ConstDefine.splitChar);
+			int x = int.Parse(s[0].Trim());
+			int y = int.Parse(s[1].Trim());
+			int z = int.Parse(s[2].Trim());
+			int w = int.Parse(s[3].Trim());
+			vec = new Vector4Int(x, y, z, w);
+			return vec;
 		}
-
+		public static Vector4 StringToVec4(string str)
+		{
+			Vector4 vec;
+			string[] s = str.Split(ConstDefine.splitChar);
+			float x = float.Parse(s[0].Trim());
+			float y = float.Parse(s[1].Trim());
+			float z = float.Parse(s[2].Trim());
+			float w = float.Parse(s[3].Trim());
+			vec = new Vector4(x, y, z, w);
+			return vec;
+		}
 		
 	}
 }

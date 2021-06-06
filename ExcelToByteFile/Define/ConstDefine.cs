@@ -17,11 +17,6 @@ namespace ExcelToByteFile
         public const char noteChar = '#';
 
         /// <summary>
-        /// id列名称
-        /// </summary>
-        public const string idColName = "id";
-
-        /// <summary>
         /// excel头部固定行数
         /// </summary>
         public const int headFixedRowNum = 3; 
@@ -41,6 +36,7 @@ namespace ExcelToByteFile
         public const string stringType = "string";
         public const string longType = "long";
         public const string doubleType = "double";
+        public const string vecType = "vector";
         public const string listType = "list";
         public const string dictType = "dict";
     }
@@ -61,6 +57,7 @@ namespace ExcelToByteFile
         Long = 11,
         String = 12,
         List = 100,
-        Dictionary = 10000
+        Dictionary = 10000,
+        Vector = 20000,
     }
 }

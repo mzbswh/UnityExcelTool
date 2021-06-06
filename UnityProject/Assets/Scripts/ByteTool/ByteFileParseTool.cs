@@ -288,6 +288,41 @@ public static class ByteFileParseTool
 		return ReadDict<K, V>(data, index, keyToken, valToken);
 	}
 
+	public static Vector2 ReadVector2(byte[] data, int index)
+    {
+		float x = ReadFloat(data, index);
+		float y = ReadFloat(data, index + 4);
+		return new Vector2(x, y);
+    }
+	public static Vector2Int ReadVector2Int(byte[] data, int index)
+	{
+		int x = ReadInt(data, index);
+		int y = ReadInt(data, index + 4);
+		return new Vector2Int(x, y);
+	}
+	public static Vector3 ReadVector3(byte[] data, int index)
+	{
+		float x = ReadFloat(data, index);
+		float y = ReadFloat(data, index + 4);
+		float z = ReadFloat(data, index + 8);
+		return new Vector3(x, y, z);
+	}
+	public static Vector3Int ReadVector3Int(byte[] data, int index)
+	{
+		int x = ReadInt(data, index);
+		int y = ReadInt(data, index + 4);
+		int z = ReadInt(data, index + 8);
+		return new Vector3Int(x, y, z);
+	}
+	public static Vector4 ReadVector4(byte[] data, int index)
+	{
+		float x = ReadFloat(data, index);
+		float y = ReadFloat(data, index + 4);
+		float z = ReadFloat(data, index + 8);
+		float w = ReadFloat(data, index + 12);
+		return new Vector4(x, y, z, w);
+	}
+
 	static int GetReadLen<T>(TypeToken token, T val)
     {
 		switch(token)
@@ -313,7 +348,27 @@ public static class ByteFileParseTool
         }
     }
 
-	static TypeToken GetTypeToken<T>()
+	public static Type GetBaseTypeByBaseTypeToken(int token)
+    {
+		switch (token)
+        {
+			case (int)TypeToken.Bool: return typeof(bool);
+			case (int)TypeToken.SByte: return typeof(sbyte);
+			case (int)TypeToken.Byte: return typeof(byte);
+			case (int)TypeToken.UShort: return typeof(ushort);
+			case (int)TypeToken.Short: return typeof(short);
+			case (int)TypeToken.UInt: return typeof(uint);
+			case (int)TypeToken.Int: return typeof(int);
+			case (int)TypeToken.Float: return typeof(float);
+			case (int)TypeToken.ULong: return typeof(ulong);
+			case (int)TypeToken.Long: return typeof(long);
+			case (int)TypeToken.Double: return typeof(double);
+			case (int)TypeToken.String: return typeof(string);
+			default: return null;
+		}
+    }
+
+	public static TypeToken GetTypeToken<T>()
     {
 		Type t = typeof(T);
 		if (t == typeof(bool)) return TypeToken.Bool;
@@ -348,5 +403,6 @@ public enum TypeToken
 	Long = 11,
 	String = 12,
 	List = 100,
-	Dictionary = 10000
+	Dictionary = 10000,
+	Vector = 20000
 }

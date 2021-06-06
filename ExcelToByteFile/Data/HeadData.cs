@@ -17,7 +17,7 @@ namespace ExcelToByteFile
 		/// <summary>
 		/// 类型: 基本类型 列表为list 字典为dict
 		/// </summary>
-		public string Type { get; }
+		public string MainType { get; }
 
 		/// <summary>
 		/// 如果是list，dict, vector，会有子类型
@@ -37,7 +37,7 @@ namespace ExcelToByteFile
 		public HeadData(string name, string type,string[] subType, string comment, int cellNum)
 		{
 			Name = name;
-			Type = type;
+			MainType = type;
 			SubType = subType;
 			Comment = comment;
 			CellNum = cellNum;

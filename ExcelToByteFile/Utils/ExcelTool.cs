@@ -29,15 +29,14 @@ namespace ExcelToByteFile
                 {
                     if (GlobalConfig.Ins.autoCompletion)
                     {
-                        string type = sheet.heads[i].Type;
+                        string type = sheet.heads[i].MainType;
                         if (DataTypeHelper.IsBaseType(type) && type != TypeDefine.stringType)
                             value = GlobalConfig.Ins.autoCompletionVal;
                         else if (type == TypeDefine.stringType)
                             value = string.Empty;
                         else
                         {
-                            MessageBox.Show($"此单元格数值不能为空，第{cellNum}列");
-                            Environment.Exit(1);
+                            Log.LogError($"此列单元格数值不能为空，第{cellNum}列");
                         }
                             
                     }
@@ -73,14 +72,12 @@ namespace ExcelToByteFile
                             return val.StringValue;
                         else
                         {
-                            MessageBox.Show($"未支持的公式类型 : {val.CellType}");
-                            Environment.Exit(1);
+                            Log.LogError($"未支持的公式类型 : {val.CellType}");
                             return string.Empty;
                         }
                     }
                 default:
-                    MessageBox.Show($"未支持的单元格类型 : {cell.CellType}");
-                    Environment.Exit(1);
+                    Log.LogError($"未支持的单元格类型 : {cell.CellType}");
                     return string.Empty;
             }
         }

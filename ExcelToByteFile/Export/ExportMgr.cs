@@ -4,6 +4,7 @@ using System.Text;
 using System.Linq;
 using System.IO;
 using System.Windows.Forms;
+using System.Threading.Tasks;
 
 namespace ExcelToByteFile
 {
@@ -16,7 +17,7 @@ namespace ExcelToByteFile
 
 	public class ExportMgr
     {
-        static ByteBuffer fileBuffer = new ByteBuffer(ConfigDefine.fileStreamMaxLen);
+        static ByteWriteBuffer fileBuffer = new ByteWriteBuffer(ConfigDefine.fileStreamMaxLen);
         static List<FileInfoData> fileDatas = new List<FileInfoData>();
 
         public static void Export(List<string> fileList)
@@ -31,6 +32,12 @@ namespace ExcelToByteFile
                 fileBuffer.Clear();
                 string filePath = fileList[i];
                 ExcelData excelFile = new ExcelData(filePath);
+                if (!Program.IsCommandLine)
+                {
+
+                    Program.mainForm?.Invoke(new Action(() => { Program.mainForm.SetProgress(i + 1, "正在生成：" + excelFile.ExcelName); }));
+                }
+                   
                 try
                 {
                     if (excelFile.Load())
@@ -41,7 +48,7 @@ namespace ExcelToByteFile
                 }
                 catch
                 {
-                    Environment.Exit(1);
+                    Log.LogError($"{excelFile.ExcelName} 加载错误");
                 }
                 
             }
@@ -49,12 +56,11 @@ namespace ExcelToByteFile
             ExportManifest(fileDatas);
             // 导出cs定义文件
             ExportExcelDefineCSCode(GlobalConfig.Ins.codeFileOutputDir, fileDatas);
-            Log.LogNormal("生成完成！");
         }
 
         public static void ExportOneSheet(string path, SheetData sheet)
         {
-            Log.LogNormal($"正在生成 {sheet.GetExportFileName()}.bytes {sheet.rows.Count}行 {sheet.heads.Count}列 ...");
+            Log.LogConsole($"正在生成 {sheet.GetExportFileName()}.bytes {sheet.rows.Count}行 {sheet.heads.Count}列 ...");
             FileInfoData fileData = new FileInfoData(sheet);
             fileDatas.Add(fileData);
             int heapStart = fileData.FileLength;
@@ -73,7 +79,7 @@ namespace ExcelToByteFile
             }
 
             // 创建文件
-            string filePath = StringHelper.MakeSaveFullPath(path + Path.DirectorySeparatorChar, $"{sheet.GetExportFileName()}.bytes");
+            string filePath = StringHelper.MakeFullPath(path + Path.DirectorySeparatorChar, $"{sheet.GetExportFileName()}.bytes");
             using (FileStream fs = new FileStream(filePath, FileMode.Create))
             {
                 byte[] data = fileBuffer.GetBuffer();
@@ -84,7 +90,7 @@ namespace ExcelToByteFile
 
         private static void ExportManifest(List<FileInfoData> fileDatas)
         {
-            Log.LogNormal("正在生成 manifest.bytes ...");
+            Log.LogConsole("正在生成 manifest.bytes ...");
             string path = GlobalConfig.Ins.byteFileOutputDir;
             fileBuffer.Clear();
             // 写入信息
@@ -94,16 +100,16 @@ namespace ExcelToByteFile
             {
                 FileInfoData data = fileDatas[i];
                 fileBuffer.WriteString(data.FileName);
+                fileBuffer.WriteInt(data.IdColIndex);
                 fileBuffer.WriteInt((int)data.RowCount);
                 fileBuffer.WriteInt((int)data.RowLength);
-                fileBuffer.WriteListInt(data.ColOffset);
                 fileBuffer.WriteListInt(data.Tokens);
-                //fileBuffer.WriteListString(data.VariableNames);
-                //fileBuffer.WriteListString(data.Comments);
+                fileBuffer.WriteListInt(data.ColOffset);
+                fileBuffer.WriteListString(data.VariableNames);
             }
 
             // 创建文件
-            string filePath = StringHelper.MakeSaveFullPath(path, "manifest.bytes");
+            string filePath = StringHelper.MakeFullPath(path, "manifest.bytes");
             using (FileStream fs = new FileStream(filePath, FileMode.Create))
             {
                 byte[] data = fileBuffer.GetBuffer();
@@ -114,7 +120,7 @@ namespace ExcelToByteFile
 
         private static void ExportExcelDefineCSCode(string path, List<FileInfoData> data)
         {
-            Log.LogNormal("正在生成 ExcelDefine.cs ...");
+            Log.LogConsole("正在生成 ExcelDefine.cs ...");
             using (StreamWriter sw = new StreamWriter(
                 path + Path.DirectorySeparatorChar + "ExcelDefine" + ".cs", 
                 false, 
@@ -143,7 +149,7 @@ namespace ExcelToByteFile
                             int a = 0;
                             while(b)
                             {
-                                varName = raw + a.ToString();
+                                varName = raw + "_c_" + a.ToString();
                                 if (!info.VariableNames.Contains(varName))
                                 {
                                     b = false;
@@ -156,7 +162,8 @@ namespace ExcelToByteFile
                         sb1.Append($"[{type}] " + info.Comments[j]);
                         sb1.AppendLine(@"</summary>");
                         sb1.Append(@"       public const int ");
-                        sb1.AppendLine(varName + @" = " + j.ToString() + ";");
+                        int val = (j << 16) + info.ColOffset[j];
+                        sb1.AppendLine(varName + @" = " + val.ToString() + ";");
                     }
                     sb1.AppendLine(@"   }");
                 }
@@ -167,9 +174,9 @@ namespace ExcelToByteFile
             }
         }
 
-		private static void WriteCell(ByteBuffer buffer, HeadData head, string value)
+		private static void WriteCell(ByteWriteBuffer buffer, HeadData head, string value)
 		{
-			switch (head.Type)
+			switch (head.MainType)
             {
                 case TypeDefine.sbyteType:
                     buffer.WriteSbyte(StringConvert.StringToValue<sbyte>(value));
@@ -213,56 +220,102 @@ namespace ExcelToByteFile
                 case TypeDefine.dictType:
                     WriteDict(buffer, head.SubType, value);
                     break;
+                case TypeDefine.vecType:
+                    WriteVect(buffer, head.SubType, value);
+                    break;
 				default: 
-                    MessageBox.Show($"Not support head type {head.Type}");
-                    Environment.Exit(1);
+                    Log.LogError($"不支持的类型 {head.MainType}");
                     break;
 			}
 		}
 
-		private static void WriteList(ByteBuffer buffer, string subType, string value)
+		private static void WriteList(ByteWriteBuffer buffer, string subType, string value)
         {
 			switch(subType)
             {
                 case TypeDefine.sbyteType:
-                    buffer.WriteListSByte(StringConvert.StringToValueList<sbyte>(value, ConstDefine.splitChar));
+                    buffer.WriteListSByte(StringConvert.StringToList<sbyte>(value, ConstDefine.splitChar));
                     break;
                 case TypeDefine.uintType:
-                    buffer.WriteListUInt(StringConvert.StringToValueList<uint>(value, ConstDefine.splitChar));
+                    buffer.WriteListUInt(StringConvert.StringToList<uint>(value, ConstDefine.splitChar));
                     break;
                 case TypeDefine.ulongType:
-                    buffer.WriteListULong(StringConvert.StringToValueList<ulong>(value, ConstDefine.splitChar));
+                    buffer.WriteListULong(StringConvert.StringToList<ulong>(value, ConstDefine.splitChar));
                     break;
                 case TypeDefine.ushortType:
-                    buffer.WriteListUShort(StringConvert.StringToValueList<ushort>(value, ConstDefine.splitChar));
+                    buffer.WriteListUShort(StringConvert.StringToList<ushort>(value, ConstDefine.splitChar));
                     break;
                 case TypeDefine.boolType:
-                    buffer.WriteListBool(StringConvert.StringToValueList<bool>(value, ConstDefine.splitChar));
+                    buffer.WriteListBool(StringConvert.StringToList<bool>(value, ConstDefine.splitChar));
                     break;
                 case TypeDefine.byteType:
-                    buffer.WriteListByte(StringConvert.StringToValueList<byte>(value, ConstDefine.splitChar));
+                    buffer.WriteListByte(StringConvert.StringToList<byte>(value, ConstDefine.splitChar));
                     break;
                 case TypeDefine.shortType:
-                    buffer.WriteListShort(StringConvert.StringToValueList<short>(value, ConstDefine.splitChar));
+                    buffer.WriteListShort(StringConvert.StringToList<short>(value, ConstDefine.splitChar));
                     break;
                 case TypeDefine.intType:
-                    buffer.WriteListInt(StringConvert.StringToValueList<int>(value, ConstDefine.splitChar));
+                    buffer.WriteListInt(StringConvert.StringToList<int>(value, ConstDefine.splitChar));
                     break;
                 case TypeDefine.floatType:
-                    buffer.WriteListFloat(StringConvert.StringToValueList<float>(value, ConstDefine.splitChar)); break;
+                    buffer.WriteListFloat(StringConvert.StringToList<float>(value, ConstDefine.splitChar)); break;
                 case TypeDefine.stringType:
                     buffer.WriteListString(StringConvert.StringToStringList(value)); break;
                 case TypeDefine.longType:
-                    buffer.WriteListLong(StringConvert.StringToValueList<long>(value, ConstDefine.splitChar)); break;
+                    buffer.WriteListLong(StringConvert.StringToList<long>(value, ConstDefine.splitChar)); break;
                 case TypeDefine.doubleType:
-                    buffer.WriteListDouble(StringConvert.StringToValueList<double>(value, ConstDefine.splitChar)); break;
+                    buffer.WriteListDouble(StringConvert.StringToList<double>(value, ConstDefine.splitChar)); break;
             }
         }
 
-        private static void WriteDict(ByteBuffer buffer, string[] subType, string value)
+        private static void WriteDict(ByteWriteBuffer buffer, string[] subType, string value)
         {
             var dict = StringConvert.StringToDict<string, string>(value);
             buffer.WriteDict(dict, subType[0], subType[1]);
+        }
+
+        private static void WriteVect(ByteWriteBuffer buffer, string[] subType, string value)
+        {
+            int dimen = int.Parse(subType[0]);
+            if (dimen == 2)
+            {
+                if (subType[1] == TypeDefine.intType)
+                {
+                    Vector2Int vec = StringConvert.StringToVec2Int(value);
+                    buffer.WriteVec2Int(vec);
+                }
+                else
+                {
+                    Vector2 vec = StringConvert.StringToVec2(value);
+                    buffer.WriteVec2(vec);
+                }
+            }
+            else if (dimen == 3)
+            {
+                if (subType[1] == TypeDefine.intType)
+                {
+                    Vector3Int vec = StringConvert.StringToVec3Int(value);
+                    buffer.WriteVec3Int(vec);
+                }
+                else
+                {
+                    Vector3 vec = StringConvert.StringToVec3(value);
+                    buffer.WriteVec3(vec);
+                }
+            }
+            else
+            {
+                if (subType[1] == TypeDefine.intType)
+                {
+                    Vector4Int vec = StringConvert.StringToVec4Int(value);
+                    buffer.WriteVec4Int(vec);
+                }
+                else
+                {
+                    Vector4 vec = StringConvert.StringToVec4(value);
+                    buffer.WriteVec4(vec);
+                }
+            }
         }
 	}
 }

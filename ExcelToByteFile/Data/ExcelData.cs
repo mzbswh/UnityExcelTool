@@ -72,7 +72,7 @@ namespace ExcelToByteFile
                 else
                 {
                     string extension = Path.GetExtension(ExcelPath);
-                    Log.LogError($"未支持的Excel文件类型 : {extension}");
+                    Log.LogMessageBox($"未支持的Excel文件类型 : {extension}");
                     return false;
                     //throw new Exception($"未支持的Excel文件类型 : {extension}");
                 }
@@ -91,14 +91,13 @@ namespace ExcelToByteFile
                 // 如果没有找到有效的工作页
                 if (sheetDataList.Count == 0)
                 {
-                    MessageBox.Show($"没有发现 {ExcelName} 的页签");
-                    Environment.Exit(1);
+                    Log.LogError($"没有发现 {ExcelName} 的页签");
                 }
             }
             catch (Exception ex)
             {
                 
-                Log.LogError($"表格[{ExcelName}]加载错误：{ex}");
+                Log.LogMessageBox($"表格[{ExcelName}]加载错误：{ex}");
                 //throw new Exception($"表格[{ExcelName}]加载错误：{ex}");
                 return false;
             }

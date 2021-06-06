@@ -14,7 +14,7 @@ namespace ExcelToByteFile
         /// <returns></returns>
         public static bool IsValidType(string type)
         {
-            if (IsBaseType(type) || IsListType(type) || IsDictType(type))
+            if (IsBaseType(type) || IsListType(type) || IsDictType(type) || IsVectorType(type))
                 return true;
             else return false;
         }
@@ -45,6 +45,23 @@ namespace ExcelToByteFile
             return false;
         }
 
+        public static bool IsVectorType(string type)
+        {
+            type = type.Replace(" ", "").ToLower();
+            string pattern = @"vector(\d)([a-zA-Z]+)";
+            Match m = Regex.Match(type, pattern);
+            if (m.Success)
+            {
+                int val = int.Parse(m.Groups[1].Value);
+                if (m.Groups[2].Value == TypeDefine.intType  || m.Groups[2].Value == TypeDefine.floatType)
+                {
+                    if (val == 2 || val ==3 || val == 4)
+                        return true;
+                }
+            }
+            return false;
+        }
+
         /// <summary>
         /// 是否是列表类型
         /// </summary>
@@ -52,7 +69,7 @@ namespace ExcelToByteFile
         /// <returns></returns>
         public static bool IsListType(string type)
         {
-            type = type.Replace(" ", "");
+            type = type.Replace(" ", "").ToLower();
             string pattern = @"list<([a-zA-Z]+)>";
             Match m = Regex.Match(type, pattern);
             if (m.Success)
@@ -69,7 +86,7 @@ namespace ExcelToByteFile
         /// <returns></returns>
         public static bool IsDictType(string type)
         {
-            type = type.Replace(" ", "");
+            type = type.Replace(" ", "").ToLower();
             string pattern = @"dict<([a-zA-Z]+),([a-zA-Z]+)>";
             Match m = Regex.Match(type, pattern);
             if (m.Success)
@@ -80,10 +97,17 @@ namespace ExcelToByteFile
             return false;
         }
 
-        public static string GetProcessedType(string rawType)
+        /// <summary>
+        /// 获取主类型
+        /// </summary>
+        /// <param name="rawType"></param>
+        /// <returns></returns>
+        public static string GetMainType(string rawType)
         {
+            rawType = rawType.Replace(" ", "").ToLower();
             if (IsBaseType(rawType)) return rawType;
             else if (IsListType(rawType)) return TypeDefine.listType;
+            else if (IsVectorType(rawType)) return TypeDefine.vecType;
             else return TypeDefine.dictType;
         }
 
@@ -94,9 +118,17 @@ namespace ExcelToByteFile
         /// <returns></returns>
         public static string[] GetSubType(string type)
         {
-            type = type.Replace(" ", "");
+            type = type.Replace(" ", "").ToLower();
             string[] subType = null;
-            if (IsListType(type))
+            if (IsVectorType(type))
+            {
+                subType = new string[2];
+                string pattern = @"vector(\d)([a-zA-Z]+)";
+                Match m = Regex.Match(type, pattern);
+                subType[0] = m.Groups[1].Value;
+                subType[1] = m.Groups[2].Value;
+            }
+            else if (IsListType(type))
             {
                 subType = new string[1];
                 string pattern = @"list<([a-zA-Z]+)>";
