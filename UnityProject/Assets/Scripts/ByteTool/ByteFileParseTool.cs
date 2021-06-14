@@ -47,7 +47,7 @@ public static class ByteFileParseTool
     }
 	public static bool ReadBool(byte[] data, int index)
     {
-		return data[index] == 1;
+		return data[index] >= 1;
 	}
 	public static byte ReadByte(byte[] data, int index)
     {
@@ -97,7 +97,11 @@ public static class ByteFileParseTool
 	}
 	public static string ReadString(byte[] data, int index, bool indexIsAddr = true)
 	{
-		if (indexIsAddr) index = ReadInt(data, index);
+		if (indexIsAddr)
+        {
+			index = ReadInt(data, index);
+			if (index < 0) return string.Empty;
+		}
 		int count = ReadUShort(data, index);
 		index += 2;
 		return Encoding.UTF8.GetString(data, index, count);
@@ -110,6 +114,7 @@ public static class ByteFileParseTool
 	public static List<bool> ReadListBool(byte[] data, int index)
     {
 		index = ReadInt(data, index);
+		if (index < 0) return new List<bool>();
 		int count = ReadUShort(data, index);
 		index += 2;
 		List<bool> ls = new List<bool>(count);
@@ -123,6 +128,7 @@ public static class ByteFileParseTool
 	public static List<sbyte> ReadListSByte(byte[] data, int index)
 	{
 		index = ReadInt(data, index);
+		if (index < 0) return new List<sbyte>();
 		int count = ReadUShort(data, index);
 		index += 2;
 		List<sbyte> ls = new List<sbyte>(count);
@@ -136,6 +142,7 @@ public static class ByteFileParseTool
 	public static List<byte> ReadListByte(byte[] data, int index)
 	{
 		index = ReadInt(data, index);
+		if (index < 0) return new List<byte>();
 		int count = ReadUShort(data, index);
 		index += 2;
 		List<byte> ls = new List<byte>(count);
@@ -149,6 +156,7 @@ public static class ByteFileParseTool
 	public static List<ushort> ReadListUShort(byte[] data, int index)
 	{
 		index = ReadInt(data, index);
+		if (index < 0) return new List<ushort>();
 		int count = ReadUShort(data, index);
 		index += 2;
 		List<ushort> ls = new List<ushort>(count);
@@ -162,6 +170,7 @@ public static class ByteFileParseTool
 	public static List<short> ReadListShort(byte[] data, int index)
 	{
 		index = ReadInt(data, index);
+		if (index < 0) return new List<short>();
 		int count = ReadUShort(data, index);
 		index += 2;
 		List<short> ls = new List<short>(count);
@@ -175,6 +184,7 @@ public static class ByteFileParseTool
 	public static List<uint> ReadListUInt(byte[] data, int index)
 	{
 		index = ReadInt(data, index);
+		if (index < 0) return new List<uint>();
 		int count = ReadUShort(data, index);
 		index += 2;
 		List<uint> ls = new List<uint>(count);
@@ -188,6 +198,7 @@ public static class ByteFileParseTool
 	public static List<int> ReadListInt(byte[] data, int index)
 	{
 		index = ReadInt(data, index);
+		if (index < 0) return new List<int>();
 		int count = ReadUShort(data, index);
 		index += 2;
 		List<int> ls = new List<int>(count);
@@ -201,6 +212,7 @@ public static class ByteFileParseTool
 	public static List<float> ReadListFloat(byte[] data, int index)
 	{
 		index = ReadInt(data, index);
+		if (index < 0) return new List<float>();
 		int count = ReadUShort(data, index);
 		index += 2;
 		List<float> ls = new List<float>(count);
@@ -214,6 +226,7 @@ public static class ByteFileParseTool
 	public static List<ulong> ReadListULong(byte[] data, int index)
 	{
 		index = ReadInt(data, index);
+		if (index < 0) return new List<ulong>();
 		int count = ReadUShort(data, index);
 		index += 2;
 		List<ulong> ls = new List<ulong>(count);
@@ -227,6 +240,7 @@ public static class ByteFileParseTool
 	public static List<long> ReadListLong(byte[] data, int index)
 	{
 		index = ReadInt(data, index);
+		if (index < 0) return new List<long>();
 		int count = ReadUShort(data, index);
 		index += 2;
 		List<long> ls = new List<long>(count);
@@ -240,6 +254,7 @@ public static class ByteFileParseTool
 	public static List<double> ReadListDouble(byte[] data, int index)
 	{
 		index = ReadInt(data, index);
+		if (index < 0) return new List<double>();
 		int count = ReadUShort(data, index);
 		index += 2;
 		List<double> ls = new List<double>(count);
@@ -253,6 +268,7 @@ public static class ByteFileParseTool
 	public static List<string> ReadListString(byte[] data, int index)
 	{
 		index = ReadInt(data, index);
+		if (index < 0) return new List<string>();
 		int count = ReadUShort(data, index);
 		index += 2;
 		List<string> ls = new List<string>(count);
@@ -269,6 +285,7 @@ public static class ByteFileParseTool
     {
 		Dictionary<K, V> dict = new Dictionary<K, V>();
 		index = ReadInt(data, index);
+		if (index < 0) return new Dictionary<K, V>();
 		int count = ReadUShort(data, index);
 		index += 2;
 		for (int i = 0; i < count; i++)

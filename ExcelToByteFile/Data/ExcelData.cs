@@ -83,6 +83,11 @@ namespace ExcelToByteFile
                 for (int i = 0; i < len; i++)
                 {
                     ISheet sheet = _workbook.GetSheetAt(i);
+                    if (GlobalConfig.Ins.customExportSheetPrefix)
+                    {
+                        if (!sheet.SheetName.StartsWith(GlobalConfig.Ins.customSheetPrefix))
+                            continue;
+                    }
                     SheetData sheetData = new SheetData(_workbook, sheet, _evaluator, ExcelName);
                     sheetData.Load();
                     sheetDataList.Add(sheetData);

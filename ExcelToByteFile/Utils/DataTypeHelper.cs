@@ -48,12 +48,12 @@ namespace ExcelToByteFile
         public static bool IsVectorType(string type)
         {
             type = type.Replace(" ", "").ToLower();
-            string pattern = @"vector(\d)([a-zA-Z]+)";
+            string pattern = @"vector(\d)([a-zA-Z]*)";
             Match m = Regex.Match(type, pattern);
             if (m.Success)
             {
                 int val = int.Parse(m.Groups[1].Value);
-                if (m.Groups[2].Value == TypeDefine.intType  || m.Groups[2].Value == TypeDefine.floatType)
+                if (m.Groups[2].Value == TypeDefine.intType || m.Groups[2].Value == string.Empty)
                 {
                     if (val == 2 || val ==3 || val == 4)
                         return true;
@@ -123,7 +123,7 @@ namespace ExcelToByteFile
             if (IsVectorType(type))
             {
                 subType = new string[2];
-                string pattern = @"vector(\d)([a-zA-Z]+)";
+                string pattern = @"vector(\d)([a-zA-Z]*)";
                 Match m = Regex.Match(type, pattern);
                 subType[0] = m.Groups[1].Value;
                 subType[1] = m.Groups[2].Value;

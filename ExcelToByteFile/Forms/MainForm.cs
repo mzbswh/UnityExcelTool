@@ -35,6 +35,12 @@ namespace ExcelToByteFile
             commetInFirstRow.Checked = GlobalConfig.Ins.commentInFirstRow;
             onlyOneSheet.Checked = GlobalConfig.Ins.onlyOneSheet;
             idColName.Text = GlobalConfig.Ins.idColName;
+            firstColIsPrimary.Checked = GlobalConfig.Ins.firstColIsPrimary;
+            customExportSheetPrefix.Checked = GlobalConfig.Ins.customExportSheetPrefix;
+            customSheetPrefix.Text = GlobalConfig.Ins.customSheetPrefix;
+            structInfoOutputDir.Text = GlobalConfig.Ins.structOutputDir;
+            generateStructCs.Checked = GlobalConfig.Ins.generateStructInfoCs;
+            //MessageBox.Show(GlobalConfig.Ins.structOutputDir + " " + GlobalConfig.Ins.generateStructInfoCs);
         }
 
         /// <summary>
@@ -183,7 +189,7 @@ namespace ExcelToByteFile
 
         private void intro_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("1. Excel必须设置id列\n" +
+            MessageBox.Show("1. 类型单元格或一行（除前3行）第一个单元格包含 # 时为注释列或行\n" +
                 "2. 列表填写格式 xx,xx,xx 逗号为分隔符\n" +
                 "3. 字典填写格式 {key1, val1}, {k2, v2}\n" +
                 "4. 列表或字典里各元素及分隔符间可加任意长度空格\n" +
@@ -210,7 +216,7 @@ namespace ExcelToByteFile
 
         private void StartExport(int progressMax)
         {
-            panel1.Enabled = false;
+            selectStructDir.Enabled = false;
             panel2.Visible = true;
             progressBar1.Minimum = 0;
             progressBar1.Maximum = progressMax;
@@ -218,7 +224,7 @@ namespace ExcelToByteFile
 
         private void EndExport()
         {
-            panel1.Enabled = true;
+            selectStructDir.Enabled = true;
             panel2.Visible = false;
         }
 
@@ -272,7 +278,7 @@ namespace ExcelToByteFile
 
         private void textBox1_TextChanged_1(object sender, EventArgs e)
         {
-            
+            GlobalConfig.Ins.idColName = idColName.Text;
         }
 
         private void byteFileOutputDir_MouseHover(object sender, EventArgs e)
@@ -283,6 +289,57 @@ namespace ExcelToByteFile
         private void codeFileOutputDir_MouseHover(object sender, EventArgs e)
         {
             toolTip1.Show(codeFileOutputDir.Text, codeFileOutputDir);
+        }
+
+        private void checkBox1_CheckedChanged_2(object sender, EventArgs e)
+        {
+            GlobalConfig.Ins.firstColIsPrimary = firstColIsPrimary.Checked;
+            if (firstColIsPrimary.Checked)
+            {
+                label5.Enabled = false;
+                idColName.Enabled = false;
+            }
+            else
+            {
+                label5.Enabled = true;
+                idColName.Enabled = true;
+            }
+        }
+
+        private void customExportSheetPrefix_CheckedChanged(object sender, EventArgs e)
+        {
+            GlobalConfig.Ins.customExportSheetPrefix = customExportSheetPrefix.Checked;
+        }
+
+        private void customSheetPrefix_TextChanged(object sender, EventArgs e)
+        {
+            GlobalConfig.Ins.customSheetPrefix = customSheetPrefix.Text;
+        }
+
+        private void checkBox1_CheckedChanged_3(object sender, EventArgs e)
+        {
+            GlobalConfig.Ins.generateStructInfoCs = generateStructCs.Checked;
+            if (generateStructCs.Checked)
+            {
+                button3.Enabled = true;
+                structInfoOutputDir.Enabled = true;
+            }
+            else
+            {
+                button3.Enabled = false;
+                structInfoOutputDir.Enabled = false;
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            GlobalConfig.Ins.structOutputDir = OpenSelectFolderDialog(GlobalConfig.Ins.structOutputDir);
+            structInfoOutputDir.Text = GlobalConfig.Ins.structOutputDir;
+        }
+
+        private void structInfoOutputDir_MouseHover(object sender, EventArgs e)
+        {
+            toolTip1.Show(structInfoOutputDir.Text, structInfoOutputDir);
         }
     }
 }

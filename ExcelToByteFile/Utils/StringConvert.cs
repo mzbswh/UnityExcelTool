@@ -38,7 +38,7 @@ namespace ExcelToByteFile
 				{
 					if (!String.IsNullOrEmpty(split))
 					{
-						result.Add((T)Convert.ChangeType(split, typeof(T)));
+						result.Add((T)Convert.ChangeType(split.Trim(), typeof(T)));
 					}
 				}
 			}
@@ -58,7 +58,7 @@ namespace ExcelToByteFile
 				foreach (string split in splits)
 				{
 					string s = split.Trim();
-					if (s.StartsWith('\"')) s = s[1..^1];
+					if (s.StartsWith('\"') && s.EndsWith('\"')) s = s[1..^1];
 					s = s.Replace("\\,", ",");
 
 					if (!String.IsNullOrEmpty(s))
@@ -85,8 +85,8 @@ namespace ExcelToByteFile
 				string key = keyValPair[0].Trim();
 				string val = keyValPair[1].Trim();
 
-				if (key.StartsWith('\"')) key = key[1..^1];
-				if (val.StartsWith('\"')) val = val[1..^1];
+				if (key.StartsWith('\"') && key.EndsWith('\"')) key = key[1..^1];
+				if (val.StartsWith('\"') && val.StartsWith('\"')) val = val[1..^1];
 				key = key.Replace("\\,", ",");
 				val = val.Replace("\\,", ",");
 				dict.Add((T1)Convert.ChangeType(key, typeof(T1)), (T2)Convert.ChangeType(val, typeof(T2)));

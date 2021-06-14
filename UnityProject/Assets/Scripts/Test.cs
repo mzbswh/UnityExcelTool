@@ -9,6 +9,22 @@ public class Test : MonoBehaviour
 
     private void Start()
     {
+        Stopwatch sw = new Stopwatch();
+        sw.Start();
+        ExcelDataAccess.Init();
+        sw.Stop();
+
+        EDS_Test t = new EDS_Test(1);
+        Debug.LogError(t.douType);
+        //foreach (var i in t.lss)
+        //{
+        //    Debug.LogError(i);
+        //    //Debug.LogError($"key {i.Key} val {i.Value}");
+        //}
+        //Debug.LogError($"{t.v4.x}, {t.v4.y}, {t.v4.z}, {t.v4.w}");
+        //Debug.LogError(t.v3i);
+        //Debug.LogError(t.v4);
+
     }
 
 }

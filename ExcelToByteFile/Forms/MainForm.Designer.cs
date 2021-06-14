@@ -56,14 +56,20 @@ namespace ExcelToByteFile
             this.intro = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.progressLab = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.selectStructDir = new System.Windows.Forms.Panel();
+            this.structInfoOutputDir = new System.Windows.Forms.Label();
+            this.button3 = new System.Windows.Forms.Button();
+            this.generateStructCs = new System.Windows.Forms.CheckBox();
+            this.customSheetPrefix = new System.Windows.Forms.TextBox();
+            this.customExportSheetPrefix = new System.Windows.Forms.CheckBox();
+            this.firstColIsPrimary = new System.Windows.Forms.CheckBox();
             this.idColName = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.defaultSkip)).BeginInit();
-            this.panel1.SuspendLayout();
+            this.selectStructDir.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -114,7 +120,7 @@ namespace ExcelToByteFile
             // btn_generate
             // 
             this.btn_generate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_generate.Location = new System.Drawing.Point(566, 425);
+            this.btn_generate.Location = new System.Drawing.Point(596, 556);
             this.btn_generate.Name = "btn_generate";
             this.btn_generate.Size = new System.Drawing.Size(150, 50);
             this.btn_generate.TabIndex = 2;
@@ -155,7 +161,7 @@ namespace ExcelToByteFile
             // typeNullIsNote
             // 
             this.typeNullIsNote.AutoSize = true;
-            this.typeNullIsNote.Location = new System.Drawing.Point(10, 439);
+            this.typeNullIsNote.Location = new System.Drawing.Point(10, 461);
             this.typeNullIsNote.Name = "typeNullIsNote";
             this.typeNullIsNote.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.typeNullIsNote.Size = new System.Drawing.Size(253, 25);
@@ -166,7 +172,7 @@ namespace ExcelToByteFile
             // 
             // defaultSkip
             // 
-            this.defaultSkip.Location = new System.Drawing.Point(377, 535);
+            this.defaultSkip.Location = new System.Drawing.Point(377, 556);
             this.defaultSkip.Maximum = new decimal(new int[] {
             10,
             0,
@@ -182,11 +188,12 @@ namespace ExcelToByteFile
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(0, 537);
+            this.label2.Location = new System.Drawing.Point(0, 558);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(375, 21);
             this.label2.TabIndex = 13;
             this.label2.Text = "读取头部固定3行数据后，默认跳过行数不读取数据:";
+            this.toolTip1.SetToolTip(this.label2, "例如：0代表实际数据从第4行开始读取，1从第5行。。。");
             // 
             // button1
             // 
@@ -201,7 +208,7 @@ namespace ExcelToByteFile
             // autoCompletion
             // 
             this.autoCompletion.AutoSize = true;
-            this.autoCompletion.Location = new System.Drawing.Point(10, 499);
+            this.autoCompletion.Location = new System.Drawing.Point(10, 524);
             this.autoCompletion.Name = "autoCompletion";
             this.autoCompletion.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.autoCompletion.Size = new System.Drawing.Size(247, 25);
@@ -214,7 +221,7 @@ namespace ExcelToByteFile
             // 
             this.label3.AutoSize = true;
             this.label3.ForeColor = System.Drawing.Color.DodgerBlue;
-            this.label3.Location = new System.Drawing.Point(263, 500);
+            this.label3.Location = new System.Drawing.Point(263, 525);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(74, 21);
             this.label3.TabIndex = 16;
@@ -222,7 +229,7 @@ namespace ExcelToByteFile
             // 
             // autoCompletionVal
             // 
-            this.autoCompletionVal.Location = new System.Drawing.Point(335, 497);
+            this.autoCompletionVal.Location = new System.Drawing.Point(329, 522);
             this.autoCompletionVal.Name = "autoCompletionVal";
             this.autoCompletionVal.Size = new System.Drawing.Size(100, 28);
             this.autoCompletionVal.TabIndex = 17;
@@ -237,7 +244,8 @@ namespace ExcelToByteFile
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(154, 21);
             this.label4.TabIndex = 18;
-            this.label4.Text = "代码文件输出路径：";
+            this.label4.Text = "变量定义输出路径：";
+            this.toolTip1.SetToolTip(this.label4, "每个sheet生成一个类，变量为类的常量，存储在一行中偏移的字节数");
             // 
             // button2
             // 
@@ -263,7 +271,7 @@ namespace ExcelToByteFile
             // commetInFirstRow
             // 
             this.commetInFirstRow.AutoSize = true;
-            this.commetInFirstRow.Location = new System.Drawing.Point(10, 408);
+            this.commetInFirstRow.Location = new System.Drawing.Point(10, 430);
             this.commetInFirstRow.Name = "commetInFirstRow";
             this.commetInFirstRow.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.commetInFirstRow.Size = new System.Drawing.Size(317, 25);
@@ -275,7 +283,7 @@ namespace ExcelToByteFile
             // onlyOneSheet
             // 
             this.onlyOneSheet.AutoSize = true;
-            this.onlyOneSheet.Location = new System.Drawing.Point(10, 470);
+            this.onlyOneSheet.Location = new System.Drawing.Point(10, 492);
             this.onlyOneSheet.Name = "onlyOneSheet";
             this.onlyOneSheet.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.onlyOneSheet.Size = new System.Drawing.Size(168, 25);
@@ -298,7 +306,7 @@ namespace ExcelToByteFile
             // 
             this.progressBar1.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.progressBar1.ForeColor = System.Drawing.SystemColors.HotTrack;
-            this.progressBar1.Location = new System.Drawing.Point(10, 48);
+            this.progressBar1.Location = new System.Drawing.Point(10, 41);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(719, 25);
             this.progressBar1.Step = 1;
@@ -311,7 +319,7 @@ namespace ExcelToByteFile
             // 
             this.progressLab.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.progressLab.AutoSize = true;
-            this.progressLab.Location = new System.Drawing.Point(271, 14);
+            this.progressLab.Location = new System.Drawing.Point(271, 15);
             this.progressLab.Name = "progressLab";
             this.progressLab.Size = new System.Drawing.Size(169, 21);
             this.progressLab.TabIndex = 25;
@@ -319,39 +327,110 @@ namespace ExcelToByteFile
             this.progressLab.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.progressLab.Click += new System.EventHandler(this.progressLab_Click);
             // 
-            // panel1
+            // selectStructDir
             // 
-            this.panel1.Controls.Add(this.idColName);
-            this.panel1.Controls.Add(this.label5);
-            this.panel1.Controls.Add(this.commetInFirstRow);
-            this.panel1.Controls.Add(this.btn_selectFiles);
-            this.panel1.Controls.Add(this.button1);
-            this.panel1.Controls.Add(this.btn_generate);
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.defaultSkip);
-            this.panel1.Controls.Add(this.autoCompletionVal);
-            this.panel1.Controls.Add(this.onlyOneSheet);
-            this.panel1.Controls.Add(this.label3);
-            this.panel1.Controls.Add(this.intro);
-            this.panel1.Controls.Add(this.autoCompletion);
-            this.panel1.Controls.Add(this.lsBox_selectedFiles);
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.codeFileOutputDir);
-            this.panel1.Controls.Add(this.btn_selectByteFileOutputDir);
-            this.panel1.Controls.Add(this.button2);
-            this.panel1.Controls.Add(this.typeNullIsNote);
-            this.panel1.Controls.Add(this.byteFileOutputDir);
-            this.panel1.Controls.Add(this.label4);
-            this.panel1.Location = new System.Drawing.Point(12, 12);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(760, 604);
-            this.panel1.TabIndex = 26;
+            this.selectStructDir.Controls.Add(this.structInfoOutputDir);
+            this.selectStructDir.Controls.Add(this.button3);
+            this.selectStructDir.Controls.Add(this.generateStructCs);
+            this.selectStructDir.Controls.Add(this.customSheetPrefix);
+            this.selectStructDir.Controls.Add(this.customExportSheetPrefix);
+            this.selectStructDir.Controls.Add(this.firstColIsPrimary);
+            this.selectStructDir.Controls.Add(this.idColName);
+            this.selectStructDir.Controls.Add(this.label5);
+            this.selectStructDir.Controls.Add(this.commetInFirstRow);
+            this.selectStructDir.Controls.Add(this.btn_selectFiles);
+            this.selectStructDir.Controls.Add(this.button1);
+            this.selectStructDir.Controls.Add(this.btn_generate);
+            this.selectStructDir.Controls.Add(this.label2);
+            this.selectStructDir.Controls.Add(this.defaultSkip);
+            this.selectStructDir.Controls.Add(this.autoCompletionVal);
+            this.selectStructDir.Controls.Add(this.onlyOneSheet);
+            this.selectStructDir.Controls.Add(this.label3);
+            this.selectStructDir.Controls.Add(this.intro);
+            this.selectStructDir.Controls.Add(this.autoCompletion);
+            this.selectStructDir.Controls.Add(this.lsBox_selectedFiles);
+            this.selectStructDir.Controls.Add(this.label1);
+            this.selectStructDir.Controls.Add(this.codeFileOutputDir);
+            this.selectStructDir.Controls.Add(this.btn_selectByteFileOutputDir);
+            this.selectStructDir.Controls.Add(this.button2);
+            this.selectStructDir.Controls.Add(this.typeNullIsNote);
+            this.selectStructDir.Controls.Add(this.byteFileOutputDir);
+            this.selectStructDir.Controls.Add(this.label4);
+            this.selectStructDir.Location = new System.Drawing.Point(12, 12);
+            this.selectStructDir.Name = "selectStructDir";
+            this.selectStructDir.Size = new System.Drawing.Size(760, 620);
+            this.selectStructDir.TabIndex = 26;
+            // 
+            // structInfoOutputDir
+            // 
+            this.structInfoOutputDir.AutoSize = true;
+            this.structInfoOutputDir.ForeColor = System.Drawing.Color.DodgerBlue;
+            this.structInfoOutputDir.Location = new System.Drawing.Point(243, 403);
+            this.structInfoOutputDir.Name = "structInfoOutputDir";
+            this.structInfoOutputDir.Size = new System.Drawing.Size(74, 21);
+            this.structInfoOutputDir.TabIndex = 31;
+            this.structInfoOutputDir.Text = "输出路径";
+            this.structInfoOutputDir.MouseHover += new System.EventHandler(this.structInfoOutputDir_MouseHover);
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(157, 399);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(80, 30);
+            this.button3.TabIndex = 30;
+            this.button3.Text = "选择";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // generateStructCs
+            // 
+            this.generateStructCs.AutoSize = true;
+            this.generateStructCs.Location = new System.Drawing.Point(10, 399);
+            this.generateStructCs.Name = "generateStructCs";
+            this.generateStructCs.Size = new System.Drawing.Size(141, 25);
+            this.generateStructCs.TabIndex = 29;
+            this.generateStructCs.Text = "生成结构信息类";
+            this.toolTip1.SetToolTip(this.generateStructCs, "行数据的结构信息，可更方便取得数据");
+            this.generateStructCs.UseVisualStyleBackColor = true;
+            this.generateStructCs.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged_3);
+            // 
+            // customSheetPrefix
+            // 
+            this.customSheetPrefix.Location = new System.Drawing.Point(377, 489);
+            this.customSheetPrefix.Name = "customSheetPrefix";
+            this.customSheetPrefix.Size = new System.Drawing.Size(100, 28);
+            this.customSheetPrefix.TabIndex = 28;
+            this.customSheetPrefix.Text = "s_";
+            this.customSheetPrefix.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.customSheetPrefix.TextChanged += new System.EventHandler(this.customSheetPrefix_TextChanged);
+            // 
+            // customExportSheetPrefix
+            // 
+            this.customExportSheetPrefix.AutoSize = true;
+            this.customExportSheetPrefix.Location = new System.Drawing.Point(198, 493);
+            this.customExportSheetPrefix.Name = "customExportSheetPrefix";
+            this.customExportSheetPrefix.Size = new System.Drawing.Size(182, 25);
+            this.customExportSheetPrefix.TabIndex = 27;
+            this.customExportSheetPrefix.Text = "自定义导出sheet前缀";
+            this.customExportSheetPrefix.UseVisualStyleBackColor = true;
+            this.customExportSheetPrefix.CheckedChanged += new System.EventHandler(this.customExportSheetPrefix_CheckedChanged);
+            // 
+            // firstColIsPrimary
+            // 
+            this.firstColIsPrimary.AutoSize = true;
+            this.firstColIsPrimary.Location = new System.Drawing.Point(263, 592);
+            this.firstColIsPrimary.Name = "firstColIsPrimary";
+            this.firstColIsPrimary.Size = new System.Drawing.Size(157, 25);
+            this.firstColIsPrimary.TabIndex = 26;
+            this.firstColIsPrimary.Text = "默认第一列为主列";
+            this.firstColIsPrimary.UseVisualStyleBackColor = true;
+            this.firstColIsPrimary.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged_2);
             // 
             // idColName
             // 
-            this.idColName.Location = new System.Drawing.Point(420, 568);
+            this.idColName.Location = new System.Drawing.Point(88, 589);
             this.idColName.Name = "idColName";
-            this.idColName.Size = new System.Drawing.Size(208, 28);
+            this.idColName.Size = new System.Drawing.Size(149, 28);
             this.idColName.TabIndex = 25;
             this.idColName.Text = "id";
             this.idColName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -360,20 +439,21 @@ namespace ExcelToByteFile
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(0, 571);
+            this.label5.Location = new System.Drawing.Point(0, 592);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(415, 21);
+            this.label5.Size = new System.Drawing.Size(90, 21);
             this.label5.TabIndex = 24;
-            this.label5.Text = "主列列名（默认为 id 必须是int且不能一个sheet内重复）";
+            this.label5.Text = "主列列名：";
+            this.toolTip1.SetToolTip(this.label5, "默认为 id，解析时作为字典的key值，只能是基本数据类型，不能是vector,list或dict");
             this.label5.Click += new System.EventHandler(this.label5_Click);
             // 
             // panel2
             // 
             this.panel2.Controls.Add(this.progressLab);
             this.panel2.Controls.Add(this.progressBar1);
-            this.panel2.Location = new System.Drawing.Point(12, 622);
+            this.panel2.Location = new System.Drawing.Point(12, 638);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(760, 81);
+            this.panel2.Size = new System.Drawing.Size(760, 70);
             this.panel2.TabIndex = 27;
             this.panel2.Visible = false;
             // 
@@ -384,7 +464,7 @@ namespace ExcelToByteFile
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(784, 711);
             this.Controls.Add(this.panel2);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.selectStructDir);
             this.Font = new System.Drawing.Font("Microsoft YaHei UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -396,8 +476,8 @@ namespace ExcelToByteFile
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.contextMenuStrip1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.defaultSkip)).EndInit();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.selectStructDir.ResumeLayout(false);
+            this.selectStructDir.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.ResumeLayout(false);
@@ -429,12 +509,18 @@ namespace ExcelToByteFile
         private System.Windows.Forms.Button intro;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Label progressLab;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel selectStructDir;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem 删除;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox idColName;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.CheckBox firstColIsPrimary;
+        private System.Windows.Forms.TextBox customSheetPrefix;
+        private System.Windows.Forms.CheckBox customExportSheetPrefix;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.CheckBox generateStructCs;
+        private System.Windows.Forms.Label structInfoOutputDir;
     }
 }

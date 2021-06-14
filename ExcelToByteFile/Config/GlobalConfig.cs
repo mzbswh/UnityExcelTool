@@ -27,6 +27,8 @@ namespace ExcelToByteFile
 		/// </summary>
 		public string codeFileOutputDir = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
 
+		public string structOutputDir = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+
 		/// <summary>
 		/// 是否自动补全
 		/// </summary>
@@ -56,6 +58,14 @@ namespace ExcelToByteFile
 		/// 只读取一个sheet
 		/// </summary>
 		public bool onlyOneSheet = true;
+
+		public bool firstColIsPrimary = true;
+
+		public bool customExportSheetPrefix = false;
+
+		public string customSheetPrefix = "s_";
+
+		public bool generateStructInfoCs = true;
 
 		/// <summary>
 		/// 存储在本地的配置文件名称
@@ -104,6 +114,16 @@ namespace ExcelToByteFile
 				onlyOneSheet = str == "True";
 				str = sr.ReadLine();
 				idColName = str;
+				str = sr.ReadLine();
+				firstColIsPrimary = str == "True";
+				str = sr.ReadLine();
+				customExportSheetPrefix = str == "True";
+				str = sr.ReadLine();
+				customSheetPrefix = str;
+				str = sr.ReadLine();
+				generateStructInfoCs = str == "True";
+				str = sr.ReadLine();
+				structOutputDir = str;
 
 				sr.Dispose();
 				sr.Close();
@@ -147,6 +167,11 @@ namespace ExcelToByteFile
 				sw.WriteLine(commentInFirstRow.ToString());
 				sw.WriteLine(onlyOneSheet.ToString());
 				sw.WriteLine(idColName);
+				sw.WriteLine(firstColIsPrimary.ToString());
+				sw.WriteLine(customExportSheetPrefix.ToString());
+				sw.WriteLine(customSheetPrefix);
+				sw.WriteLine(generateStructInfoCs.ToString());
+				sw.WriteLine(structOutputDir);
 
 				sw.Flush();
 				sw.Dispose();

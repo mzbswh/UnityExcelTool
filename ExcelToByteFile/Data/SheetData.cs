@@ -59,7 +59,12 @@ namespace ExcelToByteFile
 		public SheetData(IWorkbook workbook, ISheet sheet, XSSFFormulaEvaluator evaluator, string excelName)
         {
 			ExcelName = excelName;
-			SheetName = sheet.SheetName;
+			if (GlobalConfig.Ins.customExportSheetPrefix)
+            {
+				int start = GlobalConfig.Ins.customSheetPrefix.Length;
+				SheetName = sheet.SheetName.Substring(start);
+			}
+			else SheetName = sheet.SheetName;
 			_workbook = workbook;
 			_sheet = sheet;
 			_evaluator = evaluator;
@@ -98,6 +103,15 @@ namespace ExcelToByteFile
 				commentRow = _sheet.GetRow(curRow++);  //备注: 可能为空
 			}
 			int endCol = typeRow.LastCellNum;
+
+			if (GlobalConfig.Ins.firstColIsPrimary)
+			{
+				ICell typeCell = typeRow.GetCell(typeRow.FirstCellNum);
+				string idType = ExcelTool.GetCellValue(typeCell, _evaluator).Trim().Replace(" ", "").ToLower();
+				if (!DataTypeHelper.IsBaseType(idType))
+					Log.LogError($"{ExcelName}_{SheetName} 主列类型不能为{idType}");
+			}
+
 			// 获取数据类型信息
 			for (int index = typeRow.FirstCellNum; index < endCol; index++)
 			{
@@ -106,7 +120,7 @@ namespace ExcelToByteFile
 				ICell commentCell = commentRow?.GetCell(index);
 				
 				// 检测重复的列
-				string type = ExcelTool.GetCellValue(typeCell, _evaluator).Trim().ToLower();
+				string type = ExcelTool.GetCellValue(typeCell, _evaluator).Trim().Replace(" ","").ToLower();
 				string name = ExcelTool.GetCellValue(nameCell, _evaluator).Trim();
 				string comment = ExcelTool.GetCellValue(commentCell, _evaluator);
 				bool isNotesCol = (type.Contains(ConstDefine.noteChar)) 
@@ -137,7 +151,7 @@ namespace ExcelToByteFile
 			}
 
 			// 如果没有ID列
-			if (!IsNameExist(GlobalConfig.Ins.idColName))
+			if (!GlobalConfig.Ins.firstColIsPrimary && !IsNameExist(GlobalConfig.Ins.idColName))
 			{
 				Log.LogError($"{ExcelName}_{SheetName}表格必须设立一个 'id' 列.");
 			}

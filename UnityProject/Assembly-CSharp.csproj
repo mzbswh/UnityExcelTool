@@ -64,10 +64,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\AutoGen\ExcelDefine.cs" />
+    <Compile Include="Assets\Scripts\AutoGen\ExcelDataStruct.cs" />
+    <Compile Include="Assets\Scripts\AutoGen\ExcelVariableDefine.cs" />
     <Compile Include="Assets\Scripts\ByteTool\ByteFileParseTool.cs" />
     <Compile Include="Assets\Scripts\ByteTool\ExcelDataAccess.cs" />
-    <Compile Include="Assets\Scripts\ByteTool\ExcelDataCache.cs" />
     <Compile Include="Assets\Scripts\Test.cs" />
     <Reference Include="UnityEngine">
       <HintPath>D:/Unity/UnityEditors/2019.4.22f1c1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
@@ -598,31 +598,31 @@
       <HintPath>D:/Unity/UnityEditors/2019.4.22f1c1/Editor/Data/NetStandard/compat/2.0.0/shims/netfx/System.Xml.Serialization.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline.Editor">
-      <HintPath>C:/Users/mzbswh/Desktop/UnityProject/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
+      <HintPath>C:/Users/mzbswh/Desktop/Excel/ExcelToByteFile/UnityProject/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VSCode.Editor">
-      <HintPath>C:/Users/mzbswh/Desktop/UnityProject/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
+      <HintPath>C:/Users/mzbswh/Desktop/Excel/ExcelToByteFile/UnityProject/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>C:/Users/mzbswh/Desktop/UnityProject/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>C:/Users/mzbswh/Desktop/Excel/ExcelToByteFile/UnityProject/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>C:/Users/mzbswh/Desktop/UnityProject/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+      <HintPath>C:/Users/mzbswh/Desktop/Excel/ExcelToByteFile/UnityProject/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline">
-      <HintPath>C:/Users/mzbswh/Desktop/UnityProject/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
+      <HintPath>C:/Users/mzbswh/Desktop/Excel/ExcelToByteFile/UnityProject/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
     </Reference>
     <Reference Include="Unity.CollabProxy.Editor">
-      <HintPath>C:/Users/mzbswh/Desktop/UnityProject/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+      <HintPath>C:/Users/mzbswh/Desktop/Excel/ExcelToByteFile/UnityProject/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Rider.Editor">
-      <HintPath>C:/Users/mzbswh/Desktop/UnityProject/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
+      <HintPath>C:/Users/mzbswh/Desktop/Excel/ExcelToByteFile/UnityProject/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>C:/Users/mzbswh/Desktop/UnityProject/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>C:/Users/mzbswh/Desktop/Excel/ExcelToByteFile/UnityProject/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.UI">
-      <HintPath>C:/Users/mzbswh/Desktop/UnityProject/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+      <HintPath>C:/Users/mzbswh/Desktop/Excel/ExcelToByteFile/UnityProject/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup></ItemGroup>

@@ -56,6 +56,8 @@ namespace ExcelToByteFile
             ExportManifest(fileDatas);
             // 导出cs定义文件
             ExportExcelDefineCSCode(GlobalConfig.Ins.codeFileOutputDir, fileDatas);
+            // 导出数据结构信息文件
+            ExportStructInfoCsCode(GlobalConfig.Ins.structOutputDir, fileDatas);
         }
 
         public static void ExportOneSheet(string path, SheetData sheet)
@@ -120,34 +122,35 @@ namespace ExcelToByteFile
 
         private static void ExportExcelDefineCSCode(string path, List<FileInfoData> data)
         {
-            Log.LogConsole("正在生成 ExcelDefine.cs ...");
+            Log.LogConsole("正在生成 ExcelVariableDefine.cs ...");
             using (StreamWriter sw = new StreamWriter(
-                path + Path.DirectorySeparatorChar + "ExcelDefine" + ".cs", 
+                path + Path.DirectorySeparatorChar + "ExcelVariableDefine" + ".cs", 
                 false, 
                 new UTF8Encoding(false)))
             {
                 StringBuilder sb1 = new StringBuilder();    // 类变量
                 StringBuilder sb2 = new StringBuilder();    // 文件枚举
-                sb1.AppendLine(@"public sealed class ExcelVariableDef");
-                sb1.AppendLine(@"{");
+                //sb1.AppendLine(@"public sealed class ExcelVariableDef");
+                //sb1.AppendLine(@"{");
                 sb2.AppendLine(@"public enum ExcelName");
                 sb2.AppendLine(@"{");
                 for (int i = 0; i < data.Count; i++)
                 {
                     FileInfoData info = data[i];
-                    sb1.Append(@"   public sealed class ");
+                    string fileName = "EVD_" + info.FileName;
+                    sb1.Append(@"public static class EVD_");
                     sb1.AppendLine(info.FileName);
-                    sb1.AppendLine(@"   {");
-                    sb2.Append(@"   ///<summary>");
+                    sb1.AppendLine(@"{");
+                    sb2.Append(@"    ///<summary>");
                     sb2.Append($"主列: " + info.VariableNames[info.IdColIndex] +
-                        $" [{info.GetTypeByToken(info.Tokens[info.IdColIndex])}]");
+                        $" [{info.GetCommentTypeByToken(info.Tokens[info.IdColIndex])}]");
                     sb2.AppendLine(@"</summary>");
-                    sb2.AppendLine(@"   " + info.FileName + @" = " + i.ToString() + @",");
+                    sb2.AppendLine(@"    " + info.FileName + @" = " + i.ToString() + @",");
                     for (int j = 0; j < info.VariableNames.Count; j++)
                     {
                         string varName = info.VariableNames[j];
                         string raw = varName;
-                        if (varName == info.FileName)
+                        if (varName == fileName)
                         {
                             bool b = true;
                             int a = 0;
@@ -161,20 +164,74 @@ namespace ExcelToByteFile
                                 else a++;
                             }
                         }
-                        sb1.Append(@"       /// <summary>");
-                        string type = info.GetTypeByToken(info.Tokens[j]);
+                        sb1.Append(@"    /// <summary>");
+                        string type = info.GetCommentTypeByToken(info.Tokens[j]);
                         sb1.Append($"[{type}] " + info.Comments[j]);
                         sb1.AppendLine(@"</summary>");
-                        sb1.Append(@"       public const int ");
+                        sb1.Append(@"    public const int ");
                         int val = (j << 16) + info.ColOffset[j];
                         sb1.AppendLine(varName + @" = " + val.ToString() + ";");
                     }
-                    sb1.AppendLine(@"   }");
+                    sb1.AppendLine(@"}");
                 }
-                sb1.AppendLine(@"}");
+                //sb1.AppendLine(@"}");
                 sb2.Append(@"}");
                 sw.Write(sb1.ToString());
                 sw.Write(sb2.ToString());
+            }
+        }
+
+        private static void ExportStructInfoCsCode(string path, List<FileInfoData> data)
+        {
+            Log.LogConsole("正在生成 ExcelDataStruct.cs ...");
+            using (StreamWriter sw = new StreamWriter(
+                path + Path.DirectorySeparatorChar + "ExcelDataStruct" + ".cs",
+                false,
+                new UTF8Encoding(false)))
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine(@"using System.Collections.Generic;");
+                sb.AppendLine(@"using UnityEngine;");
+                sb.AppendLine();
+
+                for (int i = 0; i < data.Count; i++)
+                {
+                    FileInfoData info = data[i];
+                    string fileName = "EDS_" + info.FileName;
+                    string idType = info.GetCsType(info.IdColIndex);
+                    sb.AppendLine(@"public struct " + fileName);
+                    sb.AppendLine(@"{");
+                    sb.AppendLine(@"    " + idType + @" primaryColVal;");
+                    
+                    sb.AppendLine(@"    public " + fileName + @"(" + idType
+                        + @" val) { this.primaryColVal = val; }");
+                    for (int j = 0; j < info.VariableNames.Count; j++)
+                    {
+                        string varName = info.VariableNames[j];
+                        string raw = varName;
+                        string csType = info.GetCsType(j);
+                        if (varName == fileName)
+                        {
+                            bool b = true;
+                            int a = 0;
+                            while (b)
+                            {
+                                varName = raw + "_c_" + a.ToString();
+                                if (!info.VariableNames.Contains(varName))
+                                {
+                                    b = false;
+                                }
+                                else a++;
+                            }
+                        }
+                        sb.Append(@"    /// <summary>");
+                        sb.Append(info.Comments[j]);
+                        sb.AppendLine(@"</summary>");
+                        sb.AppendLine("    " + info.GetPropertyStr(j, varName));
+                    }
+                    sb.AppendLine(@"}");
+                }
+                sw.Write(sb.ToString());
             }
         }
 

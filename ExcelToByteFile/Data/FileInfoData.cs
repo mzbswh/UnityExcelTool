@@ -32,6 +32,8 @@ namespace ExcelToByteFile
 
         public int IdColIndex { get; }
 
+        public string PrimaryColCsType { get; }
+
         /// <summary>
         /// sheet里每列变量的偏移(相对行首)
         /// </summary>
@@ -62,7 +64,8 @@ namespace ExcelToByteFile
             Tokens = GetTypeToken(data.heads);
             VariableNames = GetVariable(data.heads);
             Comments = GetComment(data.heads);
-            IdColIndex = VariableNames.FindIndex((x) => x == GlobalConfig.Ins.idColName);
+            IdColIndex = GlobalConfig.Ins.firstColIsPrimary ? 0 : VariableNames.FindIndex((x) => x == GlobalConfig.Ins.idColName);
+            PrimaryColCsType = GetCsType(IdColIndex);
         }
 
         /// <summary>
@@ -135,7 +138,7 @@ namespace ExcelToByteFile
                 {
                     int baseToken = GetTypeToken(head.MainType);
                     int dimen = int.Parse(head.SubType[0]);
-                    int valToken = GetTypeToken(head.SubType[1]);
+                    int valToken = string.Empty == head.SubType[1] ? 0 : GetTypeToken(head.SubType[1]);
                     ls.Add(baseToken + dimen * 100 + valToken);
                 }
                 else if (head.MainType == TypeDefine.dictType)
@@ -193,15 +196,17 @@ namespace ExcelToByteFile
             }
         }
 
-        public string GetTypeByToken(int token)
+        public string GetCommentTypeByToken(int token)
         {
             if (token >= (int)TypeToken.Vector)
             {
                 int dimen = (token - 20000) / 100;
                 int valToken = (token - 20000) % 100;
-                return "Vector" + (dimen).ToString() + ((TypeToken)valToken).ToString() ;
+                string type = string.Empty;
+                if (valToken != 0) type = ((TypeToken)valToken).ToString();
+                return "Vector" + (dimen).ToString() + type;
             }
-            if (token >= (int)TypeToken.Dictionary)
+            else if (token >= (int)TypeToken.Dictionary)
             {
                 int keyToken = (token - 10000) / 100;
                 int valToken = (token - 10000) % 100;
@@ -216,6 +221,77 @@ namespace ExcelToByteFile
             else
             {
                 return ((TypeToken)token).ToString();
+            }
+        }
+
+        public string GetCsType(int index)
+        {
+            int type = Tokens[index];
+            if (type >= (int)TypeToken.Vector)
+            {
+                int dimen = (type - 20000) / 100;
+                int valToken = (type - 20000) % 100;
+                string s = "Vector" + (dimen).ToString();
+                if (valToken != 0) s += "Int";
+                return s;
+            }
+            else if (type >= (int)TypeToken.Dictionary)
+            {
+                int keyToken = (type - 10000) / 100;
+                int valToken = (type - 10000) % 100;
+                return "Dictionary<" + ((TypeToken)keyToken).ToString().ToLower() + " ,"
+                    + ((TypeToken)valToken).ToString().ToLower() + ">";
+            }
+            else if (type >= (int)TypeToken.List)
+            {
+                int subToken = type - 100;
+                return "List<" + ((TypeToken)subToken).ToString().ToLower() + ">";
+            }
+            else
+            {
+                return ((TypeToken)type).ToString().ToLower();
+            }
+        }
+
+        public string GetPropertyStr(int index, string varName)
+        {
+            string csType = GetCsType(index);
+            int type = Tokens[index];
+            int off = (index << 16) + ColOffset[index]; 
+            if (type >= (int)TypeToken.Vector)
+            {
+                int dimen = (type - 20000) / 100;
+                int valToken = (type - 20000) % 100;
+                return "public " + csType + " " + varName +
+                    " { get { return ExcelDataAccess.Get" + csType + "<" +
+                      PrimaryColCsType +
+                    ">(ExcelName." + FileName + ", primaryColVal, " + off.ToString() + "); } }";
+            }
+            else if (type >= (int)TypeToken.Dictionary)
+            {
+                int keyToken = (type - 10000) / 100;
+                int valToken = (type - 10000) % 100;
+                string keyType = ((TypeToken)keyToken).ToString().ToLower();
+                string valType = ((TypeToken)valToken).ToString().ToLower();
+                return "public Dictionary<" + keyType + ", " + valType + "> " + varName +
+                    " { get { return ExcelDataAccess.GetDict<" +
+                    keyType + ", " + valType + ", " + PrimaryColCsType +
+                    ">(ExcelName." + FileName + ", primaryColVal, " + off.ToString() + "); } }";
+            }
+            else if (type >= (int)TypeToken.List)
+            {
+                int subToken = type - 100;
+                return "public " + csType + " " + varName +
+                    " { get { return ExcelDataAccess.GetList<" +
+                    ((TypeToken)subToken).ToString().ToLower() + ", " + PrimaryColCsType +
+                    ">(ExcelName." + FileName + ", primaryColVal, " + off.ToString() + "); } }";
+            }
+            else
+            {
+                return "public " + csType + " " + varName +
+                    " { get { return ExcelDataAccess.Get<" + 
+                    csType + ", " + PrimaryColCsType + 
+                    ">(ExcelName." + FileName + ", primaryColVal, " + off.ToString() + "); } }";
             }
         }
     }

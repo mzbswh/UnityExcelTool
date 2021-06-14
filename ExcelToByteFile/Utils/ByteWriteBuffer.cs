@@ -118,6 +118,7 @@ namespace ExcelToByteFile
 		}
 		public void WriteBytes(byte[] data, int offset, int count, bool writeToHeap = false)
 		{
+			if (count <= 0) return;
 			CheckWriterIndex(count);
 			if (writeToHeap)
             {
@@ -191,157 +192,211 @@ namespace ExcelToByteFile
 			int num = bytes.Length; // + 1; // 注意：字符串末尾写入结束符
 			if (num > ushort.MaxValue)
 				throw new FormatException($"String length cannot be greater than {ushort.MaxValue} !");
-
-			if (!onlyWriteToHeap) WriteInt(_heapIndex);	// 写入堆索引地址
+			if (!onlyWriteToHeap)
+            {
+				if (bytes.Length == 0)
+                {
+					WriteInt(-1);
+					return;
+				}
+				WriteInt(_heapIndex);
+			}
 			WriteUShort(Convert.ToUInt16(num), true);
 			WriteBytes(bytes, true);
-			//WriteByte((byte)'\0', true);
 		}
 
 		public void WriteListBool(List<bool> ls)
         {
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			WriteInt(_heapIndex);
-			WriteUShort((ushort)count, true);
-			for (int i = 0; i < count; i++)
-			{
-				WriteBool(ls[i], true);
+			if (count == 0) WriteInt(-1);
+			else
+            {
+				WriteInt(_heapIndex);
+				WriteUShort((ushort)count, true);
+				for (int i = 0; i < count; i++)
+				{
+					WriteBool(ls[i], true);
+				}
 			}
 		}
 		public void WriteListByte(List<byte> ls)
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			WriteInt(_heapIndex);
-			WriteUShort((ushort)count, true);
-			for (int i = 0; i < count; i++)
-			{
-				WriteByte(ls[i], true);
+			if (count == 0) WriteInt(-1);
+			else
+            {
+				WriteInt(_heapIndex);
+				WriteUShort((ushort)count, true);
+				for (int i = 0; i < count; i++)
+				{
+					WriteByte(ls[i], true);
+				}
 			}
 		}
 		public void WriteListShort(List<short> ls)
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			WriteInt(_heapIndex);
-			WriteUShort((ushort)count, true);
-			for (int i = 0; i < count; i++)
-			{
-				WriteShort(ls[i], true);
+			if (count == 0) WriteInt(-1);
+			else
+            {
+				WriteInt(_heapIndex);
+				WriteUShort((ushort)count, true);
+				for (int i = 0; i < count; i++)
+				{
+					WriteShort(ls[i], true);
+				}
 			}
 		}
 		public void WriteListInt(List<int> ls)
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			WriteInt(_heapIndex);
-			WriteUShort((ushort)count, true);
-			for (int i = 0; i < count; i++)
-			{
-				WriteInt(ls[i], true);
+			if (count == 0) WriteInt(-1);
+			else
+            {
+				WriteInt(_heapIndex);
+				WriteUShort((ushort)count, true);
+				for (int i = 0; i < count; i++)
+				{
+					WriteInt(ls[i], true);
+				}
 			}
 		}
 		public void WriteListFloat(List<float> ls)
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			WriteInt(_heapIndex);
-			WriteUShort((ushort)count, true);
-			for (int i = 0; i < count; i++)
-			{
-				WriteFloat(ls[i], true);
+			if (count == 0) WriteInt(-1);
+			else
+            {
+				WriteInt(_heapIndex);
+				WriteUShort((ushort)count, true);
+				for (int i = 0; i < count; i++)
+				{
+					WriteFloat(ls[i], true);
+				}
 			}
 		}
 		public void WriteListLong(List<long> ls)
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			WriteInt(_heapIndex);
-			WriteUShort((ushort)count, true);
-			for (int i = 0; i < count; i++)
-			{
-				WriteLong(ls[i], true);
+			if (count == 0) WriteInt(-1);
+			else
+            {
+				WriteInt(_heapIndex);
+				WriteUShort((ushort)count, true);
+				for (int i = 0; i < count; i++)
+				{
+					WriteLong(ls[i], true);
+				}
 			}
 		}
 		public void WriteListDouble(List<double> ls)
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			WriteInt(_heapIndex);
-			WriteUShort((ushort)count, true);
-			for (int i = 0; i < count; i++)
-			{
-				WriteDouble(ls[i], true);
+			if (count == 0) WriteInt(-1);
+			else
+            {
+				WriteInt(_heapIndex);
+				WriteUShort((ushort)count, true);
+				for (int i = 0; i < count; i++)
+				{
+					WriteDouble(ls[i], true);
+				}
 			}
 		}
 		public void WriteListSByte(List<sbyte> ls)
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			WriteInt(_heapIndex);
-			WriteUShort((ushort)count, true);
-			for (int i = 0; i < count; i++)
-			{
-				WriteSbyte(ls[i], true);
+			if (count == 0) WriteInt(-1);
+			else
+            {
+				WriteInt(_heapIndex);
+				WriteUShort((ushort)count, true);
+				for (int i = 0; i < count; i++)
+				{
+					WriteSbyte(ls[i], true);
+				}
 			}
 		}
 		public void WriteListUInt(List<uint> ls)
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			WriteInt(_heapIndex);
-			WriteUShort((ushort)count, true);
-			for (int i = 0; i < count; i++)
-			{
-				WriteUInt(ls[i], true);
+			if (count == 0) WriteInt(-1);
+			else
+            {
+				WriteInt(_heapIndex);
+				WriteUShort((ushort)count, true);
+				for (int i = 0; i < count; i++)
+				{
+					WriteUInt(ls[i], true);
+				}
 			}
 		}
 		public void WriteListULong(List<ulong> ls)
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			WriteInt(_heapIndex);
-			WriteUShort((ushort)count, true);
-			for (int i = 0; i < count; i++)
-			{
-				WriteULong(ls[i], true);
+			if (count == 0) WriteInt(-1);
+			else
+            {
+				WriteInt(_heapIndex);
+				WriteUShort((ushort)count, true);
+				for (int i = 0; i < count; i++)
+				{
+					WriteULong(ls[i], true);
+				}
 			}
 		}
 		public void WriteListUShort(List<ushort> ls)
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			WriteInt(_heapIndex);
-			WriteUShort((ushort)count, true);
-			for (int i = 0; i < count; i++)
-			{
-				WriteUShort(ls[i], true);
+			if (count == 0) WriteInt(-1);
+			else
+            {
+				WriteInt(_heapIndex);
+				WriteUShort((ushort)count, true);
+				for (int i = 0; i < count; i++)
+				{
+					WriteUShort(ls[i], true);
+				}
 			}
 		}
 		public void WriteListString(List<string> ls)
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
-			WriteInt(_heapIndex);   // list地址
-			WriteUShort((ushort)count, true);
-
-			/*int lsStart = _heapIndex;      // 存储列表开始索引（第一个元素所在位置）
-            _heapIndex += count * 4;
-            int realHeapIndex = _heapIndex;// 此时指向第一个要写入的字符串的位置
-            for (int i = 0; i < count; i++)
+			if (count == 0) WriteInt(-1);
+			else
             {
-                _heapIndex = lsStart + i * 4;  // 先写入地址
-                WriteUInt((uint)_heapIndex, true);
-                _heapIndex = realHeapIndex;
-                WriteString(ls[i], true);
-                realHeapIndex = _heapIndex;    // 暂存此时的堆位置
-            }*/
+				WriteInt(_heapIndex);   // list地址
+				WriteUShort((ushort)count, true);
 
-			for (int i = 0; i < count; i++)
-            {
-                WriteString(ls[i], true);
-            }
+				/*int lsStart = _heapIndex;      // 存储列表开始索引（第一个元素所在位置）
+				_heapIndex += count * 4;
+				int realHeapIndex = _heapIndex;// 此时指向第一个要写入的字符串的位置
+				for (int i = 0; i < count; i++)
+				{
+					_heapIndex = lsStart + i * 4;  // 先写入地址
+					WriteUInt((uint)_heapIndex, true);
+					_heapIndex = realHeapIndex;
+					WriteString(ls[i], true);
+					realHeapIndex = _heapIndex;    // 暂存此时的堆位置
+				}*/
+
+				for (int i = 0; i < count; i++)
+				{
+					WriteString(ls[i], true);
+				}
+			}
         }
 		public void WriteList<T>(List<T> ls)
         {
@@ -389,23 +444,26 @@ namespace ExcelToByteFile
         {
 			int count = 0;
 			if (dict != null) count = dict.Count;
-
-			WriteInt(_heapIndex);
-			WriteUShort((ushort)count, true);   // 先写入长度
-			//int keyLen = DataTypeHelper.GetBaseTypeLen(keyType);
-			//int valLen = DataTypeHelper.GetBaseTypeLen(valType);
-			//int KeyStart = _heapIndex;
-			//int valStart = KeyStart + keyLen * count;
-			//int realIndex = valStart + valLen * count;
-			//int num = 0;
-			foreach (var pair in dict)
+			if (count == 0) WriteInt(-1);
+			else
             {
-				//_heapIndex = KeyStart + num * keyLen;
-				WriteBaseTypeToHeap(pair.Key, keyType);
-				//_heapIndex = valStart + num * valLen;
-				WriteBaseTypeToHeap(pair.Value, valType);
-				//num++;
-            }
+				WriteInt(_heapIndex);
+				WriteUShort((ushort)count, true);   // 先写入长度
+				//int keyLen = DataTypeHelper.GetBaseTypeLen(keyType);
+				//int valLen = DataTypeHelper.GetBaseTypeLen(valType);
+				//int KeyStart = _heapIndex;
+				//int valStart = KeyStart + keyLen * count;
+				//int realIndex = valStart + valLen * count;
+				//int num = 0;
+				foreach (var pair in dict)
+				{
+					//_heapIndex = KeyStart + num * keyLen;
+					WriteBaseTypeToHeap(pair.Key, keyType);
+					//_heapIndex = valStart + num * valLen;
+					WriteBaseTypeToHeap(pair.Value, valType);
+					//num++;
+				}
+			}
 		}
 
 		private void WriteBaseTypeToHeap(string value, string type)
