@@ -120,6 +120,24 @@ public static class ExcelDataAccess
             }
         }
 
+        public List<T> GetOneCol<T>(int variableOff)
+        {
+            variableOff &= filter;
+            if (variableOff >= RowLength || RowCount <= 0)
+            {
+                Debug.LogError($"{FileName} 内不存在此变量: {variableOff >> 16}列");
+                return default(List<T>);
+            }
+            List<T> ls = new List<T>();
+            int index = variableOff;
+            for (int i = 0; i < RowCount; i++)
+            {
+                ls.Add(ByteFileParseTool.ReadHelper<T>.Read(data, index));
+                index += RowLength;
+            }
+            return ls;
+        }
+
         public List<T> GetList<T>(TIdType id, int variableOff)
         {
             if (Id2RowStartOff.TryGetValue(id, out int rowStart))
@@ -307,6 +325,11 @@ public static class ExcelDataAccess
             case (int)TypeToken.Long: return new ByteFileInfo<long>(param);
             case (int)TypeToken.Double: return new ByteFileInfo<double>(param);
             case (int)TypeToken.String: return new ByteFileInfo<string>(param);
+            case (int)TypeToken.Vector + 200: return new ByteFileInfo<Vector2>(param);
+            case (int)TypeToken.Vector + 300: return new ByteFileInfo<Vector3>(param);
+            case (int)TypeToken.Vector + 400: return new ByteFileInfo<Vector4>(param);
+            case (int)TypeToken.Vector + 200 + (int)TypeToken.Int: return new ByteFileInfo<Vector2Int>(param);
+            case (int)TypeToken.Vector + 300 + (int)TypeToken.Int: return new ByteFileInfo<Vector3Int>(param);
             default: return null;
         }
     }

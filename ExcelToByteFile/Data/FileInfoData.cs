@@ -130,25 +130,25 @@ namespace ExcelToByteFile
                 HeadData head = data[i];
                 if (head.MainType == TypeDefine.listType)
                 {
-                    int baseToken = GetTypeToken(head.MainType);
-                    int elemToken = GetTypeToken(head.SubType[0]);
+                    int baseToken = GetMainTypeToken(head.MainType);
+                    int elemToken = GetMainTypeToken(head.SubType[0]);
                     ls.Add((baseToken + elemToken));
                 }
                 else if (head.MainType == TypeDefine.vecType)
                 {
-                    int baseToken = GetTypeToken(head.MainType);
+                    int baseToken = GetMainTypeToken(head.MainType);
                     int dimen = int.Parse(head.SubType[0]);
-                    int valToken = string.Empty == head.SubType[1] ? 0 : GetTypeToken(head.SubType[1]);
+                    int valToken = string.Empty == head.SubType[1] ? 0 : GetMainTypeToken(head.SubType[1]);
                     ls.Add(baseToken + dimen * 100 + valToken);
                 }
                 else if (head.MainType == TypeDefine.dictType)
                 {
-                    int baseToken = GetTypeToken(head.MainType);
-                    int keyToken = GetTypeToken(head.SubType[0]);
-                    int valToken = GetTypeToken(head.SubType[1]);
+                    int baseToken = GetMainTypeToken(head.MainType);
+                    int keyToken = GetMainTypeToken(head.SubType[0]);
+                    int valToken = GetMainTypeToken(head.SubType[1]);
                     ls.Add(baseToken + keyToken * 100 + valToken);
                 }
-                else ls.Add(GetTypeToken(head.MainType));
+                else ls.Add(GetMainTypeToken(head.MainType));
             }
             return ls;
         }
@@ -173,7 +173,7 @@ namespace ExcelToByteFile
             return ls;
         }
 
-        private int GetTypeToken(string type)
+        private int GetMainTypeToken(string type)
         {
             switch (type)
             {

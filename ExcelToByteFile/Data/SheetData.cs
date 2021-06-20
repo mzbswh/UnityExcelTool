@@ -104,13 +104,13 @@ namespace ExcelToByteFile
 			}
 			int endCol = typeRow.LastCellNum;
 
-			if (GlobalConfig.Ins.firstColIsPrimary)
-			{
-				ICell typeCell = typeRow.GetCell(typeRow.FirstCellNum);
-				string idType = ExcelTool.GetCellValue(typeCell, _evaluator).Trim().Replace(" ", "").ToLower();
-				if (!DataTypeHelper.IsBaseType(idType))
-					Log.LogError($"{ExcelName}_{SheetName} 主列类型不能为{idType}");
-			}
+			//if (GlobalConfig.Ins.firstColIsPrimary)
+			//{
+			//	ICell typeCell = typeRow.GetCell(typeRow.FirstCellNum);
+			//	string idType = ExcelTool.GetCellValue(typeCell, _evaluator).Trim().Replace(" ", "").ToLower();
+			//	if (!DataTypeHelper.IsBaseType(idType))
+			//		Log.LogError($"{ExcelName}_{SheetName} 主列类型不能为{idType}");
+			//}
 
 			// 获取数据类型信息
 			for (int index = typeRow.FirstCellNum; index < endCol; index++)
@@ -123,7 +123,7 @@ namespace ExcelToByteFile
 				string type = ExcelTool.GetCellValue(typeCell, _evaluator).Trim().Replace(" ","").ToLower();
 				string name = ExcelTool.GetCellValue(nameCell, _evaluator).Trim();
 				string comment = ExcelTool.GetCellValue(commentCell, _evaluator);
-				bool isNotesCol = (type.Contains(ConstDefine.noteChar)) 
+				bool isNotesCol = (type == ConstDefine.noteChar.ToString()) 
 					|| (GlobalConfig.Ins.typeNullIsNoteCol && (type == string.Empty));
 				if (!isNotesCol)
 				{
@@ -189,7 +189,7 @@ namespace ExcelToByteFile
         {
 			ICell firstCell = row.GetCell(row.FirstCellNum);
 			string value = ExcelTool.GetCellValue(firstCell, _evaluator);
-			return value.ToLower().Contains(ConstDefine.noteChar);
+			return value.ToLower() == ConstDefine.noteChar.ToString();
 		}
 
 		/// <summary>
