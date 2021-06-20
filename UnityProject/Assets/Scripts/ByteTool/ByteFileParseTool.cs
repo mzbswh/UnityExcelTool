@@ -27,6 +27,20 @@ public static class ByteFileParseTool
 		ReadHelper<double>.Read = (data, index) => { return ReadDouble(data, index); };
 		ReadHelper<string>.Read = (data, index) => { return ReadString(data, index); };
 
+		ReadHelper<List<bool>>.Read = (data, index) => { return ReadListBool(data, index); };
+		ReadHelper<List<sbyte>>.Read = (data, index) => { return ReadListSByte(data, index); };
+		ReadHelper<List<byte>>.Read = (data, index) => { return ReadListByte(data, index); };
+		ReadHelper<List<ushort>>.Read = (data, index) => { return ReadListUShort(data, index); };
+		ReadHelper<List<short>>.Read = (data, index) => { return ReadListShort(data, index); };
+		ReadHelper<List<uint>>.Read = (data, index) => { return ReadListUInt(data, index); };
+		ReadHelper<List<int>>.Read = (data, index) => { return ReadListInt(data, index); };
+		ReadHelper<List<ulong>>.Read = (data, index) => { return ReadListULong(data, index); };
+		ReadHelper<List<long>>.Read = (data, index) => { return ReadListLong(data, index); };
+		ReadHelper<List<float>>.Read = (data, index) => { return ReadListFloat(data, index); };
+		ReadHelper<List<double>>.Read = (data, index) => { return ReadListDouble(data, index); };
+		ReadHelper<List<string>>.Read = (data, index) => { return ReadListString(data, index); };
+
+
 		ReadHelper<bool>.ReadList = (data, index) => { return ReadListBool(data, index); };
 		ReadHelper<sbyte>.ReadList = (data, index) => { return ReadListSByte(data, index); };
 		ReadHelper<byte>.ReadList = (data, index) => { return ReadListByte(data, index); };
