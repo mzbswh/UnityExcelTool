@@ -40,7 +40,6 @@ public static class ByteFileParseTool
 		ReadHelper<List<double>>.Read = (data, index) => { return ReadListDouble(data, index); };
 		ReadHelper<List<string>>.Read = (data, index) => { return ReadListString(data, index); };
 
-
 		ReadHelper<bool>.ReadList = (data, index) => { return ReadListBool(data, index); };
 		ReadHelper<sbyte>.ReadList = (data, index) => { return ReadListSByte(data, index); };
 		ReadHelper<byte>.ReadList = (data, index) => { return ReadListByte(data, index); };
