@@ -42,9 +42,6 @@ namespace ExcelToByteFile
             this.byteFileOutputDir = new System.Windows.Forms.Label();
             this.dialog_selectFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.button1 = new System.Windows.Forms.Button();
-            this.autoCompletion = new System.Windows.Forms.CheckBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.autoCompletionVal = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
             this.codeFileOutputDir = new System.Windows.Forms.Label();
@@ -52,8 +49,6 @@ namespace ExcelToByteFile
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.progressLab = new System.Windows.Forms.Label();
             this.selectStructDir = new System.Windows.Forms.Panel();
-            this.structInfoOutputDir = new System.Windows.Forms.Label();
-            this.button3 = new System.Windows.Forms.Button();
             this.generateStructCs = new System.Windows.Forms.CheckBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
@@ -157,38 +152,6 @@ namespace ExcelToByteFile
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.OnClick_SelectFileFolder);
             // 
-            // autoCompletion
-            // 
-            this.autoCompletion.AutoSize = true;
-            this.autoCompletion.Location = new System.Drawing.Point(10, 543);
-            this.autoCompletion.Name = "autoCompletion";
-            this.autoCompletion.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.autoCompletion.Size = new System.Drawing.Size(247, 25);
-            this.autoCompletion.TabIndex = 15;
-            this.autoCompletion.Text = "自动填充空单元格(仅数值类型)";
-            this.autoCompletion.UseVisualStyleBackColor = true;
-            this.autoCompletion.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.ForeColor = System.Drawing.Color.DodgerBlue;
-            this.label3.Location = new System.Drawing.Point(263, 544);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(74, 21);
-            this.label3.TabIndex = 16;
-            this.label3.Text = "填充值：";
-            // 
-            // autoCompletionVal
-            // 
-            this.autoCompletionVal.Location = new System.Drawing.Point(329, 541);
-            this.autoCompletionVal.Name = "autoCompletionVal";
-            this.autoCompletionVal.Size = new System.Drawing.Size(100, 28);
-            this.autoCompletionVal.TabIndex = 17;
-            this.autoCompletionVal.Text = "0";
-            this.autoCompletionVal.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.autoCompletionVal.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
-            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -257,16 +220,11 @@ namespace ExcelToByteFile
             // 
             // selectStructDir
             // 
-            this.selectStructDir.Controls.Add(this.structInfoOutputDir);
-            this.selectStructDir.Controls.Add(this.button3);
             this.selectStructDir.Controls.Add(this.generateStructCs);
             this.selectStructDir.Controls.Add(this.btn_selectFiles);
             this.selectStructDir.Controls.Add(this.button1);
             this.selectStructDir.Controls.Add(this.btn_generate);
-            this.selectStructDir.Controls.Add(this.autoCompletionVal);
-            this.selectStructDir.Controls.Add(this.label3);
             this.selectStructDir.Controls.Add(this.intro);
-            this.selectStructDir.Controls.Add(this.autoCompletion);
             this.selectStructDir.Controls.Add(this.lsBox_selectedFiles);
             this.selectStructDir.Controls.Add(this.label1);
             this.selectStructDir.Controls.Add(this.codeFileOutputDir);
@@ -278,27 +236,6 @@ namespace ExcelToByteFile
             this.selectStructDir.Name = "selectStructDir";
             this.selectStructDir.Size = new System.Drawing.Size(760, 620);
             this.selectStructDir.TabIndex = 26;
-            // 
-            // structInfoOutputDir
-            // 
-            this.structInfoOutputDir.AutoSize = true;
-            this.structInfoOutputDir.ForeColor = System.Drawing.Color.DodgerBlue;
-            this.structInfoOutputDir.Location = new System.Drawing.Point(243, 500);
-            this.structInfoOutputDir.Name = "structInfoOutputDir";
-            this.structInfoOutputDir.Size = new System.Drawing.Size(74, 21);
-            this.structInfoOutputDir.TabIndex = 31;
-            this.structInfoOutputDir.Text = "输出路径";
-            this.structInfoOutputDir.MouseHover += new System.EventHandler(this.structInfoOutputDir_MouseHover);
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(157, 496);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(80, 30);
-            this.button3.TabIndex = 30;
-            this.button3.Text = "选择";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // generateStructCs
             // 
@@ -359,9 +296,6 @@ namespace ExcelToByteFile
         private System.Windows.Forms.Label byteFileOutputDir;
         private System.Windows.Forms.FolderBrowserDialog dialog_selectFolder;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.CheckBox autoCompletion;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox autoCompletionVal;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Label codeFileOutputDir;
@@ -373,8 +307,6 @@ namespace ExcelToByteFile
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem 删除;
         private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.Button button3;
         private System.Windows.Forms.CheckBox generateStructCs;
-        private System.Windows.Forms.Label structInfoOutputDir;
     }
 }

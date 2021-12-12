@@ -9,6 +9,8 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
 
+#pragma warning disable IDE1006
+
 namespace ExcelToByteFile
 {
     public partial class MainForm : Form
@@ -28,11 +30,7 @@ namespace ExcelToByteFile
         {
             byteFileOutputDir.Text = GlobalConfig.Ins.byteFileOutputDir;
             codeFileOutputDir.Text = GlobalConfig.Ins.codeFileOutputDir;
-            autoCompletion.Checked = GlobalConfig.Ins.autoCompletion;
-            autoCompletionVal.Text = GlobalConfig.Ins.autoCompletionVal;
-            structInfoOutputDir.Text = GlobalConfig.Ins.structOutputDir;
             generateStructCs.Checked = GlobalConfig.Ins.generateStructInfoCs;
-            //MessageBox.Show(GlobalConfig.Ins.structOutputDir + " " + GlobalConfig.Ins.generateStructInfoCs);
         }
 
         /// <summary>
@@ -149,16 +147,6 @@ namespace ExcelToByteFile
             return selectPath;
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            GlobalConfig.Ins.autoCompletion = autoCompletion.Checked;
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-            GlobalConfig.Ins.autoCompletionVal = autoCompletionVal.Text;
-        }
-
         private void intro_Click(object sender, EventArgs e)
         {
             MessageBox.Show("1. 类型单元格或一行（除前3行）第一个单元格包含 # 时为注释列或行\n" +
@@ -261,27 +249,6 @@ namespace ExcelToByteFile
         private void checkBox1_CheckedChanged_3(object sender, EventArgs e)
         {
             GlobalConfig.Ins.generateStructInfoCs = generateStructCs.Checked;
-            if (generateStructCs.Checked)
-            {
-                button3.Enabled = true;
-                structInfoOutputDir.Enabled = true;
-            }
-            else
-            {
-                button3.Enabled = false;
-                structInfoOutputDir.Enabled = false;
-            }
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            GlobalConfig.Ins.structOutputDir = OpenSelectFolderDialog(GlobalConfig.Ins.structOutputDir);
-            structInfoOutputDir.Text = GlobalConfig.Ins.structOutputDir;
-        }
-
-        private void structInfoOutputDir_MouseHover(object sender, EventArgs e)
-        {
-            toolTip1.Show(structInfoOutputDir.Text, structInfoOutputDir);
         }
     }
 }

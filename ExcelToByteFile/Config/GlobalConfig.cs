@@ -27,34 +27,21 @@ namespace ExcelToByteFile
 		/// </summary>
 		public string codeFileOutputDir = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
 
-		public string structOutputDir = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-
-		/// <summary>
-		/// 是否自动补全
-		/// </summary>
-		public bool autoCompletion = false;
-
-		/// <summary>
-		/// 自动补全的值
-		/// </summary>
-		public string autoCompletionVal = "0";
-
+        /// <summary>
+        /// 是否生成结构体信息文件
+        /// </summary>
 		public bool generateStructInfoCs = true;
 
 		/// <summary>
 		/// 存储在本地的配置文件名称  
 		/// </summary>
-		private const string configFileStoreName = "config.data";
+		private const string localConfigName = "config.data";
 
-		/// <summary>
-		/// 读取配置文件
-		/// </summary>
 		public void ReadConfig()
         {
 			string appPath = Application.StartupPath;
-			string configPath = Path.Combine(appPath, configFileStoreName);
+			string configPath = Path.Combine(appPath, localConfigName);
 
-			// 如果配置文件不存在
 			if (!File.Exists(configPath))
 				return;
 
@@ -70,13 +57,7 @@ namespace ExcelToByteFile
 				str = sr.ReadLine();
 				if (Directory.Exists(str)) codeFileOutputDir = str;
 				str = sr.ReadLine();
-				autoCompletion = str == ConstDefine.trueWord;
-				str = sr.ReadLine();
-				autoCompletionVal = str;
-				str = sr.ReadLine();
-				generateStructInfoCs = str == ConstDefine.trueWord;
-                str = sr.ReadLine();
-				structOutputDir = str;
+				generateStructInfoCs = str == SymbolDef.trueWord;
 
 				sr.Dispose();
 				sr.Close();
@@ -92,17 +73,11 @@ namespace ExcelToByteFile
 			}
 		}
 
-		/// <summary>
-		/// 存储配置文件
-		/// </summary>
 		public void SaveConfig()
 		{
-			string appPath = Application.StartupPath;
-			string configPath = Path.Combine(appPath, configFileStoreName);
+			string configPath = Path.Combine(Application.StartupPath, localConfigName);
 
-			// 删除旧文件
-			if (File.Exists(configPath))
-				File.Delete(configPath);
+			if (File.Exists(configPath)) File.Delete(configPath);
 
 			FileStream fs = new FileStream(configPath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
 			try
@@ -113,10 +88,7 @@ namespace ExcelToByteFile
 				sw.WriteLine(lastSelectExcelPath);
 				sw.WriteLine(byteFileOutputDir);
 				sw.WriteLine(codeFileOutputDir);
-				sw.WriteLine(autoCompletion ? ConstDefine.trueWord : ConstDefine.falseWord);    // True False
-				sw.WriteLine(autoCompletionVal);
-				sw.WriteLine(generateStructInfoCs ? ConstDefine.trueWord : ConstDefine.falseWord);
-                sw.WriteLine(structOutputDir);
+				sw.WriteLine(generateStructInfoCs ? SymbolDef.trueWord : SymbolDef.falseWord);
 
 				sw.Flush();
 				sw.Dispose();

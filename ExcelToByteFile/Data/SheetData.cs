@@ -10,18 +10,15 @@ using ExcelToByteFile.Utils;
 
 namespace ExcelToByteFile
 {
-    /// <summary>
-    /// excel里一个sheet的数据类
-    /// </summary>
     public class SheetData
     {
-        public string ExcelName => excelData.ExcelName;
+        public string ExcelName => excelData.Name;
 
-        public string SheetName { get; }
+        public string Name { get; }
 
-        public string ExportName => excelData.sheetDataList.Count <= 1 ? ExcelName : ExcelName + "_" + SheetName;
+        public string ExportName => excelData.sheetDataList.Count <= 1 ? ExcelName : ExcelName + "_" + Name;
 
-        public bool CanExport { get; private set; }
+        public bool ShouldExport { get; private set; }
 
         public int IdColIndex { get; private set; }     // 从0开始，不包含注释列
 
@@ -45,7 +42,7 @@ namespace ExcelToByteFile
         {
             this.excelData = excelData;
             this.sheet = sheet;
-            SheetName = sheet.SheetName;
+            Name = sheet.SheetName;
 		}
 
         public void Load()
@@ -64,9 +61,9 @@ namespace ExcelToByteFile
             // 先解析第一个单元格，获取此sheet的导出信息
             IRow row = sheet.GetRow(0);
             ICell cell = row.GetCell(0);
-            string[] sheetExportInfo = GetCellValue(cell).Split(Environment.NewLine.ToCharArray());
+            string[] sheetExportInfo = GetCellValue(cell).Split(Environment.NewLine);
             ParseSheetExportInfo(sheetExportInfo);
-            if (!CanExport) return;
+            if (!ShouldExport) return;
 
             IRow commentRow = null, typeRow = null, nameRow = null;
             byte ok = 0;
@@ -84,7 +81,7 @@ namespace ExcelToByteFile
             }
             if (typeRow == null || nameRow == null)
             {
-                Log.LogError($"Excel: {ExcelName} Sheet: {SheetName} 没有检测到类型行或名字行");
+                Log.Error($"Excel: {ExcelName} Sheet: {Name} 没有检测到类型行或名字行");
             }
 			int endCol = typeRow.LastCellNum;
             bool existIdCol = false;
@@ -104,17 +101,17 @@ namespace ExcelToByteFile
                 if (string.IsNullOrEmpty(type))
                 {
                     //Log.LogError($"检测到空列：第{index}列");
-                    Log.LogError($"Excel: {ExcelName} Sheet: {SheetName} 检测到空列：第{index}列");
+                    Log.Error($"Excel: {ExcelName} Sheet: {Name} 检测到空列：第{index}列");
                 }
                 else if (!DataTypeHelper.IsValidType(type))
                 {
                     //Log.LogError($"错误的数据类型：第{index}列, {type}");
-                    Log.LogError($"错误的数据类型：Excel: {ExcelName} Sheet: {SheetName} 第{index}列, {type}");
+                    Log.Error($"错误的数据类型：Excel: {ExcelName} Sheet: {Name} 第{index}列, {type}");
                 }
                 else if (ExistName(name))
                 {
                     //Log.LogError($"检测到重复变量名称 : 第{index}列, {name}");
-                    Log.LogError($"检测到重复变量名称 : Excel: {ExcelName} Sheet: {SheetName} 第{index}列, {name}");
+                    Log.Error($"检测到重复变量名称 : Excel: {ExcelName} Sheet: {Name} 第{index}列, {name}");
                 }
                 string processedType = DataTypeHelper.GetMainType(type);
                 string[] subType = DataTypeHelper.GetSubType(type);
@@ -132,7 +129,7 @@ namespace ExcelToByteFile
 			// 如果没有ID列
 			if (!existIdCol)
 			{
-				Log.LogError($"{ExcelName}_{SheetName}表格必须设立一个 'id' 列.");
+				Log.Error($"{ExcelName}_{Name}表格必须设立一个 'id' 列.");
 			}
 
 			// 所有数据行
@@ -157,7 +154,7 @@ namespace ExcelToByteFile
             {
                 value = string.Empty;
                 string keyword = sheetExportInfo[i].ToLower();
-                if (keyword[0] == ConstDefine.reverseChar)
+                if (keyword[0] == SymbolDef.reverseChar)
                 {
                     keyword = keyword[1..];
                     reverse = true;
@@ -178,28 +175,28 @@ namespace ExcelToByteFile
                 
                 switch (keyword)
                 {
-                    case SheetKeyWord.Export:
+                    case SheetKeyword.Export:
                         if (reverse)
                         {
-                            CanExport = false;
+                            ShouldExport = false;
                         }
                         else
                         {
                             if (value == string.Empty)
                             {
-                                CanExport = true;
+                                ShouldExport = true;
                             }
-                            else if (value == ConstDefine.trueWord)
+                            else if (value == SymbolDef.trueWord)
                             {
-                                CanExport = true;
+                                ShouldExport = true;
                             }
-                            else if (value == ConstDefine.falseWord)
+                            else if (value == SymbolDef.falseWord)
                             {
-                                CanExport = false;
+                                ShouldExport = false;
                             }
                             else
                             {
-                                CanExport = false;
+                                ShouldExport = false;
                             }
                         }
                         break;
@@ -216,7 +213,7 @@ namespace ExcelToByteFile
             {
                 return RowLabel.None;
             }
-            else if (s == ConstDefine.noteChar.ToString() || s == RowLabel.Note.ToString().ToLower())
+            else if (s == SymbolDef.noteChar.ToString() || s == RowLabel.Note.ToString().ToLower())
             {
                 return RowLabel.Note;
             }
@@ -245,7 +242,7 @@ namespace ExcelToByteFile
             {
                 return ColLabel.None;
             }
-            else if (s == ConstDefine.noteChar.ToString() || s == RowLabel.Note.ToString().ToLower())
+            else if (s == SymbolDef.noteChar.ToString() || s == RowLabel.Note.ToString().ToLower())
             {
                 return ColLabel.Note;
             }
@@ -295,18 +292,14 @@ namespace ExcelToByteFile
                 // 如果开启了自动补全功能且是可以自动补全的类型，就设置其值		
                 if (string.IsNullOrEmpty(value))
                 {
-                    if (GlobalConfig.Ins.autoCompletion)
+                    string type = heads[i].MainType;
+                    if (DataTypeHelper.IsBaseType(type) && type != TypeDefine.stringType)
+                        value = 0.ToString();
+                    else if (type == TypeDefine.stringType)
+                        value = string.Empty;
+                    else
                     {
-                        string type = heads[i].MainType;
-                        if (DataTypeHelper.IsBaseType(type) && type != TypeDefine.stringType)
-                            value = GlobalConfig.Ins.autoCompletionVal;
-                        else if (type == TypeDefine.stringType)
-                            value = string.Empty;
-                        else
-                        {
-                            Log.LogError($"此列单元格数值不能为空，第{cellNum}列");
-                        }
-
+                        Log.Error($"此列单元格数值不能为空，第{cellNum}列");
                     }
                 }
                 ls.Add(value);
@@ -335,12 +328,12 @@ namespace ExcelToByteFile
                         return val.StringValue;
                     else
                     {
-                        Log.LogError($"未支持的公式类型 : {val.CellType}");
+                        Log.Error($"未支持的公式类型 : {val.CellType}");
                         return string.Empty;
                     }
                 }
                 default:
-                    Log.LogError($"未支持的单元格类型 : {cell.CellType}");
+                    Log.Error($"未支持的单元格类型 : {cell.CellType}");
                     return string.Empty;
             }
         }

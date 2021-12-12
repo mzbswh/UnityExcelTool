@@ -5,13 +5,13 @@ using System.Text;
 namespace ExcelToByteFile
 {
 	/// <summary>
-	/// sheet表头部数据，每个数据列都对应一个头数据
+	/// 保存列信息：列名、类型等
 	/// </summary>
 	public class HeadData
 	{
-		/// <summary>
-		/// 名称
-		/// </summary>
+        /// <summary>
+        /// 变量名称
+        /// </summary>
 		public string Name { get; }
 
 		/// <summary>
@@ -30,10 +30,13 @@ namespace ExcelToByteFile
 		public string Comment { get; }
 
 		/// <summary>
-		/// 所在第几列, 注释列会影响此值
+		/// 所在第几列，从0开始, 对应excel表格的列
 		/// </summary>
 		public int CellNum { get; }
 
+        /// <summary>
+        /// 是否是主列，主列将作为索引
+        /// </summary>
         public bool Primary { get; }
 
 		public HeadData(string name, string type,string[] subType, string comment, int cellNum, bool primary)

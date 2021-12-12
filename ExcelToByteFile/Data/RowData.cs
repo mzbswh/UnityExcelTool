@@ -5,18 +5,12 @@ using System.Text;
 
 namespace ExcelToByteFile
 {
-	/// <summary>
-	/// sheet表一行数据
-	/// </summary>
 	public class RowData
 	{
-		/// <summary>
-		/// 一行的数据类
-		/// </summary>
 		public IRow Row { get; }
 
 		/// <summary>
-		/// 单元格数据列表
+		/// 一行的所有有效数据
 		/// </summary>
 		public List<string> ValueList { get; }
 

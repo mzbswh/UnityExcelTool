@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "ca12e317-7f41-48f4-b61a-33f310340c17": {
+      "ProjectGuid": "ca12e317-7f41-48f4-b61a-33f310340c17",
+      "DisplayName": "ExcelToByteFile",
+      "ColorIndex": 0
+    }
+  },
+  "NextColorIndex": 1
+}

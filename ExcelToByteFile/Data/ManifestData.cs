@@ -4,14 +4,14 @@ using System.Windows.Forms;
 namespace ExcelToByteFile
 {
     /// <summary>
-    /// 存放每个生成的字节file的数据，是对sheetData数据信息的进一步提炼，用于生成总信息文件
+    /// 每个生成的bytes文件对应生成一个ManifestData，最后所有的ManifestData会整体生成一个manifest.bytes文件
     /// </summary>
-    public class FileInfoData
+    public class ManifestData
     {
         /// <summary>
         /// 生成字节文件名称
         /// </summary>
-        public string FileName { get; }
+        public string ByteFileName { get; }
 
         /// <summary>
         /// 行数
@@ -29,7 +29,7 @@ namespace ExcelToByteFile
         public int ColCount => Tokens.Count;
 
         /// <summary>
-        /// 对齐数据的长度
+        /// 对齐数据的长度 (= RowCount * RowLength)
         /// </summary>
         public int AlignLength => RowCount * RowLength;
 
@@ -58,9 +58,9 @@ namespace ExcelToByteFile
         /// </summary>
         public readonly List<string> Comments = new List<string>();
 
-        public FileInfoData(SheetData data)
+        public ManifestData(SheetData data)
         {
-            FileName = data.ExportName;
+            ByteFileName = data.ExportName;
             RowCount = data.rows.Count;
             RowLength = GetRowLength(data.heads);
             ColOffset = GetColOffset(data.heads);
@@ -268,7 +268,7 @@ namespace ExcelToByteFile
                 return "public " + csType + " " + varName +
                     " { get { return ExcelDataAccess.Get" + csType + "<" +
                       PrimaryColCsType +
-                    ">(ExcelName." + FileName + ", primaryColVal, " + off.ToString() + "); } }";
+                    ">(ExcelName." + ByteFileName + ", primaryColVal, " + off.ToString() + "); } }";
             }
             else if (type >= (int)TypeToken.Dictionary)
             {
@@ -279,7 +279,7 @@ namespace ExcelToByteFile
                 return "public Dictionary<" + keyType + ", " + valType + "> " + varName +
                     " { get { return ExcelDataAccess.GetDict<" +
                     keyType + ", " + valType + ", " + PrimaryColCsType +
-                    ">(ExcelName." + FileName + ", primaryColVal, " + off.ToString() + "); } }";
+                    ">(ExcelName." + ByteFileName + ", primaryColVal, " + off.ToString() + "); } }";
             }
             else if (type >= (int)TypeToken.List)
             {
@@ -287,14 +287,14 @@ namespace ExcelToByteFile
                 return "public " + csType + " " + varName +
                     " { get { return ExcelDataAccess.GetList<" +
                     ((TypeToken)subToken).ToString().ToLower() + ", " + PrimaryColCsType +
-                    ">(ExcelName." + FileName + ", primaryColVal, " + off.ToString() + "); } }";
+                    ">(ExcelName." + ByteFileName + ", primaryColVal, " + off.ToString() + "); } }";
             }
             else
             {
                 return "public " + csType + " " + varName +
                     " { get { return ExcelDataAccess.Get<" + 
                     csType + ", " + PrimaryColCsType + 
-                    ">(ExcelName." + FileName + ", primaryColVal, " + off.ToString() + "); } }";
+                    ">(ExcelName." + ByteFileName + ", primaryColVal, " + off.ToString() + "); } }";
             }
         }
     }

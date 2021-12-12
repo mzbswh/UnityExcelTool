@@ -97,7 +97,7 @@ namespace ExcelToByteFile
 		public static Vector2Int StringToVec2Int(string str)
         {
 			Vector2Int vec;
-			string[] s = str.Split(ConstDefine.splitChar);
+			string[] s = str.Split(SymbolDef.splitChar);
 			int x = int.Parse(s[0].Trim());
 			int y = int.Parse(s[1].Trim());
 			vec = new Vector2Int(x, y);
@@ -106,7 +106,7 @@ namespace ExcelToByteFile
 		public static Vector2 StringToVec2(string str)
 		{
 			Vector2 vec;
-			string[] s = str.Split(ConstDefine.splitChar);
+			string[] s = str.Split(SymbolDef.splitChar);
 			float x = float.Parse(s[0].Trim());
 			float y = float.Parse(s[1].Trim());
 			vec = new Vector2(x, y);
@@ -115,7 +115,7 @@ namespace ExcelToByteFile
 		public static Vector3Int StringToVec3Int(string str)
 		{
 			Vector3Int vec;
-			string[] s = str.Split(ConstDefine.splitChar);
+			string[] s = str.Split(SymbolDef.splitChar);
 			int x = int.Parse(s[0].Trim());
 			int y = int.Parse(s[1].Trim());
 			int z = int.Parse(s[2].Trim());
@@ -125,7 +125,7 @@ namespace ExcelToByteFile
 		public static Vector3 StringToVec3(string str)
 		{
 			Vector3 vec;
-			string[] s = str.Split(ConstDefine.splitChar);
+			string[] s = str.Split(SymbolDef.splitChar);
 			float x = float.Parse(s[0].Trim());
 			float y = float.Parse(s[1].Trim());
 			float z = float.Parse(s[2].Trim());
@@ -135,7 +135,7 @@ namespace ExcelToByteFile
 		public static Vector4Int StringToVec4Int(string str)
 		{
 			Vector4Int vec;
-			string[] s = str.Split(ConstDefine.splitChar);
+			string[] s = str.Split(SymbolDef.splitChar);
 			int x = int.Parse(s[0].Trim());
 			int y = int.Parse(s[1].Trim());
 			int z = int.Parse(s[2].Trim());
@@ -146,7 +146,7 @@ namespace ExcelToByteFile
 		public static Vector4 StringToVec4(string str)
 		{
 			Vector4 vec;
-			string[] s = str.Split(ConstDefine.splitChar);
+			string[] s = str.Split(SymbolDef.splitChar);
 			float x = float.Parse(s[0].Trim());
 			float y = float.Parse(s[1].Trim());
 			float z = float.Parse(s[2].Trim());

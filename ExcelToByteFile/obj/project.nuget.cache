@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "nR7HGK7j7+veEMNRBABsUi2wAQexoCEtUtajPqVc1Lqg4mLV6M/cFd6t4b8qwqil69TvuJTapL9U6iuiO5GPxQ==",
+  "dgSpecHash": "w3qRI+sUsVF7SIMV2nlWWB8R53Rc2L2XIgfCvCIMFdr+Wq0h9Zfs3DLs7lYjvSsFKPZbrHBgXmySa9i3oql17Q==",
   "success": true,
-  "projectFilePath": "C:\\Users\\mzbswh\\Desktop\\ExcelToByteFile\\ExcelToByteFile\\ExcelToByteFile.csproj",
+  "projectFilePath": "C:\\Users\\mzbswh\\Desktop\\UnityExcelTool\\ExcelToByteFile\\ExcelToByteFile.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\mzbswh\\.nuget\\packages\\microsoft.netcore.platforms\\2.0.0\\microsoft.netcore.platforms.2.0.0.nupkg.sha512",
     "C:\\Users\\mzbswh\\.nuget\\packages\\microsoft.win32.systemevents\\4.5.0\\microsoft.win32.systemevents.4.5.0.nupkg.sha512",
@@ -14,7 +14,11 @@
     "C:\\Users\\mzbswh\\.nuget\\packages\\system.security.accesscontrol\\4.5.0\\system.security.accesscontrol.4.5.0.nupkg.sha512",
     "C:\\Users\\mzbswh\\.nuget\\packages\\system.security.cryptography.protecteddata\\4.5.0\\system.security.cryptography.protecteddata.4.5.0.nupkg.sha512",
     "C:\\Users\\mzbswh\\.nuget\\packages\\system.security.permissions\\4.5.0\\system.security.permissions.4.5.0.nupkg.sha512",
-    "C:\\Users\\mzbswh\\.nuget\\packages\\system.security.principal.windows\\4.5.0\\system.security.principal.windows.4.5.0.nupkg.sha512"
+    "C:\\Users\\mzbswh\\.nuget\\packages\\system.security.principal.windows\\4.5.0\\system.security.principal.windows.4.5.0.nupkg.sha512",
+    "C:\\Users\\mzbswh\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.21\\microsoft.netcore.app.host.win-x64.3.1.21.nupkg.sha512",
+    "C:\\Users\\mzbswh\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\3.1.10\\microsoft.aspnetcore.app.ref.3.1.10.nupkg.sha512",
+    "C:\\Users\\mzbswh\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\3.1.0\\microsoft.windowsdesktop.app.ref.3.1.0.nupkg.sha512",
+    "C:\\Users\\mzbswh\\.nuget\\packages\\microsoft.netcore.app.ref\\3.1.0\\microsoft.netcore.app.ref.3.1.0.nupkg.sha512"
   ],
   "logs": []
 }

@@ -14,15 +14,15 @@ namespace ExcelToByteFile
             Console.WriteLine(msg);
         }
 
-        public static void LogMessageBox(string msg, string caption = null)
+        public static void Info(string msg, string caption = null)
         {
-            MessageBox.Show(msg, caption);
+            System.Windows.Forms.MessageBox.Show(msg, caption);
         }
 
-        public static void LogError(string msg)
+        public static void Error(string msg)
         {
             if (Program.IsCommandLine) Console.WriteLine(msg);
-            else MessageBox.Show(msg + Environment.NewLine + Environment.NewLine
+            else System.Windows.Forms.MessageBox.Show(msg + Environment.NewLine + Environment.NewLine
                 + "按确定键退出...", "错误", MessageBoxButtons.OK);
             Environment.Exit(1);
         }

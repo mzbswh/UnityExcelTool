@@ -20,10 +20,8 @@ namespace ExcelToByteFile
         }
         
         /// <summary>
-        /// 是否是基础类型（除列表和字典外的类型）
+        /// 是否是基础类型（除列表和字典向量外的类型）
         /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
         public static bool IsBaseType(string type)
         {
             switch (type)
