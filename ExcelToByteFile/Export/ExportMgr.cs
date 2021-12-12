@@ -17,8 +17,8 @@ namespace ExcelToByteFile
 
 	public class ExportMgr
     {
-        static ByteWriteBuffer fileBuffer = new ByteWriteBuffer(ConfigDefine.fileStreamMaxLen);
-        static List<FileInfoData> fileDatas = new List<FileInfoData>();
+        static readonly ByteWriteBuffer fileBuffer = new ByteWriteBuffer(ConfigDefine.fileStreamMaxLen);
+        static readonly List<FileInfoData> fileDatas = new List<FileInfoData>();
 
         public static void Export(List<string> fileList)
         {
@@ -42,7 +42,18 @@ namespace ExcelToByteFile
                 {
                     if (excelFile.Load())
                     {
-                        excelFile.Export();
+                        try
+                        {
+                            foreach (var sheet in excelFile.sheetDataList)
+                            {
+                                ExportByteFile(GlobalConfig.Ins.byteFileOutputDir, sheet);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            //Log.LogError($"表格[{ExcelName}]导出错误：{ex}");
+                            MessageBox.Show($"表格[{excelFile.ExcelName}]导出错误：{ex}");
+                        }
                     }
                     excelFile.Dispose();
                 }
@@ -60,12 +71,12 @@ namespace ExcelToByteFile
             ExportStructInfoCsCode(GlobalConfig.Ins.structOutputDir, fileDatas);
         }
 
-        public static void ExportOneSheet(string path, SheetData sheet)
+        public static void ExportByteFile(string path, SheetData sheet)
         {
-            Log.LogConsole($"正在生成 {sheet.GetExportFileName()}.bytes {sheet.rows.Count}行 {sheet.heads.Count}列 ...");
+            Log.LogConsole($"正在生成 {sheet.ExportName}.bytes {sheet.rows.Count}行 {sheet.heads.Count}列 ...");
             FileInfoData fileData = new FileInfoData(sheet);
             fileDatas.Add(fileData);
-            int heapStart = fileData.FileLength;
+            int heapStart = fileData.AlignLength;
             fileBuffer.SetHeapIndexStartPos(heapStart); // 设置引用类型起始地址
 
             for (int i = 0; i < sheet.rows.Count; i++)
@@ -81,7 +92,7 @@ namespace ExcelToByteFile
             }
 
             // 创建文件
-            string filePath = StringHelper.MakeFullPath(path + Path.DirectorySeparatorChar, $"{sheet.GetExportFileName()}.bytes");
+            string filePath = StringHelper.MakeFullPath(path + Path.DirectorySeparatorChar, $"{sheet.ExportName}.bytes");
             using (FileStream fs = new FileStream(filePath, FileMode.Create))
             {
                 byte[] data = fileBuffer.GetBuffer();

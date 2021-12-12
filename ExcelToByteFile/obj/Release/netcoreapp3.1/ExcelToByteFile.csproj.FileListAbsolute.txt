@@ -44,3 +44,13 @@ C:\Users\mzbswh\Desktop\新建文件夹\ExcelToByteFile\ExcelToByteFile\obj\Rele
 C:\Users\mzbswh\Desktop\新建文件夹\ExcelToByteFile\ExcelToByteFile\obj\Release\netcoreapp3.1\ExcelToByteFile.dll
 C:\Users\mzbswh\Desktop\新建文件夹\ExcelToByteFile\ExcelToByteFile\obj\Release\netcoreapp3.1\ExcelToByteFile.pdb
 C:\Users\mzbswh\Desktop\新建文件夹\ExcelToByteFile\ExcelToByteFile\obj\Release\netcoreapp3.1\ExcelToByteFile.genruntimeconfig.cache
+C:\Users\mzbswh\Desktop\ExcelToByteFile\ExcelToByteFile\obj\Release\netcoreapp3.1\ExcelToByteFile.csproj.AssemblyReference.cache
+C:\Users\mzbswh\Desktop\ExcelToByteFile\ExcelToByteFile\obj\Release\netcoreapp3.1\ExcelToByteFile.MainForm.resources
+C:\Users\mzbswh\Desktop\ExcelToByteFile\ExcelToByteFile\obj\Release\netcoreapp3.1\ExcelToByteFile.Properties.Resources.resources
+C:\Users\mzbswh\Desktop\ExcelToByteFile\ExcelToByteFile\obj\Release\netcoreapp3.1\ExcelToByteFile.csproj.GenerateResource.cache
+C:\Users\mzbswh\Desktop\ExcelToByteFile\ExcelToByteFile\obj\Release\netcoreapp3.1\ExcelToByteFile.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\mzbswh\Desktop\ExcelToByteFile\ExcelToByteFile\obj\Release\netcoreapp3.1\ExcelToByteFile.AssemblyInfoInputs.cache
+C:\Users\mzbswh\Desktop\ExcelToByteFile\ExcelToByteFile\obj\Release\netcoreapp3.1\ExcelToByteFile.AssemblyInfo.cs
+C:\Users\mzbswh\Desktop\ExcelToByteFile\ExcelToByteFile\obj\Release\netcoreapp3.1\ExcelToByteFile.csproj.CoreCompileInputs.cache
+C:\Users\mzbswh\Desktop\ExcelToByteFile\ExcelToByteFile\obj\Release\netcoreapp3.1\ExcelToByteFile.dll
+C:\Users\mzbswh\Desktop\ExcelToByteFile\ExcelToByteFile\obj\Release\netcoreapp3.1\ExcelToByteFile.pdb

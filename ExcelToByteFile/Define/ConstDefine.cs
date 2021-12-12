@@ -16,10 +16,13 @@ namespace ExcelToByteFile
         /// </summary>
         public const char noteChar = '#';
 
-        /// <summary>
-        /// excel头部固定行数
-        /// </summary>
-        public const int headFixedRowNum = 3; 
+        public const char reverseChar = '!';
+
+        public const char equalChar = '=';
+
+        public const string trueWord = "true";
+
+        public const string falseWord = "false";
     }
 
     public class TypeDefine
@@ -41,6 +44,11 @@ namespace ExcelToByteFile
         public const string dictType = "dict";
     }
 
+    public class SheetKeyWord
+    {
+        public const string Export = "Export";    // 导出
+    }
+
     public enum TypeToken
     {
         Null = 0,
@@ -59,5 +67,21 @@ namespace ExcelToByteFile
         List = 100,
         Dictionary = 10000,
         Vector = 20000,
+    }
+
+    public enum RowLabel
+    {
+        None,
+        Type,
+        Name,
+        Comment,
+        Note        // # 或 Note
+    }
+
+    public enum ColLabel
+    {
+        None,
+        Primary,    // KEY 或 Primary
+        Note
     }
 }

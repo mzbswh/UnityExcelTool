@@ -41,9 +41,6 @@ namespace ExcelToByteFile
             this.btn_selectByteFileOutputDir = new System.Windows.Forms.Button();
             this.byteFileOutputDir = new System.Windows.Forms.Label();
             this.dialog_selectFolder = new System.Windows.Forms.FolderBrowserDialog();
-            this.typeNullIsNote = new System.Windows.Forms.CheckBox();
-            this.defaultSkip = new System.Windows.Forms.NumericUpDown();
-            this.label2 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.autoCompletion = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -51,8 +48,6 @@ namespace ExcelToByteFile
             this.label4 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
             this.codeFileOutputDir = new System.Windows.Forms.Label();
-            this.commetInFirstRow = new System.Windows.Forms.CheckBox();
-            this.onlyOneSheet = new System.Windows.Forms.CheckBox();
             this.intro = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.progressLab = new System.Windows.Forms.Label();
@@ -60,15 +55,9 @@ namespace ExcelToByteFile
             this.structInfoOutputDir = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
             this.generateStructCs = new System.Windows.Forms.CheckBox();
-            this.customSheetPrefix = new System.Windows.Forms.TextBox();
-            this.customExportSheetPrefix = new System.Windows.Forms.CheckBox();
-            this.firstColIsPrimary = new System.Windows.Forms.CheckBox();
-            this.idColName = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.contextMenuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.defaultSkip)).BeginInit();
             this.selectStructDir.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -97,7 +86,7 @@ namespace ExcelToByteFile
             this.lsBox_selectedFiles.Location = new System.Drawing.Point(178, 0);
             this.lsBox_selectedFiles.Name = "lsBox_selectedFiles";
             this.lsBox_selectedFiles.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.lsBox_selectedFiles.Size = new System.Drawing.Size(582, 298);
+            this.lsBox_selectedFiles.Size = new System.Drawing.Size(582, 382);
             this.lsBox_selectedFiles.TabIndex = 1;
             this.lsBox_selectedFiles.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lsBox_selectedFiles_KeyDown);
             // 
@@ -131,7 +120,7 @@ namespace ExcelToByteFile
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(0, 330);
+            this.label1.Location = new System.Drawing.Point(0, 408);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(155, 21);
             this.label1.TabIndex = 3;
@@ -139,7 +128,7 @@ namespace ExcelToByteFile
             // 
             // btn_selectByteFileOutputDir
             // 
-            this.btn_selectByteFileOutputDir.Location = new System.Drawing.Point(157, 325);
+            this.btn_selectByteFileOutputDir.Location = new System.Drawing.Point(157, 403);
             this.btn_selectByteFileOutputDir.Name = "btn_selectByteFileOutputDir";
             this.btn_selectByteFileOutputDir.Size = new System.Drawing.Size(80, 30);
             this.btn_selectByteFileOutputDir.TabIndex = 4;
@@ -151,49 +140,12 @@ namespace ExcelToByteFile
             // 
             this.byteFileOutputDir.AutoSize = true;
             this.byteFileOutputDir.ForeColor = System.Drawing.Color.DodgerBlue;
-            this.byteFileOutputDir.Location = new System.Drawing.Point(243, 330);
+            this.byteFileOutputDir.Location = new System.Drawing.Point(243, 408);
             this.byteFileOutputDir.Name = "byteFileOutputDir";
             this.byteFileOutputDir.Size = new System.Drawing.Size(74, 21);
             this.byteFileOutputDir.TabIndex = 5;
             this.byteFileOutputDir.Text = "输出路径";
             this.byteFileOutputDir.MouseHover += new System.EventHandler(this.byteFileOutputDir_MouseHover);
-            // 
-            // typeNullIsNote
-            // 
-            this.typeNullIsNote.AutoSize = true;
-            this.typeNullIsNote.Location = new System.Drawing.Point(10, 461);
-            this.typeNullIsNote.Name = "typeNullIsNote";
-            this.typeNullIsNote.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.typeNullIsNote.Size = new System.Drawing.Size(253, 25);
-            this.typeNullIsNote.TabIndex = 11;
-            this.typeNullIsNote.Text = "类型单元格为空时认为是注释列";
-            this.typeNullIsNote.UseVisualStyleBackColor = true;
-            this.typeNullIsNote.CheckedChanged += new System.EventHandler(this.typeNullIsNote_CheckedChanged);
-            // 
-            // defaultSkip
-            // 
-            this.defaultSkip.Location = new System.Drawing.Point(377, 556);
-            this.defaultSkip.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.defaultSkip.Name = "defaultSkip";
-            this.defaultSkip.ReadOnly = true;
-            this.defaultSkip.Size = new System.Drawing.Size(63, 28);
-            this.defaultSkip.TabIndex = 12;
-            this.defaultSkip.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.defaultSkip.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(0, 558);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(375, 21);
-            this.label2.TabIndex = 13;
-            this.label2.Text = "读取头部固定3行数据后，默认跳过行数不读取数据:";
-            this.toolTip1.SetToolTip(this.label2, "例如：0代表实际数据从第4行开始读取，1从第5行。。。");
             // 
             // button1
             // 
@@ -208,7 +160,7 @@ namespace ExcelToByteFile
             // autoCompletion
             // 
             this.autoCompletion.AutoSize = true;
-            this.autoCompletion.Location = new System.Drawing.Point(10, 524);
+            this.autoCompletion.Location = new System.Drawing.Point(10, 543);
             this.autoCompletion.Name = "autoCompletion";
             this.autoCompletion.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.autoCompletion.Size = new System.Drawing.Size(247, 25);
@@ -221,7 +173,7 @@ namespace ExcelToByteFile
             // 
             this.label3.AutoSize = true;
             this.label3.ForeColor = System.Drawing.Color.DodgerBlue;
-            this.label3.Location = new System.Drawing.Point(263, 525);
+            this.label3.Location = new System.Drawing.Point(263, 544);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(74, 21);
             this.label3.TabIndex = 16;
@@ -229,7 +181,7 @@ namespace ExcelToByteFile
             // 
             // autoCompletionVal
             // 
-            this.autoCompletionVal.Location = new System.Drawing.Point(329, 522);
+            this.autoCompletionVal.Location = new System.Drawing.Point(329, 541);
             this.autoCompletionVal.Name = "autoCompletionVal";
             this.autoCompletionVal.Size = new System.Drawing.Size(100, 28);
             this.autoCompletionVal.TabIndex = 17;
@@ -240,7 +192,7 @@ namespace ExcelToByteFile
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(0, 368);
+            this.label4.Location = new System.Drawing.Point(0, 446);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(154, 21);
             this.label4.TabIndex = 18;
@@ -249,7 +201,7 @@ namespace ExcelToByteFile
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(157, 363);
+            this.button2.Location = new System.Drawing.Point(157, 441);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(80, 30);
             this.button2.TabIndex = 19;
@@ -261,36 +213,12 @@ namespace ExcelToByteFile
             // 
             this.codeFileOutputDir.AutoSize = true;
             this.codeFileOutputDir.ForeColor = System.Drawing.Color.DodgerBlue;
-            this.codeFileOutputDir.Location = new System.Drawing.Point(243, 368);
+            this.codeFileOutputDir.Location = new System.Drawing.Point(243, 446);
             this.codeFileOutputDir.Name = "codeFileOutputDir";
             this.codeFileOutputDir.Size = new System.Drawing.Size(74, 21);
             this.codeFileOutputDir.TabIndex = 20;
             this.codeFileOutputDir.Text = "输出路径";
             this.codeFileOutputDir.MouseHover += new System.EventHandler(this.codeFileOutputDir_MouseHover);
-            // 
-            // commetInFirstRow
-            // 
-            this.commetInFirstRow.AutoSize = true;
-            this.commetInFirstRow.Location = new System.Drawing.Point(10, 430);
-            this.commetInFirstRow.Name = "commetInFirstRow";
-            this.commetInFirstRow.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.commetInFirstRow.Size = new System.Drawing.Size(317, 25);
-            this.commetInFirstRow.TabIndex = 21;
-            this.commetInFirstRow.Text = "变量注释在第一行（不勾选默认第三行）";
-            this.commetInFirstRow.UseVisualStyleBackColor = true;
-            this.commetInFirstRow.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged_1);
-            // 
-            // onlyOneSheet
-            // 
-            this.onlyOneSheet.AutoSize = true;
-            this.onlyOneSheet.Location = new System.Drawing.Point(10, 492);
-            this.onlyOneSheet.Name = "onlyOneSheet";
-            this.onlyOneSheet.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.onlyOneSheet.Size = new System.Drawing.Size(168, 25);
-            this.onlyOneSheet.TabIndex = 22;
-            this.onlyOneSheet.Text = "只读取第一个Sheet";
-            this.onlyOneSheet.UseVisualStyleBackColor = true;
-            this.onlyOneSheet.CheckedChanged += new System.EventHandler(this.onlyOneSheet_CheckedChanged);
             // 
             // intro
             // 
@@ -332,19 +260,10 @@ namespace ExcelToByteFile
             this.selectStructDir.Controls.Add(this.structInfoOutputDir);
             this.selectStructDir.Controls.Add(this.button3);
             this.selectStructDir.Controls.Add(this.generateStructCs);
-            this.selectStructDir.Controls.Add(this.customSheetPrefix);
-            this.selectStructDir.Controls.Add(this.customExportSheetPrefix);
-            this.selectStructDir.Controls.Add(this.firstColIsPrimary);
-            this.selectStructDir.Controls.Add(this.idColName);
-            this.selectStructDir.Controls.Add(this.label5);
-            this.selectStructDir.Controls.Add(this.commetInFirstRow);
             this.selectStructDir.Controls.Add(this.btn_selectFiles);
             this.selectStructDir.Controls.Add(this.button1);
             this.selectStructDir.Controls.Add(this.btn_generate);
-            this.selectStructDir.Controls.Add(this.label2);
-            this.selectStructDir.Controls.Add(this.defaultSkip);
             this.selectStructDir.Controls.Add(this.autoCompletionVal);
-            this.selectStructDir.Controls.Add(this.onlyOneSheet);
             this.selectStructDir.Controls.Add(this.label3);
             this.selectStructDir.Controls.Add(this.intro);
             this.selectStructDir.Controls.Add(this.autoCompletion);
@@ -353,7 +272,6 @@ namespace ExcelToByteFile
             this.selectStructDir.Controls.Add(this.codeFileOutputDir);
             this.selectStructDir.Controls.Add(this.btn_selectByteFileOutputDir);
             this.selectStructDir.Controls.Add(this.button2);
-            this.selectStructDir.Controls.Add(this.typeNullIsNote);
             this.selectStructDir.Controls.Add(this.byteFileOutputDir);
             this.selectStructDir.Controls.Add(this.label4);
             this.selectStructDir.Location = new System.Drawing.Point(12, 12);
@@ -365,7 +283,7 @@ namespace ExcelToByteFile
             // 
             this.structInfoOutputDir.AutoSize = true;
             this.structInfoOutputDir.ForeColor = System.Drawing.Color.DodgerBlue;
-            this.structInfoOutputDir.Location = new System.Drawing.Point(243, 403);
+            this.structInfoOutputDir.Location = new System.Drawing.Point(243, 500);
             this.structInfoOutputDir.Name = "structInfoOutputDir";
             this.structInfoOutputDir.Size = new System.Drawing.Size(74, 21);
             this.structInfoOutputDir.TabIndex = 31;
@@ -374,7 +292,7 @@ namespace ExcelToByteFile
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(157, 399);
+            this.button3.Location = new System.Drawing.Point(157, 496);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(80, 30);
             this.button3.TabIndex = 30;
@@ -385,67 +303,14 @@ namespace ExcelToByteFile
             // generateStructCs
             // 
             this.generateStructCs.AutoSize = true;
-            this.generateStructCs.Location = new System.Drawing.Point(10, 399);
+            this.generateStructCs.Location = new System.Drawing.Point(10, 496);
             this.generateStructCs.Name = "generateStructCs";
             this.generateStructCs.Size = new System.Drawing.Size(141, 25);
             this.generateStructCs.TabIndex = 29;
             this.generateStructCs.Text = "生成结构信息类";
-            this.toolTip1.SetToolTip(this.generateStructCs, "行数据的结构信息，可更方便取得数据");
+            this.toolTip1.SetToolTip(this.generateStructCs, "行数据的的结构体定义，可更方便取得数据");
             this.generateStructCs.UseVisualStyleBackColor = true;
             this.generateStructCs.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged_3);
-            // 
-            // customSheetPrefix
-            // 
-            this.customSheetPrefix.Location = new System.Drawing.Point(377, 489);
-            this.customSheetPrefix.Name = "customSheetPrefix";
-            this.customSheetPrefix.Size = new System.Drawing.Size(100, 28);
-            this.customSheetPrefix.TabIndex = 28;
-            this.customSheetPrefix.Text = "s_";
-            this.customSheetPrefix.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.customSheetPrefix.TextChanged += new System.EventHandler(this.customSheetPrefix_TextChanged);
-            // 
-            // customExportSheetPrefix
-            // 
-            this.customExportSheetPrefix.AutoSize = true;
-            this.customExportSheetPrefix.Location = new System.Drawing.Point(198, 493);
-            this.customExportSheetPrefix.Name = "customExportSheetPrefix";
-            this.customExportSheetPrefix.Size = new System.Drawing.Size(182, 25);
-            this.customExportSheetPrefix.TabIndex = 27;
-            this.customExportSheetPrefix.Text = "自定义导出sheet前缀";
-            this.customExportSheetPrefix.UseVisualStyleBackColor = true;
-            this.customExportSheetPrefix.CheckedChanged += new System.EventHandler(this.customExportSheetPrefix_CheckedChanged);
-            // 
-            // firstColIsPrimary
-            // 
-            this.firstColIsPrimary.AutoSize = true;
-            this.firstColIsPrimary.Location = new System.Drawing.Point(263, 592);
-            this.firstColIsPrimary.Name = "firstColIsPrimary";
-            this.firstColIsPrimary.Size = new System.Drawing.Size(157, 25);
-            this.firstColIsPrimary.TabIndex = 26;
-            this.firstColIsPrimary.Text = "默认第一列为主列";
-            this.firstColIsPrimary.UseVisualStyleBackColor = true;
-            this.firstColIsPrimary.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged_2);
-            // 
-            // idColName
-            // 
-            this.idColName.Location = new System.Drawing.Point(88, 589);
-            this.idColName.Name = "idColName";
-            this.idColName.Size = new System.Drawing.Size(149, 28);
-            this.idColName.TabIndex = 25;
-            this.idColName.Text = "id";
-            this.idColName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.idColName.TextChanged += new System.EventHandler(this.textBox1_TextChanged_1);
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(0, 592);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(90, 21);
-            this.label5.TabIndex = 24;
-            this.label5.Text = "主列列名：";
-            this.toolTip1.SetToolTip(this.label5, "默认为 id，解析时作为字典的key值，只能是基本数据类型，不能是vector,list或dict");
-            this.label5.Click += new System.EventHandler(this.label5_Click);
             // 
             // panel2
             // 
@@ -475,7 +340,6 @@ namespace ExcelToByteFile
             this.Text = "Excel转字节文件";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.contextMenuStrip1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.defaultSkip)).EndInit();
             this.selectStructDir.ResumeLayout(false);
             this.selectStructDir.PerformLayout();
             this.panel2.ResumeLayout(false);
@@ -494,9 +358,6 @@ namespace ExcelToByteFile
         private System.Windows.Forms.Button btn_selectByteFileOutputDir;
         private System.Windows.Forms.Label byteFileOutputDir;
         private System.Windows.Forms.FolderBrowserDialog dialog_selectFolder;
-        private System.Windows.Forms.CheckBox typeNullIsNote;
-        private System.Windows.Forms.NumericUpDown defaultSkip;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.CheckBox autoCompletion;
         private System.Windows.Forms.Label label3;
@@ -504,8 +365,6 @@ namespace ExcelToByteFile
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Label codeFileOutputDir;
-        private System.Windows.Forms.CheckBox commetInFirstRow;
-        private System.Windows.Forms.CheckBox onlyOneSheet;
         private System.Windows.Forms.Button intro;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Label progressLab;
@@ -513,12 +372,7 @@ namespace ExcelToByteFile
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem 删除;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox idColName;
         private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.CheckBox firstColIsPrimary;
-        private System.Windows.Forms.TextBox customSheetPrefix;
-        private System.Windows.Forms.CheckBox customExportSheetPrefix;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.CheckBox generateStructCs;
         private System.Windows.Forms.Label structInfoOutputDir;

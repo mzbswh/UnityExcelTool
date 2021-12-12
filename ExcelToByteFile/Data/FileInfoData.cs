@@ -26,9 +26,12 @@ namespace ExcelToByteFile
         /// <summary>
         /// 列数（不包括注释列）
         /// </summary>
-        public int ColCount { get { return Tokens.Count; } }
+        public int ColCount => Tokens.Count;
 
-        public int FileLength { get { return RowCount * RowLength; } }
+        /// <summary>
+        /// 对齐数据的长度
+        /// </summary>
+        public int AlignLength => RowCount * RowLength;
 
         public int IdColIndex { get; }
 
@@ -57,14 +60,14 @@ namespace ExcelToByteFile
 
         public FileInfoData(SheetData data)
         {
-            FileName = data.GetExportFileName();
+            FileName = data.ExportName;
             RowCount = data.rows.Count;
             RowLength = GetRowLength(data.heads);
             ColOffset = GetColOffset(data.heads);
             Tokens = GetTypeToken(data.heads);
             VariableNames = GetVariable(data.heads);
             Comments = GetComment(data.heads);
-            IdColIndex = GlobalConfig.Ins.firstColIsPrimary ? 0 : VariableNames.FindIndex((x) => x == GlobalConfig.Ins.idColName);
+            IdColIndex = data.IdColIndex;
             PrimaryColCsType = GetCsType(IdColIndex);
         }
 

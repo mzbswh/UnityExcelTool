@@ -496,11 +496,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\mzbswh\\Desktop\\新建文件夹\\ExcelToByteFile\\ExcelToByteFile\\ExcelToByteFile.csproj",
+      "projectUniqueName": "C:\\Users\\mzbswh\\Desktop\\ExcelToByteFile\\ExcelToByteFile\\ExcelToByteFile.csproj",
       "projectName": "ExcelToByteFile",
-      "projectPath": "C:\\Users\\mzbswh\\Desktop\\新建文件夹\\ExcelToByteFile\\ExcelToByteFile\\ExcelToByteFile.csproj",
+      "projectPath": "C:\\Users\\mzbswh\\Desktop\\ExcelToByteFile\\ExcelToByteFile\\ExcelToByteFile.csproj",
       "packagesPath": "C:\\Users\\mzbswh\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\mzbswh\\Desktop\\新建文件夹\\ExcelToByteFile\\ExcelToByteFile\\obj\\",
+      "outputPath": "C:\\Users\\mzbswh\\Desktop\\ExcelToByteFile\\ExcelToByteFile\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "D:\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -556,7 +556,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.201\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.401\\RuntimeIdentifierGraph.json"
       }
     }
   }

@@ -39,43 +39,12 @@ namespace ExcelToByteFile
 		/// </summary>
 		public string autoCompletionVal = "0";
 
-		/// <summary>
-		/// 类型为空时认为是注释列
-		/// </summary>
-		public bool typeNullIsNoteCol = true;
-
-		/// <summary>
-		/// 开始读取数据时跳过的行，即从第3（头部固定行）+ 此值 行开始读取
-		/// </summary>
-		public int skipRowBeginRead = 0;
-
-		/// <summary>
-		/// true: 变量注释在第一行，false：注释是第三行
-		/// </summary>
-		public bool commentInFirstRow = false;
-
-		/// <summary>
-		/// 只读取一个sheet
-		/// </summary>
-		public bool onlyOneSheet = true;
-
-		public bool firstColIsPrimary = true;
-
-		public bool customExportSheetPrefix = false;
-
-		public string customSheetPrefix = "s_";
-
 		public bool generateStructInfoCs = true;
 
 		/// <summary>
-		/// 存储在本地的配置文件名称
+		/// 存储在本地的配置文件名称  
 		/// </summary>
 		private const string configFileStoreName = "config.data";
-
-		/// <summary>
-		/// id列名称
-		/// </summary>
-		public string idColName = "id";
 
 		/// <summary>
 		/// 读取配置文件
@@ -101,28 +70,12 @@ namespace ExcelToByteFile
 				str = sr.ReadLine();
 				if (Directory.Exists(str)) codeFileOutputDir = str;
 				str = sr.ReadLine();
-				autoCompletion = str == "True";
+				autoCompletion = str == ConstDefine.trueWord;
 				str = sr.ReadLine();
 				autoCompletionVal = str;
 				str = sr.ReadLine();
-				typeNullIsNoteCol = str == "True";
-				str = sr.ReadLine();
-				skipRowBeginRead = int.Parse(str);
-				str = sr.ReadLine();
-				commentInFirstRow = str == "True";
-				str = sr.ReadLine();
-				onlyOneSheet = str == "True";
-				str = sr.ReadLine();
-				idColName = str;
-				str = sr.ReadLine();
-				firstColIsPrimary = str == "True";
-				str = sr.ReadLine();
-				customExportSheetPrefix = str == "True";
-				str = sr.ReadLine();
-				customSheetPrefix = str;
-				str = sr.ReadLine();
-				generateStructInfoCs = str == "True";
-				str = sr.ReadLine();
+				generateStructInfoCs = str == ConstDefine.trueWord;
+                str = sr.ReadLine();
 				structOutputDir = str;
 
 				sr.Dispose();
@@ -160,18 +113,10 @@ namespace ExcelToByteFile
 				sw.WriteLine(lastSelectExcelPath);
 				sw.WriteLine(byteFileOutputDir);
 				sw.WriteLine(codeFileOutputDir);
-				sw.WriteLine(autoCompletion.ToString());    // True False
+				sw.WriteLine(autoCompletion ? ConstDefine.trueWord : ConstDefine.falseWord);    // True False
 				sw.WriteLine(autoCompletionVal);
-				sw.WriteLine(typeNullIsNoteCol.ToString());
-				sw.WriteLine(skipRowBeginRead.ToString());
-				sw.WriteLine(commentInFirstRow.ToString());
-				sw.WriteLine(onlyOneSheet.ToString());
-				sw.WriteLine(idColName);
-				sw.WriteLine(firstColIsPrimary.ToString());
-				sw.WriteLine(customExportSheetPrefix.ToString());
-				sw.WriteLine(customSheetPrefix);
-				sw.WriteLine(generateStructInfoCs.ToString());
-				sw.WriteLine(structOutputDir);
+				sw.WriteLine(generateStructInfoCs ? ConstDefine.trueWord : ConstDefine.falseWord);
+                sw.WriteLine(structOutputDir);
 
 				sw.Flush();
 				sw.Dispose();

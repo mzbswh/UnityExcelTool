@@ -11,11 +11,6 @@ namespace ExcelToByteFile
 	public class RowData
 	{
 		/// <summary>
-		/// 行号
-		/// </summary>
-		public int RowNum { get; }
-
-		/// <summary>
 		/// 一行的数据类
 		/// </summary>
 		public IRow Row { get; }
@@ -25,20 +20,13 @@ namespace ExcelToByteFile
 		/// </summary>
 		public List<string> ValueList { get; }
 
-		public RowData(int rowNum, IRow row, List<string> valList)
+		public RowData(IRow row, List<string> valList)
 		{
-			RowNum = rowNum;
 			Row = row;
 			ValueList = valList;
 		}
 
-		public string this[int index]
-        {
-			get
-            {
-				return ValueList[index];
-            }
-        }
+        public string this[int index] => ValueList[index];
 
-	}
+    }
 }

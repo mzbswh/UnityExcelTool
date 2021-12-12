@@ -30,19 +30,19 @@ namespace ExcelToByteFile
         public string ExcelPath { get; }
 
         /// <summary>
-        /// 此excel所有的sheet数据
-        /// </summary>
-        public readonly List<SheetData> sheetDataList = new List<SheetData>();
-
-        /// <summary>
         /// 表格类
         /// </summary>
-        private IWorkbook _workbook = null;
+        public IWorkbook Workbook { get; private set; }
 
         /// <summary>
 		/// 公式计算器, 一个表格对应一个公式计算器
 		/// </summary>
-		private XSSFFormulaEvaluator _evaluator = null;
+		public XSSFFormulaEvaluator Evaluator { get; private set; }
+
+        /// <summary>
+        /// 此excel所有的sheet数据
+        /// </summary>
+        public readonly List<SheetData> sheetDataList = new List<SheetData>();
 
         /// <summary>
         /// 文件流
@@ -66,9 +66,9 @@ namespace ExcelToByteFile
                 _stream = new FileStream(ExcelPath, FileMode.Open, FileAccess.Read);
 
                 if (ExcelPath.IndexOf(".xlsx") > 0)
-                    _workbook = new XSSFWorkbook(_stream);
+                    Workbook = new XSSFWorkbook(_stream);
                 else if (ExcelPath.IndexOf(".xls") > 0)
-                    _workbook = new HSSFWorkbook(_stream);
+                    Workbook = new HSSFWorkbook(_stream);
                 else
                 {
                     string extension = Path.GetExtension(ExcelPath);
@@ -77,20 +77,18 @@ namespace ExcelToByteFile
                     //throw new Exception($"未支持的Excel文件类型 : {extension}");
                 }
 
-                _evaluator = new XSSFFormulaEvaluator(_workbook);
+                Evaluator = new XSSFFormulaEvaluator(Workbook);
 
-                int len = GlobalConfig.Ins.onlyOneSheet ? 1 : _workbook.NumberOfSheets;
+                int len = Workbook.NumberOfSheets;
                 for (int i = 0; i < len; i++)
                 {
-                    ISheet sheet = _workbook.GetSheetAt(i);
-                    if (GlobalConfig.Ins.customExportSheetPrefix)
-                    {
-                        if (!sheet.SheetName.StartsWith(GlobalConfig.Ins.customSheetPrefix))
-                            continue;
-                    }
-                    SheetData sheetData = new SheetData(_workbook, sheet, _evaluator, ExcelName);
+                    ISheet sheet = Workbook.GetSheetAt(i);
+                    SheetData sheetData = new SheetData(sheet, this);
                     sheetData.Load();
-                    sheetDataList.Add(sheetData);
+                    if (sheetData.CanExport)
+                    {
+                        sheetDataList.Add(sheetData);
+                    }
                 }
 
                 // 如果没有找到有效的工作页
@@ -101,9 +99,7 @@ namespace ExcelToByteFile
             }
             catch (Exception ex)
             {
-                
                 Log.LogMessageBox($"表格[{ExcelName}]加载错误：{ex}");
-                //throw new Exception($"表格[{ExcelName}]加载错误：{ex}");
                 return false;
             }
             return true;
@@ -120,36 +116,14 @@ namespace ExcelToByteFile
                 _stream = null;
             }
 
-            if (_workbook != null)
+            if (Workbook != null)
             {
-                _workbook.Close();
-                _workbook = null;
+                Workbook.Close();
+                Workbook = null;
             }
 
             sheetDataList.Clear();
             GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// 导出Excel
-        /// </summary>
-        /// <returns></returns>
-        public bool Export()
-        {
-            try
-            {
-                for (int i = 0; i < sheetDataList.Count; i++)
-                {
-                    sheetDataList[i].Export(GlobalConfig.Ins.byteFileOutputDir);
-                }
-            }
-            catch (Exception ex)
-            {
-                //Log.LogError($"表格[{ExcelName}]导出错误：{ex}");
-                MessageBox.Show($"表格[{ExcelName}]导出错误：{ex}");
-                return false;
-            }
-            return true;
         }
     }
 }

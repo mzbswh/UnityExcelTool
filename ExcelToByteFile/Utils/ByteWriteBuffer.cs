@@ -31,31 +31,22 @@ namespace ExcelToByteFile
 			InitWriteListHelper();
 		}
 
-		/// <summary>
-		/// 缓冲区容量
-		/// </summary>
-		public int Capacity
-		{
-			get { return _buffer.Length; }
-		}
+        /// <summary>
+        /// 缓冲区容量
+        /// </summary>
+        public int Capacity => _buffer.Length;
 
-		/// <summary>
-		/// 当前可读数据量
-		/// </summary>
-		public int ReadableBytes
-		{
-			get { return _heapIndex; }
-		}
+        /// <summary>
+        /// 当前可读数据量
+        /// </summary>
+        public int ReadableBytes => _heapIndex;
 
-		/// <summary>
-		/// 写入的下标位置
-		/// </summary>
-		public int WriterIndex
-		{
-			get { return _stackIndex; }
-		}
+        /// <summary>
+        /// 写入的下标位置
+        /// </summary>
+        public int WriterIndex => _stackIndex;
 
-		private void InitWriteListHelper()
+        private void InitWriteListHelper()
 		{
 			WriteListHelper<bool>.WriteList = (ls) => { WriteListBool(ls); };
 			WriteListHelper<sbyte>.WriteList = (ls) => { WriteListSByte(ls); };

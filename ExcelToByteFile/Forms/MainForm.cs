@@ -28,16 +28,8 @@ namespace ExcelToByteFile
         {
             byteFileOutputDir.Text = GlobalConfig.Ins.byteFileOutputDir;
             codeFileOutputDir.Text = GlobalConfig.Ins.codeFileOutputDir;
-            typeNullIsNote.Checked = GlobalConfig.Ins.typeNullIsNoteCol;
-            defaultSkip.Value = GlobalConfig.Ins.skipRowBeginRead;
             autoCompletion.Checked = GlobalConfig.Ins.autoCompletion;
             autoCompletionVal.Text = GlobalConfig.Ins.autoCompletionVal;
-            commetInFirstRow.Checked = GlobalConfig.Ins.commentInFirstRow;
-            onlyOneSheet.Checked = GlobalConfig.Ins.onlyOneSheet;
-            idColName.Text = GlobalConfig.Ins.idColName;
-            firstColIsPrimary.Checked = GlobalConfig.Ins.firstColIsPrimary;
-            customExportSheetPrefix.Checked = GlobalConfig.Ins.customExportSheetPrefix;
-            customSheetPrefix.Text = GlobalConfig.Ins.customSheetPrefix;
             structInfoOutputDir.Text = GlobalConfig.Ins.structOutputDir;
             generateStructCs.Checked = GlobalConfig.Ins.generateStructInfoCs;
             //MessageBox.Show(GlobalConfig.Ins.structOutputDir + " " + GlobalConfig.Ins.generateStructInfoCs);
@@ -157,16 +149,6 @@ namespace ExcelToByteFile
             return selectPath;
         }
 
-        private void typeNullIsNote_CheckedChanged(object sender, EventArgs e)
-        {
-            GlobalConfig.Ins.typeNullIsNoteCol = typeNullIsNote.Checked;
-        }
-
-        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
-        {
-            GlobalConfig.Ins.skipRowBeginRead = (int)defaultSkip.Value;
-        }
-
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             GlobalConfig.Ins.autoCompletion = autoCompletion.Checked;
@@ -175,16 +157,6 @@ namespace ExcelToByteFile
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             GlobalConfig.Ins.autoCompletionVal = autoCompletionVal.Text;
-        }
-
-        private void checkBox1_CheckedChanged_1(object sender, EventArgs e)
-        {
-            GlobalConfig.Ins.commentInFirstRow = commetInFirstRow.Checked;
-        }
-
-        private void onlyOneSheet_CheckedChanged(object sender, EventArgs e)
-        {
-            GlobalConfig.Ins.onlyOneSheet = onlyOneSheet.Checked;
         }
 
         private void intro_Click(object sender, EventArgs e)
@@ -276,11 +248,6 @@ namespace ExcelToByteFile
 
         }
 
-        private void textBox1_TextChanged_1(object sender, EventArgs e)
-        {
-            GlobalConfig.Ins.idColName = idColName.Text;
-        }
-
         private void byteFileOutputDir_MouseHover(object sender, EventArgs e)
         {
             toolTip1.Show(byteFileOutputDir.Text, byteFileOutputDir);
@@ -289,31 +256,6 @@ namespace ExcelToByteFile
         private void codeFileOutputDir_MouseHover(object sender, EventArgs e)
         {
             toolTip1.Show(codeFileOutputDir.Text, codeFileOutputDir);
-        }
-
-        private void checkBox1_CheckedChanged_2(object sender, EventArgs e)
-        {
-            GlobalConfig.Ins.firstColIsPrimary = firstColIsPrimary.Checked;
-            if (firstColIsPrimary.Checked)
-            {
-                label5.Enabled = false;
-                idColName.Enabled = false;
-            }
-            else
-            {
-                label5.Enabled = true;
-                idColName.Enabled = true;
-            }
-        }
-
-        private void customExportSheetPrefix_CheckedChanged(object sender, EventArgs e)
-        {
-            GlobalConfig.Ins.customExportSheetPrefix = customExportSheetPrefix.Checked;
-        }
-
-        private void customSheetPrefix_TextChanged(object sender, EventArgs e)
-        {
-            GlobalConfig.Ins.customSheetPrefix = customSheetPrefix.Text;
         }
 
         private void checkBox1_CheckedChanged_3(object sender, EventArgs e)

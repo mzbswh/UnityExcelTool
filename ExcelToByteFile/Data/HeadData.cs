@@ -34,13 +34,16 @@ namespace ExcelToByteFile
 		/// </summary>
 		public int CellNum { get; }
 
-		public HeadData(string name, string type,string[] subType, string comment, int cellNum)
+        public bool Primary { get; }
+
+		public HeadData(string name, string type,string[] subType, string comment, int cellNum, bool primary)
 		{
 			Name = name;
 			MainType = type;
 			SubType = subType;
 			Comment = comment;
 			CellNum = cellNum;
+            Primary = primary;
 		}
 	}
 }
