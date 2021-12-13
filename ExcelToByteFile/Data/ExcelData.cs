@@ -9,6 +9,7 @@ using System.IO;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using NPOI.HSSF.UserModel;
+using NPOI.SS.Formula;
 
 namespace ExcelToByteFile
 {
@@ -26,7 +27,7 @@ namespace ExcelToByteFile
         /// <summary>
 		/// 公式计算器, 一个表格对应一个公式计算器
 		/// </summary>
-		public XSSFFormulaEvaluator Evaluator { get; private set; }
+		public BaseFormulaEvaluator Evaluator { get; private set; }
 
         /// <summary>
         /// 此excel所有的sheet表（仅可导出）数据
@@ -48,24 +49,31 @@ namespace ExcelToByteFile
                 fileStream = new FileStream(LoadPath, FileMode.Open, FileAccess.Read);
 
                 if (LoadPath.IndexOf(".xlsx") > 0)
+                {
                     Workbook = new XSSFWorkbook(fileStream);
+                    Evaluator = new XSSFFormulaEvaluator(Workbook);
+                }
+                    
                 else if (LoadPath.IndexOf(".xls") > 0)
+                {
                     Workbook = new HSSFWorkbook(fileStream);
+                    Evaluator = new HSSFFormulaEvaluator(Workbook);
+                }
+                    
                 else
                 {
                     string extension = System.IO.Path.GetExtension(LoadPath);
                     Log.Info($"未支持的Excel文件类型 : {extension}");
                     return false;
                 }
-
-                Evaluator = new XSSFFormulaEvaluator(Workbook);
+                
 
                 for (int i = 0; i < Workbook.NumberOfSheets; i++)
                 {
                     ISheet sheet = Workbook.GetSheetAt(i);
-                    SheetData sheetData = new SheetData(sheet, this);
+                    SheetData sheetData = new SheetData(sheet, Name, Evaluator);
                     sheetData.Load();
-                    if (sheetData.ShouldExport)
+                    if (sheetData.SheetConfig.Export)
                     {
                         sheetDataList.Add(sheetData);
                     }

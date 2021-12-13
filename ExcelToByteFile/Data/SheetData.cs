@@ -7,20 +7,26 @@ using NPOI.XSSF.UserModel;
 using NPOI.HSSF.UserModel;
 using System.Windows.Forms;
 using ExcelToByteFile.Utils;
+using NPOI.SS.Formula;
+using System.Text.RegularExpressions;
+using System.Security.Policy;
 
 namespace ExcelToByteFile
 {
     public class SheetData
     {
-        public string ExcelName => excelData.Name;
+        public string ExcelName { get; }
 
         public string Name { get; }
 
-        public string ExportName => excelData.sheetDataList.Count <= 1 ? ExcelName : ExcelName + "_" + Name;
+        /// <summary>
+        /// 主列索引，在heads的索引，已经去除了注释列
+        /// </summary>
+        public int PrimaryColIndex { get; private set; }
 
-        public bool ShouldExport { get; private set; }
+        public SheetConfigData SheetConfig { get; private set; }
 
-        public int IdColIndex { get; private set; }     // 从0开始，不包含注释列
+        public SheetOptimizeData SheetOptimizeData { get; private set; }
 
         /// <summary>
         /// 表格头部数据, 从左到右顺序存储
@@ -34,16 +40,17 @@ namespace ExcelToByteFile
 
         private readonly ISheet sheet = null;
 
-        private readonly ExcelData excelData;
+        private readonly BaseFormulaEvaluator evaluator;
 
-        private int primaryColIndex = -1;
+        private int primaryColIndex = -1;   // excel列索引，没有去除注释列
 
-		public SheetData(ISheet sheet, ExcelData excelData)
+		public SheetData(ISheet sheet, string excelName, BaseFormulaEvaluator evaluator)
         {
-            this.excelData = excelData;
             this.sheet = sheet;
             Name = sheet.SheetName;
-		}
+            ExcelName = excelName;
+            this.evaluator = evaluator;
+        }
 
         public void Load()
         {
@@ -51,23 +58,18 @@ namespace ExcelToByteFile
 			//int merge = _sheet.NumMergedRegions;
 			//if (merge > 0) throw new Exception($"不支持合并单元格，请移除后从新生成：{_sheet.GetMergedRegion(0).FormatAsString()}");
 			//Log.LogError($"不支持合并单元格，请移除后从新生成：{_sheet.GetMergedRegion(0).FormatAsString()}");
-            // 数据头一共三行
-            //if (_sheet.LastRowNum < ConstDefine.headFixedRowNum - 1)
-            //{
-            //	//Log.LogError($"Excel: {ExcelName} Sheet: {SheetName} 行数错误");
-            //	Log.LogError($"Excel: {ExcelName} Sheet: {SheetName} 行数错误");
-            //}
-            
+
             // 先解析第一个单元格，获取此sheet的导出信息
             IRow row = sheet.GetRow(0);
             ICell cell = row.GetCell(0);
-            string[] sheetExportInfo = GetCellValue(cell).Split(Environment.NewLine);
-            ParseSheetExportInfo(sheetExportInfo);
-            if (!ShouldExport) return;
+            SheetConfig = new SheetConfigData(GetCellValue(cell), $"{ExcelName}_{Name}");
 
+            if (!SheetConfig.Export) return;
+
+            // 获取类型行，名字行以及可能存在的注释行
             IRow commentRow = null, typeRow = null, nameRow = null;
             byte ok = 0;
-			for (int i = 1; i < sheet.LastRowNum; i++)
+			for (int i = 1; i <= ConstDef.sheetDefRowMax; i++)
             {
                 row = sheet.GetRow(i);
                 RowLabel lab = GetRowLabel(row);
@@ -81,58 +83,58 @@ namespace ExcelToByteFile
             }
             if (typeRow == null || nameRow == null)
             {
-                Log.Error($"Excel: {ExcelName} Sheet: {Name} 没有检测到类型行或名字行");
+                Log.Error($"{ExcelName}_{Name}: 没有检测到类型行或变量名字行");
             }
-			int endCol = typeRow.LastCellNum;
+
+            // 获取数据类型名字信息
             bool existIdCol = false;
-			// 获取数据类型信息
-			for (int index = 1; index < endCol; index++)
+            for (int idx = 1; idx < typeRow.LastCellNum; idx++)
 			{
-                ColLabel lab = GetColLabel(index);
-                if (lab == ColLabel.None || lab == ColLabel.Note) continue;
-				ICell typeCell = typeRow.GetCell(index);
-				ICell nameCell = nameRow.GetCell(index);
-				ICell commentCell = commentRow?.GetCell(index);
-				
-				// 检测重复的列
-				string type = GetCellValue(typeCell).Trim().Replace(" ","").ToLower();
-				string name = GetCellValue(nameCell).Trim().Replace(" ", "");
-				string comment = GetCellValue(commentCell);
+                ColLabel lab = GetColLabel(idx);
+                // 最后一个有效列前面要么是有效列要么是注释列，不能是None
+                if (lab == ColLabel.Note) continue;
+                else if (lab == ColLabel.None) break;
+
+				ICell typeCell = typeRow.GetCell(idx);
+				ICell nameCell = nameRow.GetCell(idx);
+				ICell commentCell = commentRow?.GetCell(idx);
+
+                // 检测重复的列
+                string type = GetCellValue(typeCell).ToLowerAndRemoveWhiteSpace();
+                string name = GetCellValue(nameCell).ToLowerAndRemoveWhiteSpace();
+                string comment = GetCellValue(commentCell);
                 if (string.IsNullOrEmpty(type))
                 {
-                    //Log.LogError($"检测到空列：第{index}列");
-                    Log.Error($"Excel: {ExcelName} Sheet: {Name} 检测到空列：第{index}列");
+                    Log.Error($"{ExcelName}_{Name}: 检测第{idx}列类型为空，如果是注释列请进行标注");
                 }
                 else if (!DataTypeHelper.IsValidType(type))
                 {
-                    //Log.LogError($"错误的数据类型：第{index}列, {type}");
-                    Log.Error($"错误的数据类型：Excel: {ExcelName} Sheet: {Name} 第{index}列, {type}");
+                    Log.Error($"错误的数据类型：{ExcelName}_{Name}: 第{idx}列, 类型={type}");
                 }
                 else if (ExistName(name))
                 {
-                    //Log.LogError($"检测到重复变量名称 : 第{index}列, {name}");
-                    Log.Error($"检测到重复变量名称 : Excel: {ExcelName} Sheet: {Name} 第{index}列, {name}");
+                    Log.Error($"检测到重复变量名称 : {ExcelName}_{Name} 第{idx}列, {name}");
                 }
-                string processedType = DataTypeHelper.GetMainType(type);
+                // 添加到heads数据里
+                string mainType = DataTypeHelper.GetMainType(type);
                 string[] subType = DataTypeHelper.GetSubType(type);
                 bool primary = lab == ColLabel.Primary;
                 existIdCol |= primary;
-                HeadData head = new HeadData(name, processedType, subType, comment, index, primary);
+                HeadData head = new HeadData(name, mainType, subType, comment, idx, primary);
                 heads.Add(head);
                 if (primary)
                 {
-                    primaryColIndex = index;
-                    IdColIndex = heads.Count - 1;
+                    primaryColIndex = idx;
+                    PrimaryColIndex = heads.Count - 1;
                 }
             }
 
-			// 如果没有ID列
 			if (!existIdCol)
 			{
-				Log.Error($"{ExcelName}_{Name}表格必须设立一个 'id' 列.");
+				Log.Error($"{ExcelName}_{Name}表格必须设立一个主列！");
 			}
 
-			// 所有数据行
+			// 读取所有数据行
 			for (int i = 1; i <= sheet.LastRowNum; i++)
 			{
 				row = sheet.GetRow(i);
@@ -144,62 +146,29 @@ namespace ExcelToByteFile
 				RowData rowData = new RowData(row, vals);
 				rows.Add(rowData);
 			}
-		}
 
-        private void ParseSheetExportInfo(string[] sheetExportInfo)
-        {
-            bool reverse = false;
-            string value;
-            for (int i = 0; i < sheetExportInfo.Length; i++)
+            // 优化数据
+            if (SheetConfig.Optimize)
             {
-                value = string.Empty;
-                string keyword = sheetExportInfo[i].ToLower();
-                if (keyword[0] == SymbolDef.reverseChar)
+                if (DataTypeHelper.CanOptimizeIfPrimaryIs(heads[PrimaryColIndex].MainType))
                 {
-                    keyword = keyword[1..];
-                    reverse = true;
-                }
-                else
-                {
-                    var temp = keyword.Split('=');
-                    if (temp.Length > 1)
+                    List<ulong> nums = new List<ulong>(rows.Count);
+                    for (int i = 0; i < rows.Count; i++)
                     {
-                        keyword = temp[0];
-                        value = temp[1];
-                    }
-                    else
-                    {
-                        value = string.Empty;
-                    }
-                }
-                
-                switch (keyword)
-                {
-                    case SheetKeyword.Export:
-                        if (reverse)
+                        if (ulong.TryParse(rows[i][PrimaryColIndex], out ulong val))
                         {
-                            ShouldExport = false;
+                            nums.Add(val);
                         }
                         else
                         {
-                            if (value == string.Empty)
-                            {
-                                ShouldExport = true;
-                            }
-                            else if (value == SymbolDef.trueWord)
-                            {
-                                ShouldExport = true;
-                            }
-                            else if (value == SymbolDef.falseWord)
-                            {
-                                ShouldExport = false;
-                            }
-                            else
-                            {
-                                ShouldExport = false;
-                            }
+                            return;
                         }
-                        break;
+                    }
+                    var optimizeType = Optimize.GetOptimizeType(nums);
+                    if (optimizeType != OptimizeType.None)
+                    {
+                        SheetOptimizeData = new SheetOptimizeData(optimizeType, Optimize.segment, Optimize.partialContinuityStart, Optimize.step); ;
+                    }
                 }
             }
         }
@@ -208,7 +177,7 @@ namespace ExcelToByteFile
         {
             ICell cell = row.GetCell(0);
             if (cell == null) return RowLabel.None;
-            string s = GetCellValue(cell).ToLower();
+            string s = GetCellValue(cell).ToLowerAndRemoveWhiteSpace();
             if (s == string.Empty)
             {
                 return RowLabel.None;
@@ -237,7 +206,7 @@ namespace ExcelToByteFile
             IRow row = sheet.GetRow(0);
             ICell cell = row.GetCell(col);
             if (cell == null) return ColLabel.None;
-            string s = GetCellValue(cell).ToLower();
+            string s = GetCellValue(cell).ToLowerAndRemoveWhiteSpace();
             if (s == string.Empty)
             {
                 return ColLabel.None;
@@ -246,26 +215,22 @@ namespace ExcelToByteFile
             {
                 return ColLabel.Note;
             }
-            else if (s == ColLabel.Primary.ToString().ToLower() || s == "key")
+            else if (s == ColLabel.Primary.ToString().ToLower() || s == SymbolDef.keyWord)
             {
                 return ColLabel.Primary;
             }
             return ColLabel.None;
         }
 
-		public bool IsNoteRow(IRow row) => GetRowLabel(row) == RowLabel.Note;
-
-        public bool IsEndRow(IRow row)
+        private bool IsEndRow(IRow row)
         {
             if (row == null) return true;
-
             ICell cell = row.GetCell(primaryColIndex);
             if (cell == null) return true;
-            string value = GetCellValue(cell);
-            return string.IsNullOrEmpty(value);
+            return string.IsNullOrEmpty(GetCellValue(cell));
         }
 
-        public bool ExistName(string name)
+        private bool ExistName(string name)
         {
 			for (int i = 0; i < heads.Count; i++)
 			{
@@ -277,29 +242,26 @@ namespace ExcelToByteFile
         /// <summary>
         /// 获取一个sheet里的一行数据（仅有效数据，不包含注释列）
         /// </summary>
-        public List<string> GetOneRowData(IRow row)
+        private List<string> GetOneRowData(IRow row)
         {
             List<string> ls = new List<string>();
             for (int i = 0; i < heads.Count; i++)
             {
                 int cellNum = heads[i].CellNum;
-
                 // 获取单元格字符串
                 ICell cell = row.GetCell(cellNum);
                 string value = GetCellValue(cell);
 
-                // 检测数值单元格是否为空值
-                // 如果开启了自动补全功能且是可以自动补全的类型，就设置其值		
                 if (string.IsNullOrEmpty(value))
                 {
                     string type = heads[i].MainType;
-                    if (DataTypeHelper.IsBaseType(type) && type != TypeDefine.stringType)
+                    if (DataTypeHelper.IsBaseType(type) && type != TypeDef.stringType)
                         value = 0.ToString();
-                    else if (type == TypeDefine.stringType)
+                    else if (type == TypeDef.stringType)
                         value = string.Empty;
                     else
                     {
-                        Log.Error($"此列单元格数值不能为空，第{cellNum}列");
+                        Log.Error($"{ExcelName}_{Name}: 第{row.RowNum}行，第{cellNum}列单元格数值不能为空（0 based）！");
                     }
                 }
                 ls.Add(value);
@@ -307,11 +269,9 @@ namespace ExcelToByteFile
             return ls;
         }
 
-        public string GetCellValue(ICell cell)
+        private string GetCellValue(ICell cell)
         {
-            // cell 可能为空值，因此需要判断这种情况
             if (cell == null) return string.Empty;
-
             switch (cell.CellType)
             {
                 case CellType.Blank: return string.Empty;
@@ -321,7 +281,7 @@ namespace ExcelToByteFile
                 case CellType.Formula:
                 {
                     // 公式只支持数值和字符串类型
-                    var val = excelData.Evaluator.Evaluate(cell);
+                    var val = evaluator.Evaluate(cell);
                     if (val.CellType == CellType.Numeric)
                         return val.NumberValue.ToString();
                     else if (val.CellType == CellType.String)

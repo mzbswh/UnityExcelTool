@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ExcelToByteFile
 {
-    public class TypeDefine
+    public class TypeDef
     {
         public const string sbyteType = "sbyte";
         public const string ushortType = "ushort";

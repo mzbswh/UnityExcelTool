@@ -23,5 +23,7 @@ namespace ExcelToByteFile
         public const string trueWord = "true";
 
         public const string falseWord = "false";
+
+        public const string keyWord = "key";
     }
 }

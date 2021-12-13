@@ -7,7 +7,7 @@ namespace ExcelToByteFile
     public enum TypeToken
     {
         Null = 0,
-        SByte = 1,
+        Sbyte = 1,
         Byte = 2,
         Bool = 3,
         UShort = 4,

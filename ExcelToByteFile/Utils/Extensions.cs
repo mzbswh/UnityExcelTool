@@ -1,16 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using NPOI.SS.UserModel;
-using NPOI.XSSF.UserModel;
+using System.Text.RegularExpressions;
 
 namespace ExcelToByteFile.Utils
 {
     static class Extensions
     {
-        //public static string GetValue(this ICell cell, XSSFFormulaEvaluator evaluator)
-        //{
-        //    return ExcelTool.GetCellValue(cell, evaluator);
-        //}
+        /// <summary>
+        /// 转小写并去空格
+        /// </summary>
+        public static string ToLowerAndRemoveWhiteSpace(this string s)
+        {
+            return Regex.Replace(s.ToLower(), @"\s", "");
+        }
     }
 }

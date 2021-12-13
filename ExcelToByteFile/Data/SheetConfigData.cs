@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
+using NPOI.SS.UserModel;
+
 namespace ExcelToByteFile
 {
-    internal class SheetConfigData
+    /// <summary>
+    /// 对应表格第一个单元格数据
+    /// </summary>
+    public class SheetConfigData
     {
         public string ExportName { get; }
 
@@ -13,15 +18,19 @@ namespace ExcelToByteFile
 
         public bool Export { get; }
 
-        private readonly SheetData sheetData;
+        public bool Optimize { get; }
 
-        public SheetConfigData(string config, SheetData sheetData)
+        private readonly string logFileName; // log时用于判断是哪个excel和哪个sheet
+
+        public SheetConfigData(string config, string logFileName)
         {
-            this.sheetData = sheetData;
+            this.logFileName = logFileName;
+
             /******* default *******/
             ExportName = string.Empty;
             CacheData = false;
             Export = true;
+            Optimize = true;
             /***********************/
 
             var configs = config.Split(Environment.NewLine);
@@ -46,7 +55,7 @@ namespace ExcelToByteFile
                     {
                         if (temp.Length > 2)
                         {
-                            Log.Error($"{sheetData.ExcelName}_{sheetData.Name} 配置写法错误：{keyword}");
+                            Log.Error($"{logFileName} 配置写法错误：{keyword}");
                         }
                         value = temp[1];
                     }
@@ -60,12 +69,18 @@ namespace ExcelToByteFile
                     case SheetKeyword.ExportName:
                         if (value == null)
                         {
-                            Log.Error($"{sheetData.ExcelName}_{sheetData.Name} 配置写法错误：{keyword}, 导出名称不可为空");
+                            Log.Error($"{logFileName} 配置写法错误：{keyword}, 导出名称不可为空");
                         }
                         ExportName = value;
                         break;
                     case SheetKeyword.CacheData:
                         CacheData = !reverse && ((value == string.Empty) || (value == SymbolDef.trueWord));
+                        break;
+                    case SheetKeyword.Optimize:
+                        Optimize = !reverse && ((value == string.Empty) || (value == SymbolDef.trueWord));
+                        break;
+                    default:
+                        Log.Error($"{logFileName} 未支持的关键字：{keyword}, value={value}");
                         break;
                 }
             }

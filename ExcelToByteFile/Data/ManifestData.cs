@@ -9,7 +9,7 @@ namespace ExcelToByteFile
     public class ManifestData
     {
         /// <summary>
-        /// 生成字节文件名称
+        /// 生成字节文件名称, 无后缀拓展名称
         /// </summary>
         public string ByteFileName { get; }
 
@@ -45,6 +45,7 @@ namespace ExcelToByteFile
         /// <summary>
         /// 类型列表: 如果是list, 值 = 100 + 元素类型值， 
         /// 如果是dict 值 = 10000 + key类型 * 100 + val类型
+        /// vec 值 = 20000 + dimension * 100 + val类型
         /// </summary>
         public readonly List<int> Tokens = new List<int>();
 
@@ -58,24 +59,27 @@ namespace ExcelToByteFile
         /// </summary>
         public readonly List<string> Comments = new List<string>();
 
-        public ManifestData(SheetData data)
+        public ManifestData(SheetData data, string exportName)
         {
-            ByteFileName = data.ExportName;
+            ByteFileName = exportName;
             RowCount = data.rows.Count;
             RowLength = GetRowLength(data.heads);
             ColOffset = GetColOffset(data.heads);
             Tokens = GetTypeToken(data.heads);
             VariableNames = GetVariable(data.heads);
             Comments = GetComment(data.heads);
-            IdColIndex = data.IdColIndex;
-            PrimaryColCsType = GetCsType(IdColIndex);
+            IdColIndex = data.PrimaryColIndex;
+            PrimaryColCsType = DataTypeHelper.GetType(Tokens[IdColIndex]);
+        }
+
+        public int GetToken(int index)
+        {
+            return Tokens[index];
         }
 
         /// <summary>
         /// 获取一行需要占据的字节数
         /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
         private int GetRowLength(List<HeadData> data)
         {
             int len = 0;
@@ -84,11 +88,10 @@ namespace ExcelToByteFile
                 string type = data[i].MainType;
                 if (DataTypeHelper.IsBaseType(type))
                     len += DataTypeHelper.GetBaseTypeLen(type);
-                else if (type == TypeDefine.vecType)
+                else if (type == TypeDef.vecType)
                 {
                     int dimension = int.Parse(data[i].SubType[0]);
                     len += dimension * 4;
-                    // MessageBox.Show("di = " + dimension + "  len = " + len);
                 }
                 else len += 4;  // list 和 dict
             }
@@ -98,8 +101,6 @@ namespace ExcelToByteFile
         /// <summary>
         /// 获取每列相对行首的偏移
         /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
         private List<int> GetColOffset(List<HeadData> data)
         {
             List<int> offs = new List<int>();
@@ -112,7 +113,7 @@ namespace ExcelToByteFile
                 {
                     off += DataTypeHelper.GetBaseTypeLen(type);
                 }
-                else if (type == TypeDefine.vecType)
+                else if (type == TypeDef.vecType)
                 {
                     int dimension = int.Parse(data[i].SubType[0]);
                     int len = dimension * 4;
@@ -131,20 +132,20 @@ namespace ExcelToByteFile
             for (int i = 0; i < data.Count; i++)
             {
                 HeadData head = data[i];
-                if (head.MainType == TypeDefine.listType)
+                if (head.MainType == TypeDef.listType)
                 {
                     int baseToken = GetMainTypeToken(head.MainType);
                     int elemToken = GetMainTypeToken(head.SubType[0]);
                     ls.Add((baseToken + elemToken));
                 }
-                else if (head.MainType == TypeDefine.vecType)
+                else if (head.MainType == TypeDef.vecType)
                 {
                     int baseToken = GetMainTypeToken(head.MainType);
                     int dimen = int.Parse(head.SubType[0]);
                     int valToken = string.Empty == head.SubType[1] ? 0 : GetMainTypeToken(head.SubType[1]);
                     ls.Add(baseToken + dimen * 100 + valToken);
                 }
-                else if (head.MainType == TypeDefine.dictType)
+                else if (head.MainType == TypeDef.dictType)
                 {
                     int baseToken = GetMainTypeToken(head.MainType);
                     int keyToken = GetMainTypeToken(head.SubType[0]);
@@ -180,91 +181,34 @@ namespace ExcelToByteFile
         {
             switch (type)
             {
-                case TypeDefine.boolType: return (int)TypeToken.Bool;
-                case TypeDefine.sbyteType: return (int)TypeToken.SByte;
-                case TypeDefine.byteType: return (int)TypeToken.Byte;
-                case TypeDefine.shortType: return (int)TypeToken.Short;
-                case TypeDefine.ushortType: return (int)TypeToken.UShort;
-                case TypeDefine.uintType: return (int)TypeToken.UInt;
-                case TypeDefine.intType: return (int)TypeToken.Int;
-                case TypeDefine.floatType: return (int)TypeToken.Float;
-                case TypeDefine.ulongType: return (int)TypeToken.ULong;
-                case TypeDefine.longType: return (int)TypeToken.Long;
-                case TypeDefine.doubleType: return (int)TypeToken.Double;
-                case TypeDefine.stringType: return (int)TypeToken.String;
-                case TypeDefine.listType: return (int)TypeToken.List;
-                case TypeDefine.dictType: return (int)TypeToken.Dictionary;
-                case TypeDefine.vecType: return (int)TypeToken.Vector;
+                case TypeDef.boolType: return (int)TypeToken.Bool;
+                case TypeDef.sbyteType: return (int)TypeToken.Sbyte;
+                case TypeDef.byteType: return (int)TypeToken.Byte;
+                case TypeDef.shortType: return (int)TypeToken.Short;
+                case TypeDef.ushortType: return (int)TypeToken.UShort;
+                case TypeDef.uintType: return (int)TypeToken.UInt;
+                case TypeDef.intType: return (int)TypeToken.Int;
+                case TypeDef.floatType: return (int)TypeToken.Float;
+                case TypeDef.ulongType: return (int)TypeToken.ULong;
+                case TypeDef.longType: return (int)TypeToken.Long;
+                case TypeDef.doubleType: return (int)TypeToken.Double;
+                case TypeDef.stringType: return (int)TypeToken.String;
+                case TypeDef.listType: return (int)TypeToken.List;
+                case TypeDef.dictType: return (int)TypeToken.Dictionary;
+                case TypeDef.vecType: return (int)TypeToken.Vector;
                 default: return (int)TypeToken.Null;
             }
         }
-
-        public string GetCommentTypeByToken(int token)
-        {
-            if (token >= (int)TypeToken.Vector)
-            {
-                int dimen = (token - 20000) / 100;
-                int valToken = (token - 20000) % 100;
-                string type = string.Empty;
-                if (valToken != 0) type = ((TypeToken)valToken).ToString();
-                return "Vector" + (dimen).ToString() + type;
-            }
-            else if (token >= (int)TypeToken.Dictionary)
-            {
-                int keyToken = (token - 10000) / 100;
-                int valToken = (token - 10000) % 100;
-                return "Dict&lt;" + ((TypeToken)keyToken).ToString() + " ,"
-                    + ((TypeToken)valToken).ToString() + "&gt;";
-            }
-            else if (token >= (int)TypeToken.List)
-            {
-                int subToken = token - 100;
-                return "List&lt;" + ((TypeToken)subToken).ToString() + "&gt;";
-            }
-            else
-            {
-                return ((TypeToken)token).ToString();
-            }
-        }
-
-        public string GetCsType(int index)
-        {
-            int type = Tokens[index];
-            if (type >= (int)TypeToken.Vector)
-            {
-                int dimen = (type - 20000) / 100;
-                int valToken = (type - 20000) % 100;
-                string s = "Vector" + (dimen).ToString();
-                if (valToken != 0) s += "Int";
-                return s;
-            }
-            else if (type >= (int)TypeToken.Dictionary)
-            {
-                int keyToken = (type - 10000) / 100;
-                int valToken = (type - 10000) % 100;
-                return "Dictionary<" + ((TypeToken)keyToken).ToString().ToLower() + " ,"
-                    + ((TypeToken)valToken).ToString().ToLower() + ">";
-            }
-            else if (type >= (int)TypeToken.List)
-            {
-                int subToken = type - 100;
-                return "List<" + ((TypeToken)subToken).ToString().ToLower() + ">";
-            }
-            else
-            {
-                return ((TypeToken)type).ToString().ToLower();
-            }
-        }
-
+       
         public string GetPropertyStr(int index, string varName)
         {
-            string csType = GetCsType(index);
+            string csType = DataTypeHelper.GetType(Tokens[index]);
             int type = Tokens[index];
             int off = (index << 16) + ColOffset[index]; 
             if (type >= (int)TypeToken.Vector)
             {
-                int dimen = (type - 20000) / 100;
-                int valToken = (type - 20000) % 100;
+                int dimen = (type - (int)TypeToken.Vector) / 100;
+                int valToken = (type - (int)TypeToken.Vector) % 100;
                 return "public " + csType + " " + varName +
                     " { get { return ExcelDataAccess.Get" + csType + "<" +
                       PrimaryColCsType +
@@ -272,8 +216,8 @@ namespace ExcelToByteFile
             }
             else if (type >= (int)TypeToken.Dictionary)
             {
-                int keyToken = (type - 10000) / 100;
-                int valToken = (type - 10000) % 100;
+                int keyToken = (type - (int)TypeToken.Dictionary) / 100;
+                int valToken = (type - (int)TypeToken.Dictionary) % 100;
                 string keyType = ((TypeToken)keyToken).ToString().ToLower();
                 string valType = ((TypeToken)valToken).ToString().ToLower();
                 return "public Dictionary<" + keyType + ", " + valType + "> " + varName +
@@ -283,7 +227,7 @@ namespace ExcelToByteFile
             }
             else if (type >= (int)TypeToken.List)
             {
-                int subToken = type - 100;
+                int subToken = type - (int)TypeToken.List;
                 return "public " + csType + " " + varName +
                     " { get { return ExcelDataAccess.GetList<" +
                     ((TypeToken)subToken).ToString().ToLower() + ", " + PrimaryColCsType +
