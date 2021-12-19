@@ -30,7 +30,7 @@ namespace ExcelToByteFile
         {
             byteFileOutputDir.Text = GlobalConfig.Ins.byteFileOutputDir;
             codeFileOutputDir.Text = GlobalConfig.Ins.codeFileOutputDir;
-            generateStructCs.Checked = GlobalConfig.Ins.generateStructInfoCs;
+            generateStructCs.Checked = GlobalConfig.Ins.generateStructInfoCode;
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace ExcelToByteFile
             StartExport(fileList.Count);
 
 
-            Task t = Task.Run(()=> { ExportMgr.Export(fileList); });
+            Task t = Task.Run(() => ExportMgr.Export(fileList));
             t.ContinueWith(new Action<Task>((t) =>
             {
                 MessageBox.Show("生成完成.");
@@ -248,7 +248,7 @@ namespace ExcelToByteFile
 
         private void checkBox1_CheckedChanged_3(object sender, EventArgs e)
         {
-            GlobalConfig.Ins.generateStructInfoCs = generateStructCs.Checked;
+            GlobalConfig.Ins.generateStructInfoCode = generateStructCs.Checked;
         }
     }
 }

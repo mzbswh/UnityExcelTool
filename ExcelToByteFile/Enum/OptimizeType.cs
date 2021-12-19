@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ExcelToByteFile
 {
-    public enum OptimizeType
+    public enum OptimizeType : byte
     {
         None,
         Continuity,

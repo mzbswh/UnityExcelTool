@@ -40,7 +40,7 @@ namespace ExcelToByteFile
             ReadHelper<List<string>>.Read = (data, index) => ReadListString(data, index);
 
             ReadHelper<Vector2>.Read = (data, index) => ReadVector2(data, index);
-            ReadHelper<Vector3>.Read = (data, index) => { return ReadVector3(data, index); };
+            ReadHelper<Vector3>.Read = (data, index) => ReadVector3(data, index);
             ReadHelper<Vector4>.Read = (data, index) => ReadVector4(data, index);
             ReadHelper<Vector2Int>.Read = (data, index) => ReadVector2Int(data, index);
             ReadHelper<Vector3Int>.Read = (data, index) => ReadVector3Int(data, index);
@@ -114,7 +114,7 @@ namespace ExcelToByteFile
 
         public static List<T> ReadList<T>(byte[] data, int index)
         {
-            return ReadHelper<T>.ReadList(data, index);
+            return ReadHelper<List<T>>.Read(data, index);
         }
         public static List<bool> ReadListBool(byte[] data, int index)
         {
@@ -388,5 +388,4 @@ namespace ExcelToByteFile
             else return TypeToken.Null;
         }
     }
-
 }

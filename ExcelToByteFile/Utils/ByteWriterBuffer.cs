@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
 using System.Windows.Forms;
+using System.Runtime.CompilerServices;
 
 namespace ExcelToByteFile
 {
-	public static class WriteListHelper<T>
+	public static class WriteHelper<T>
     {
-		public static Action<List<T>> WriteList;
+		public static Action<T, bool> Write;
     }
 
 	/// <summary>
@@ -28,18 +29,32 @@ namespace ExcelToByteFile
 		public ByteWriterBuffer(int capacity)
 		{
 			buffer = new byte[capacity];
-            WriteListHelper<bool>.WriteList = (ls) => WriteListBool(ls);
-            WriteListHelper<sbyte>.WriteList = (ls) => WriteListSbyte(ls);
-            WriteListHelper<byte>.WriteList = (ls) => WriteListByte(ls);
-            WriteListHelper<ushort>.WriteList = (ls) => WriteListUShort(ls);
-            WriteListHelper<short>.WriteList = (ls) => WriteListShort(ls);
-            WriteListHelper<uint>.WriteList = (ls) => WriteListUInt(ls);
-            WriteListHelper<int>.WriteList = (ls) => WriteListInt(ls);
-            WriteListHelper<float>.WriteList = (ls) => WriteListFloat(ls);
-            WriteListHelper<ulong>.WriteList = (ls) => WriteListULong(ls);
-            WriteListHelper<long>.WriteList = (ls) => WriteListLong(ls);
-            WriteListHelper<double>.WriteList = (ls) => WriteListDouble(ls);
-            WriteListHelper<string>.WriteList = (ls) => WriteListString(ls);
+
+            WriteHelper<bool>.Write = (ls, b) => WriteBool(ls, b);
+            WriteHelper<sbyte>.Write = (ls, b) => WriteSbyte(ls, b);
+            WriteHelper<byte>.Write = (ls, b) => WriteByte(ls, b);
+            WriteHelper<ushort>.Write = (ls, b) => WriteUShort(ls, b);
+            WriteHelper<short>.Write = (ls, b) => WriteShort(ls, b);
+            WriteHelper<uint>.Write = (ls, b) => WriteUInt(ls, b);
+            WriteHelper<int>.Write = (ls, b) => WriteInt(ls, b);
+            WriteHelper<float>.Write = (ls, b) => WriteFloat(ls, b);
+            WriteHelper<ulong>.Write = (ls, b) => WriteULong(ls, b);
+            WriteHelper<long>.Write = (ls, b) => WriteLong(ls, b);
+            WriteHelper<double>.Write = (ls, b) => WriteDouble(ls, b);
+            WriteHelper<string>.Write = (ls, b) => WriteString(ls, b);
+
+            WriteHelper<List<bool>>.Write = (ls, b) => WriteListBool(ls, b);
+            WriteHelper<List<sbyte>>.Write = (ls, b) => WriteListSbyte(ls, b);
+            WriteHelper<List<byte>>.Write = (ls, b) => WriteListByte(ls, b);
+            WriteHelper<List<ushort>>.Write = (ls, b) => WriteListUShort(ls, b);
+            WriteHelper<List<short>>.Write = (ls, b) => WriteListShort(ls, b);
+            WriteHelper<List<uint>>.Write = (ls, b) => WriteListUInt(ls, b);
+            WriteHelper<List<int>>.Write = (ls, b) => WriteListInt(ls, b);
+            WriteHelper<List<float>>.Write = (ls, b) => WriteListFloat(ls, b);
+            WriteHelper<List<ulong>>.Write = (ls, b) => WriteListULong(ls, b);
+            WriteHelper<List<long>>.Write = (ls, b) => WriteListLong(ls, b);
+            WriteHelper<List<double>>.Write = (ls, b) => WriteListDouble(ls, b);
+            WriteHelper<List<string>>.Write = (ls, b) => WriteListString(ls, b);
         }
 
         /// <summary>
@@ -77,7 +92,7 @@ namespace ExcelToByteFile
 		/// 设置引用类型索引起始位置
 		/// </summary>
 		/// <param name="pos"></param>
-		public void SetHeapIndexStartPos(int pos)
+		public void SetNonAlignStartPos(int pos)
         {
 			nonAlignIndex = pos;
 			nonAlignStart = pos;
@@ -86,28 +101,32 @@ namespace ExcelToByteFile
 		#region 写入操作
 
 		[Conditional("DEBUG")]
-		private void CheckWriterIndex(int length, bool writeToHeap = false)
+		private void CheckWriterIndex(int length, bool writeToNonAlign = false)
 		{
-			if (writeToHeap)
+			if (writeToNonAlign)
             {
-				if (nonAlignIndex + length > Capacity) 
-					throw new IndexOutOfRangeException();
+				if (nonAlignIndex + length > Capacity)
+                {
+                    StackTrace st = new StackTrace(true);
+                    Log.Error("错误！超出容量限制：" + st.ToString());
+                }
 			}
 			else if (alignIndex + length > nonAlignStart)
 			{
-				throw new IndexOutOfRangeException();
-			}
+                StackTrace st = new StackTrace(true);
+                Log.Error("错误！超出对齐字节的范围: " + st.ToString());
+            }
 		}
 
-		public void WriteBytes(byte[] data, bool writeToHeap = false)
+		public void WriteBytes(byte[] data, bool writeToNonAlign = false)
 		{
-			WriteBytes(data, 0, data.Length, writeToHeap);
+			WriteBytes(data, 0, data.Length, writeToNonAlign);
 		}
-		public void WriteBytes(byte[] data, int offset, int count, bool writeToHeap = false)
+		public void WriteBytes(byte[] data, int offset, int count, bool writeToNonAlign = false)
 		{
 			if (count <= 0) return;
-			CheckWriterIndex(count);
-			if (writeToHeap)
+			CheckWriterIndex(count, writeToNonAlign);
+			if (writeToNonAlign)
             {
 				Buffer.BlockCopy(data, offset, buffer, nonAlignIndex, count);
 				nonAlignIndex += count;
@@ -118,68 +137,68 @@ namespace ExcelToByteFile
 				alignIndex += count;
 			}
 		}
-		public void WriteBool(bool value, bool writeToHeap = false)
+		public void WriteBool(bool value, bool writeToNonAlign = false)
 		{
-			WriteByte((byte)(value ? 1 : 0), writeToHeap);
+			WriteByte((byte)(value ? 1 : 0), writeToNonAlign);
 		}
-		public void WriteByte(byte value, bool writeToHeap = false)
+		public void WriteByte(byte value, bool writeToNonAlign = false)
 		{
-			CheckWriterIndex(1);
-			if (writeToHeap) buffer[nonAlignIndex++] = value;
+			CheckWriterIndex(1, writeToNonAlign);
+			if (writeToNonAlign) buffer[nonAlignIndex++] = value;
 			else buffer[alignIndex++] = value;
 		}
-		public void WriteSbyte(sbyte value, bool writeToHeap = false)
+		public void WriteSbyte(sbyte value, bool writeToNonAlign = false)
 		{
 			// 注意：从sbyte强转到byte不会有数据变化或丢失
-			WriteByte((byte)value, writeToHeap);
+			WriteByte((byte)value, writeToNonAlign);
 		}
-		public void WriteShort(short value, bool writeToHeap = false)
+		public void WriteShort(short value, bool writeToNonAlign = false)
 		{
 			byte[] bytes = BitConverter.GetBytes(value);
-			WriteBytes(bytes, writeToHeap);
+			WriteBytes(bytes, writeToNonAlign);
 		}
-		public void WriteUShort(ushort value, bool writeToHeap = false)
+		public void WriteUShort(ushort value, bool writeToNonAlign = false)
 		{
 			byte[] bytes = BitConverter.GetBytes(value);
-			WriteBytes(bytes, writeToHeap);
+			WriteBytes(bytes, writeToNonAlign);
 		}
-		public void WriteInt(int value, bool writeToHeap = false)
+		public void WriteInt(int value, bool writeToNonAlign = false)
 		{
 			byte[] bytes = BitConverter.GetBytes(value);
-			WriteBytes(bytes, writeToHeap);
+			WriteBytes(bytes, writeToNonAlign);
 		}
-		public void WriteUInt(uint value, bool writeToHeap = false)
+		public void WriteUInt(uint value, bool writeToNonAlign = false)
 		{
 			byte[] bytes = BitConverter.GetBytes(value);
-			WriteBytes(bytes, writeToHeap);
+			WriteBytes(bytes, writeToNonAlign);
 		}
-		public void WriteLong(long value, bool writeToHeap = false)
+		public void WriteLong(long value, bool writeToNonAlign = false)
 		{
 			byte[] bytes = BitConverter.GetBytes(value);
-			WriteBytes(bytes, writeToHeap);
+			WriteBytes(bytes, writeToNonAlign);
 		}
-		public void WriteULong(ulong value, bool writeToHeap = false)
+		public void WriteULong(ulong value, bool writeToNonAlign = false)
 		{
 			byte[] bytes = BitConverter.GetBytes(value);
-			WriteBytes(bytes, writeToHeap);
+			WriteBytes(bytes, writeToNonAlign);
 		}
-		public void WriteFloat(float value, bool writeToHeap = false)
+		public void WriteFloat(float value, bool writeToNonAlign = false)
 		{
 			byte[] bytes = BitConverter.GetBytes(value);
-			WriteBytes(bytes, writeToHeap);
+			WriteBytes(bytes, writeToNonAlign);
 		}
-		public void WriteDouble(double value, bool writeToHeap = false)
+		public void WriteDouble(double value, bool writeToNonAlign = false)
 		{
 			byte[] bytes = BitConverter.GetBytes(value);
-			WriteBytes(bytes, writeToHeap);
+			WriteBytes(bytes, writeToNonAlign);
 		}
-		public void WriteString(string value, bool onlyWriteToHeap = false)
+		public void WriteString(string value, bool onlywriteToNonAlign = false)
 		{
 			byte[] bytes = Encoding.UTF8.GetBytes(value);
 			int num = bytes.Length; // + 1; // 注意：字符串末尾写入结束符
 			if (num > ushort.MaxValue)
 				throw new FormatException($"String length cannot be greater than {ushort.MaxValue} !");
-			if (!onlyWriteToHeap)
+			if (!onlywriteToNonAlign)
             {
 				if (bytes.Length == 0)
                 {
@@ -191,12 +210,19 @@ namespace ExcelToByteFile
 			WriteUShort(Convert.ToUInt16(num), true);
 			WriteBytes(bytes, true);
 		}
+        /// <summary>
+        /// string类型第二个参数为onlywriteToNonAlign
+        /// </summary>
+        public void Write<T>(T val, bool writeToNonAlign = false)
+        {
+            WriteHelper<T>.Write(val, writeToNonAlign);
+        }
 
-		public void WriteListBool(List<bool> ls, bool onlyWriteToHeap = false)
+		public void WriteListBool(List<bool> ls, bool onlywriteToNonAlign = false)
         {
 			int count = 0;
 			if (ls != null) count = ls.Count;
-            if (!onlyWriteToHeap)
+            if (!onlywriteToNonAlign)
             {
                 if (count == 0)
                 {
@@ -211,11 +237,11 @@ namespace ExcelToByteFile
                 WriteBool(ls[i], true);
             }
         }
-		public void WriteListByte(List<byte> ls, bool onlyWriteToHeap = false)
+		public void WriteListByte(List<byte> ls, bool onlywriteToNonAlign = false)
 		{
 			int count = 0;
 			if (ls != null) count = ls.Count;
-            if (!onlyWriteToHeap)
+            if (!onlywriteToNonAlign)
             {
                 if (count == 0)
                 {
@@ -230,11 +256,11 @@ namespace ExcelToByteFile
                 WriteByte(ls[i], true);
             }
         }
-		public void WriteListShort(List<short> ls, bool onlyWriteToHeap = false)
+		public void WriteListShort(List<short> ls, bool onlywriteToNonAlign = false)
         {
 			int count = 0;
 			if (ls != null) count = ls.Count;
-            if (!onlyWriteToHeap)
+            if (!onlywriteToNonAlign)
             {
                 if (count == 0)
                 {
@@ -249,11 +275,11 @@ namespace ExcelToByteFile
                 WriteShort(ls[i], true);
             }
         }
-		public void WriteListInt(List<int> ls, bool onlyWriteToHeap = false)
+		public void WriteListInt(List<int> ls, bool onlywriteToNonAlign = false)
         {
 			int count = 0;
 			if (ls != null) count = ls.Count;
-            if(!onlyWriteToHeap)
+            if(!onlywriteToNonAlign)
             {
                 if (count == 0)
                 {
@@ -268,11 +294,11 @@ namespace ExcelToByteFile
                 WriteInt(ls[i], true);
             }
         }
-		public void WriteListFloat(List<float> ls, bool onlyWriteToHeap = false)
+		public void WriteListFloat(List<float> ls, bool onlywriteToNonAlign = false)
         {
 			int count = 0;
 			if (ls != null) count = ls.Count;
-            if (!onlyWriteToHeap)
+            if (!onlywriteToNonAlign)
             {
                 if (count == 0)
                 {
@@ -287,11 +313,11 @@ namespace ExcelToByteFile
                 WriteFloat(ls[i], true);
             }
         }
-		public void WriteListLong(List<long> ls, bool onlyWriteToHeap = false)
+		public void WriteListLong(List<long> ls, bool onlywriteToNonAlign = false)
         {
 			int count = 0;
 			if (ls != null) count = ls.Count;
-            if (!onlyWriteToHeap)
+            if (!onlywriteToNonAlign)
             {
                 if (count == 0)
                 {
@@ -306,11 +332,11 @@ namespace ExcelToByteFile
                 WriteLong(ls[i], true);
             }
         }
-		public void WriteListDouble(List<double> ls, bool onlyWriteToHeap = false)
+		public void WriteListDouble(List<double> ls, bool onlywriteToNonAlign = false)
         {
 			int count = 0;
 			if (ls != null) count = ls.Count;
-            if (!onlyWriteToHeap)
+            if (!onlywriteToNonAlign)
             {
                 if (count == 0)
                 {
@@ -325,11 +351,11 @@ namespace ExcelToByteFile
                 WriteDouble(ls[i], true);
             }
         }
-		public void WriteListSbyte(List<sbyte> ls, bool onlyWriteToHeap = false)
+		public void WriteListSbyte(List<sbyte> ls, bool onlywriteToNonAlign = false)
         {
 			int count = 0;
 			if (ls != null) count = ls.Count;
-            if (!onlyWriteToHeap)
+            if (!onlywriteToNonAlign)
             {
                 if (count == 0)
                 {
@@ -344,11 +370,11 @@ namespace ExcelToByteFile
                 WriteSbyte(ls[i], true);
             }
         }
-		public void WriteListUInt(List<uint> ls, bool onlyWriteToHeap = false)
+		public void WriteListUInt(List<uint> ls, bool onlywriteToNonAlign = false)
         {
 			int count = 0;
 			if (ls != null) count = ls.Count;
-            if (!onlyWriteToHeap)
+            if (!onlywriteToNonAlign)
             {
                 if (count == 0)
                 {
@@ -363,11 +389,11 @@ namespace ExcelToByteFile
                 WriteUInt(ls[i], true);
             }
         }
-		public void WriteListULong(List<ulong> ls, bool onlyWriteToHeap = false)
+		public void WriteListULong(List<ulong> ls, bool onlywriteToNonAlign = false)
         {
 			int count = 0;
 			if (ls != null) count = ls.Count;
-            if (!onlyWriteToHeap)
+            if (!onlywriteToNonAlign)
             {
                 if (count == 0)
                 {
@@ -382,11 +408,11 @@ namespace ExcelToByteFile
                 WriteULong(ls[i], true);
             }
         }
-		public void WriteListUShort(List<ushort> ls, bool onlyWriteToHeap = false)
+		public void WriteListUShort(List<ushort> ls, bool onlywriteToNonAlign = false)
         {
 			int count = 0;
 			if (ls != null) count = ls.Count;
-            if (!onlyWriteToHeap)
+            if (!onlywriteToNonAlign)
             {
                 if (count == 0)
                 {
@@ -401,11 +427,11 @@ namespace ExcelToByteFile
                 WriteUShort(ls[i], true);
             }
         }
-		public void WriteListString(List<string> ls, bool onlyWriteToHeap = false)
+		public void WriteListString(List<string> ls, bool onlywriteToNonAlign = false)
         {
 			int count = 0;
 			if (ls != null) count = ls.Count;
-            if (!onlyWriteToHeap)
+            if (!onlywriteToNonAlign)
             {
                 if (count == 0)
                 {
@@ -420,9 +446,9 @@ namespace ExcelToByteFile
                 WriteString(ls[i], true);
             }
         }
-		public void WriteList<T>(List<T> ls)
+		public void WriteList<T>(List<T> ls, bool onlywriteToNonAlign = false)
         {
-			WriteListHelper<T>.WriteList(ls);
+			WriteHelper<List<T>>.Write(ls, onlywriteToNonAlign);
         }
 
 		public void WriteVec2Int(Vector2Int vec)

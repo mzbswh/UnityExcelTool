@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace ExcelToByteFile.Utils
+namespace ExcelToByteFile
 {
     static class Extensions
     {

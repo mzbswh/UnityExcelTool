@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
-using ExcelToByteFile.Utils;
-
 namespace ExcelToByteFile
 {
     public static class DataTypeHelper
@@ -237,6 +235,11 @@ namespace ExcelToByteFile
             }
         }
 
+        /// <summary>
+        /// 获取注释里显示的变量类型（注释里无法使用大于小于号，所以使用其他方式显示大于小于号）
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
         public static string GetCommentTypeByToken(int token)
         {
             if (token >= (int)TypeToken.Vector)

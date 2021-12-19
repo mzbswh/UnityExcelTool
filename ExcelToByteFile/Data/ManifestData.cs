@@ -37,6 +37,10 @@ namespace ExcelToByteFile
 
         public string PrimaryColCsType { get; }
 
+        public SheetConfigData SheetConfig { get; }
+
+        public SheetOptimizeData SheetOptimizeData { get; }
+
         /// <summary>
         /// sheet里每列变量的偏移(相对行首)
         /// </summary>
@@ -70,6 +74,8 @@ namespace ExcelToByteFile
             Comments = GetComment(data.heads);
             IdColIndex = data.PrimaryColIndex;
             PrimaryColCsType = DataTypeHelper.GetType(Tokens[IdColIndex]);
+            SheetConfig = data.SheetConfig;
+            SheetOptimizeData = data.SheetOptimizeData;
         }
 
         public int GetToken(int index)

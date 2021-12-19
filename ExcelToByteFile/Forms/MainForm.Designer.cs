@@ -159,8 +159,8 @@ namespace ExcelToByteFile
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(154, 21);
             this.label4.TabIndex = 18;
-            this.label4.Text = "变量定义输出路径：";
-            this.toolTip1.SetToolTip(this.label4, "每个sheet生成一个类，变量为类的常量，存储在一行中偏移的字节数");
+            this.label4.Text = "代码文件输出路径：";
+            this.toolTip1.SetToolTip(this.label4, "代码文件生成路径");
             // 
             // button2
             // 

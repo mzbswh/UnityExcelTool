@@ -10,7 +10,7 @@ namespace ExcelToByteFile
     /// <summary>
     /// 对应表格第一个单元格数据
     /// </summary>
-    public class SheetConfigData
+    public struct SheetConfigData
     {
         public string ExportName { get; }
 
@@ -32,13 +32,15 @@ namespace ExcelToByteFile
             Export = true;
             Optimize = true;
             /***********************/
-
+            config = config.ToLowerAndRemoveWhiteSpace();
+            if (string.IsNullOrWhiteSpace(config)) return;
             var configs = config.Split(Environment.NewLine);
             bool reverse = false;
             string key;
             string value;
             foreach (var c in configs)
             {
+                if (string.IsNullOrWhiteSpace(c)) continue;
                 value = string.Empty;
                 reverse = false;
                 string keyword = Regex.Replace(c.ToLower(), @"\s", ""); // 转小写并去空格

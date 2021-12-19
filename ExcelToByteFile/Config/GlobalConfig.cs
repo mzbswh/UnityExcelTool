@@ -30,7 +30,7 @@ namespace ExcelToByteFile
         /// <summary>
         /// 是否生成结构体信息文件
         /// </summary>
-		public bool generateStructInfoCs = true;
+		public bool generateStructInfoCode = true;
 
 		/// <summary>
 		/// 存储在本地的配置文件名称  
@@ -57,7 +57,7 @@ namespace ExcelToByteFile
 				str = sr.ReadLine();
 				if (Directory.Exists(str)) codeFileOutputDir = str;
 				str = sr.ReadLine();
-				generateStructInfoCs = str == SymbolDef.trueWord;
+				generateStructInfoCode = str == SymbolDef.trueWord;
 
 				sr.Dispose();
 				sr.Close();
@@ -88,7 +88,7 @@ namespace ExcelToByteFile
 				sw.WriteLine(lastSelectExcelPath);
 				sw.WriteLine(byteFileOutputDir);
 				sw.WriteLine(codeFileOutputDir);
-				sw.WriteLine(generateStructInfoCs ? SymbolDef.trueWord : SymbolDef.falseWord);
+				sw.WriteLine(generateStructInfoCode ? SymbolDef.trueWord : SymbolDef.falseWord);
 
 				sw.Flush();
 				sw.Dispose();

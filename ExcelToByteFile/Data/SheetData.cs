@@ -6,7 +6,6 @@ using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using NPOI.HSSF.UserModel;
 using System.Windows.Forms;
-using ExcelToByteFile.Utils;
 using NPOI.SS.Formula;
 using System.Text.RegularExpressions;
 using System.Security.Policy;
@@ -72,6 +71,7 @@ namespace ExcelToByteFile
 			for (int i = 1; i <= ConstDef.sheetDefRowMax; i++)
             {
                 row = sheet.GetRow(i);
+                if (row == null) break;
                 RowLabel lab = GetRowLabel(row);
                 switch (lab)
                 {
@@ -91,9 +91,8 @@ namespace ExcelToByteFile
             for (int idx = 1; idx < typeRow.LastCellNum; idx++)
 			{
                 ColLabel lab = GetColLabel(idx);
-                // 最后一个有效列前面要么是有效列要么是注释列，不能是None
+                // 最后一个有效列前面要么是有效列要么标记为注释列，不能是None且类型为空
                 if (lab == ColLabel.Note) continue;
-                else if (lab == ColLabel.None) break;
 
 				ICell typeCell = typeRow.GetCell(idx);
 				ICell nameCell = nameRow.GetCell(idx);
@@ -103,6 +102,9 @@ namespace ExcelToByteFile
                 string type = GetCellValue(typeCell).ToLowerAndRemoveWhiteSpace();
                 string name = GetCellValue(nameCell).ToLowerAndRemoveWhiteSpace();
                 string comment = GetCellValue(commentCell);
+
+                if (string.IsNullOrWhiteSpace(type)) break; // 如果类型是空就认为是到末尾了
+
                 if (string.IsNullOrEmpty(type))
                 {
                     Log.Error($"{ExcelName}_{Name}: 检测第{idx}列类型为空，如果是注释列请进行标注");
@@ -152,10 +154,11 @@ namespace ExcelToByteFile
             {
                 if (DataTypeHelper.CanOptimizeIfPrimaryIs(heads[PrimaryColIndex].MainType))
                 {
-                    List<ulong> nums = new List<ulong>(rows.Count);
+                    if (rows.Count < 20) return;
+                    List<long> nums = new List<long>(rows.Count);
                     for (int i = 0; i < rows.Count; i++)
                     {
-                        if (ulong.TryParse(rows[i][PrimaryColIndex], out ulong val))
+                        if (long.TryParse(rows[i][PrimaryColIndex], out long val))
                         {
                             nums.Add(val);
                         }
@@ -167,7 +170,7 @@ namespace ExcelToByteFile
                     var optimizeType = Optimize.GetOptimizeType(nums);
                     if (optimizeType != OptimizeType.None)
                     {
-                        SheetOptimizeData = new SheetOptimizeData(optimizeType, Optimize.segment, Optimize.partialContinuityStart, Optimize.step); ;
+                        SheetOptimizeData = new SheetOptimizeData(optimizeType, Optimize.segment, Optimize.segmentStart, Optimize.partialContinuityStart, Optimize.step); ;
                     }
                 }
             }
@@ -226,8 +229,7 @@ namespace ExcelToByteFile
         {
             if (row == null) return true;
             ICell cell = row.GetCell(primaryColIndex);
-            if (cell == null) return true;
-            return string.IsNullOrEmpty(GetCellValue(cell));
+            return cell == null || string.IsNullOrEmpty(GetCellValue(cell));
         }
 
         private bool ExistName(string name)

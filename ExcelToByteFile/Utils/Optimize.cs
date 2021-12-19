@@ -9,17 +9,18 @@ namespace ExcelToByteFile
     public static class Optimize
     {
         /* 以下为可优化的条件 
-         * 1. 主列必须的整数数值类型（可转为ulong）且递增
+         * 1. 主列必须的整数数值类型（可转为long且数据不丢失）且递增
          * 2. 主列的数据是连续的步长可不为1
          * 3. 主列数据不连续但可分成步长为1的有限个片段，
          * 4. 主列数据不连续且片段过多，但最大的片段比例大于某一数值, 且步长为1
          */
 
-        public static ulong step = 0;
+        public static long step = 0;
         public static List<int> segment;
+        public static List<long> segmentStart;
         public static int partialContinuityStart = 0;
 
-        public static OptimizeType GetOptimizeType(List<ulong> numberSequence)
+        public static OptimizeType GetOptimizeType(List<long> numberSequence)
         {
             OptimizeType type = OptimizeType.None;
             if (IsConstantStep(numberSequence))
@@ -60,16 +61,19 @@ namespace ExcelToByteFile
         }
 
         /// <returns>每一段的数量是多少</returns>
-        static List<int> GetSegment(List<ulong> numberSequence)
+        static List<int> GetSegment(List<long> numberSequence)
         {
-            ulong num = numberSequence[0];
+            long num = numberSequence[0];
             int cnt = 1;
             List<int> result = new List<int>();
+            segmentStart = new List<long>();
+            segmentStart.Add(numberSequence[0]);
             for (int i = 1; i < numberSequence.Count; i++)
             {
-                ulong n = numberSequence[i];
+                long n = numberSequence[i];
                 if (n != num + 1)
                 {
+                    segmentStart.Add(n);
                     result.Add(cnt);
                     cnt = 0;
                 }
@@ -84,9 +88,9 @@ namespace ExcelToByteFile
             return result;
         }
 
-        static bool IsConstantStep(List<ulong> numberSequence)
+        static bool IsConstantStep(List<long> numberSequence)
         {
-            ulong step = numberSequence[1] - numberSequence[0];
+            long step = numberSequence[1] - numberSequence[0];
             int i = 2;
             var last = numberSequence[1];
             while (i <= numberSequence.Count - 1)
