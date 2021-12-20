@@ -73,89 +73,7 @@ namespace ExcelToByteFile
                         break;
                     case OptimizeType.Segment:
                         fileBuffer.WriteList(optimize.SegmentList, true);
-                        switch (data.Tokens[data.IdColIndex])
-                        {
-                            case (int)TypeToken.Sbyte:
-                            {
-                                List<sbyte> ls = new List<sbyte>(optimize.SegmentStartList.Count);
-                                for (int j = 0; j < optimize.SegmentStartList.Count; j++)
-                                {
-                                    ls.Add((sbyte)optimize.SegmentStartList[j]);
-                                }
-                                fileBuffer.WriteList(ls, true);
-                                break;
-                            }
-                            case (int)TypeToken.Byte:
-                            {
-                                List<byte> ls = new List<byte>(optimize.SegmentStartList.Count);
-                                for (int j = 0; j < optimize.SegmentStartList.Count; j++)
-                                {
-                                    ls.Add((byte)optimize.SegmentStartList[j]);
-                                }
-                                fileBuffer.WriteList(ls, true);
-                                break;
-                            }
-                            case (int)TypeToken.UShort:
-                            {
-                                List<ushort> ls = new List<ushort>(optimize.SegmentStartList.Count);
-                                for (int j = 0; j < optimize.SegmentStartList.Count; j++)
-                                {
-                                    ls.Add((ushort)optimize.SegmentStartList[j]);
-                                }
-                                fileBuffer.WriteList(ls, true);
-                                break;
-                            }
-                            case (int)TypeToken.Short:
-                            {
-                                List<short> ls = new List<short>(optimize.SegmentStartList.Count);
-                                for (int j = 0; j < optimize.SegmentStartList.Count; j++)
-                                {
-                                    ls.Add((short)optimize.SegmentStartList[j]);
-                                }
-                                fileBuffer.WriteList(ls, true);
-                                break;
-                            }
-                            case (int)TypeToken.UInt:
-                            {
-                                List<uint> ls = new List<uint>(optimize.SegmentStartList.Count);
-                                for (int j = 0; j < optimize.SegmentStartList.Count; j++)
-                                {
-                                    ls.Add((uint)optimize.SegmentStartList[j]);
-                                }
-                                fileBuffer.WriteList(ls, true);
-                                break;
-                            }
-                            case (int)TypeToken.Int:
-                            {
-                                List<int> ls = new List<int>(optimize.SegmentStartList.Count);
-                                for (int j = 0; j < optimize.SegmentStartList.Count; j++)
-                                {
-                                    ls.Add((int)optimize.SegmentStartList[j]);
-                                }
-                                fileBuffer.WriteList(ls, true);
-                                break;
-                            }
-                            case (int)TypeToken.ULong:
-                            {
-                                List<ulong> ls = new List<ulong>(optimize.SegmentStartList.Count);
-                                for (int j = 0; j < optimize.SegmentStartList.Count; j++)
-                                {
-                                    ls.Add((ulong)optimize.SegmentStartList[j]);
-                                }
-                                fileBuffer.WriteList(ls, true);
-                                break;
-                            }
-                            case (int)TypeToken.Long:
-                            {
-                                List<long> ls = new List<long>(optimize.SegmentStartList.Count);
-                                for (int j = 0; j < optimize.SegmentStartList.Count; j++)
-                                {
-                                    ls.Add(optimize.SegmentStartList[j]);
-                                }
-                                fileBuffer.WriteList(ls, true);
-                                break;
-                            }
-                        }
+                        //fileBuffer.WriteList(optimize.SegmentStartList, true);
                         break;
                     case OptimizeType.PartialContinuity:
                         int preCnt = 0;
@@ -163,60 +81,9 @@ namespace ExcelToByteFile
                         {
                             preCnt += optimize.SegmentList[c];
                         }
-                        fileBuffer.WriteInt(preCnt, true); // 前面有多少个元素
+                        fileBuffer.WriteInt(preCnt * data.RowLength, true); // 连续部分起始偏移
                         fileBuffer.WriteInt(optimize.SegmentList[optimize.PartialContinuityStart], true); // 连续的有多少个元素
-                        // 连续部分的开始元素值
-                        switch (data.Tokens[data.IdColIndex])
-                        {
-                            case (int)TypeToken.Sbyte:
-                            {
-                                var value = (sbyte)optimize.SegmentStartList[optimize.PartialContinuityStart];
-                                fileBuffer.WriteSbyte(value, true);
-                                break;
-                            }
-                            case (int)TypeToken.Byte:
-                            {
-                                var value = (byte)optimize.SegmentStartList[optimize.PartialContinuityStart];
-                                fileBuffer.WriteByte(value, true);
-                                break;
-                            }
-                            case (int)TypeToken.UShort:
-                            {
-                                var value = (ushort)optimize.SegmentStartList[optimize.PartialContinuityStart];
-                                fileBuffer.WriteUShort(value, true);
-                                break;
-                            }
-                            case (int)TypeToken.Short:
-                            {
-                                var value = (short)optimize.SegmentStartList[optimize.PartialContinuityStart];
-                                fileBuffer.WriteShort(value, true);
-                                break;
-                            }
-                            case (int)TypeToken.UInt:
-                            {
-                                var value = (uint)optimize.SegmentStartList[optimize.PartialContinuityStart];
-                                fileBuffer.WriteUInt(value, true);
-                                break;
-                            }
-                            case (int)TypeToken.Int:
-                            {
-                                var value = (int)optimize.SegmentStartList[optimize.PartialContinuityStart];
-                                fileBuffer.WriteInt(value, true);
-                                break;
-                            }
-                            case (int)TypeToken.ULong:
-                            {
-                                var value = (ulong)optimize.SegmentStartList[optimize.PartialContinuityStart];
-                                fileBuffer.WriteULong(value, true);
-                                break;
-                            }
-                            case (int)TypeToken.Long:
-                            {
-                                var value = optimize.SegmentStartList[optimize.PartialContinuityStart];
-                                fileBuffer.WriteLong(value, true);
-                                break;
-                            }
-                        }
+                        //fileBuffer.WriteLong(optimize.PartialContinuityStart, true);
                         break;
                 }
             }

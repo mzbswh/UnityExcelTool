@@ -14,8 +14,6 @@ public class Test : MonoBehaviour
         ExcelDataAccess.Init();
         sw.Stop();
 
-        EDS_Test t = new EDS_Test(1);
-        Debug.LogError(t.douType);
         //foreach (var i in t.lss)
         //{
         //    Debug.LogError(i);

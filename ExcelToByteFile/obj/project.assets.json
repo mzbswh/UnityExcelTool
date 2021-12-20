@@ -490,25 +490,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\mzbswh\\.nuget\\packages\\": {},
-    "D:\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\Administrator\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\mzbswh\\Desktop\\UnityExcelTool\\ExcelToByteFile\\ExcelToByteFile.csproj",
+      "projectUniqueName": "C:\\Users\\Administrator\\Desktop\\ExcelTest\\UnityExcelTool\\ExcelToByteFile\\ExcelToByteFile.csproj",
       "projectName": "ExcelToByteFile",
-      "projectPath": "C:\\Users\\mzbswh\\Desktop\\UnityExcelTool\\ExcelToByteFile\\ExcelToByteFile.csproj",
-      "packagesPath": "C:\\Users\\mzbswh\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\mzbswh\\Desktop\\UnityExcelTool\\ExcelToByteFile\\obj\\",
+      "projectPath": "C:\\Users\\Administrator\\Desktop\\ExcelTest\\UnityExcelTool\\ExcelToByteFile\\ExcelToByteFile.csproj",
+      "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Administrator\\Desktop\\ExcelTest\\UnityExcelTool\\ExcelToByteFile\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "D:\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
       ],
       "configFilePaths": [
-        "C:\\Users\\mzbswh\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp3.1"
@@ -550,20 +550,8 @@
         "warn": true,
         "downloadDependencies": [
           {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[3.1.10, 3.1.10]"
-          },
-          {
             "name": "Microsoft.NETCore.App.Host.win-x64",
-            "version": "[3.1.21, 3.1.21]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Ref",
-            "version": "[3.1.0, 3.1.0]"
-          },
-          {
-            "name": "Microsoft.WindowsDesktop.App.Ref",
-            "version": "[3.1.0, 3.1.0]"
+            "version": "[3.1.22, 3.1.22]"
           }
         ],
         "frameworkReferences": {
@@ -574,7 +562,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.101\\RuntimeIdentifierGraph.json"
       }
     }
   }

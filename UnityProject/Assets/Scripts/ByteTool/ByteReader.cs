@@ -109,7 +109,7 @@ namespace ExcelToByteFile
                 index = ReadInt(data, index);
                 if (index < 0) return string.Empty;
             }
-            int count = ReadUShort(data, index);
+            var count = ReadUShort(data, index);
             index += 2;
             return Encoding.UTF8.GetString(data, index, count);
         }
@@ -125,10 +125,10 @@ namespace ExcelToByteFile
                 index = ReadInt(data, index);
                 if (index < 0) return new List<bool>();
             }
-            int count = ReadUShort(data, index);
+            ushort count = ReadUShort(data, index);
             index += 2;
             List<bool> ls = new List<bool>(count);
-            for (int i = 0; i < count; i++)
+            for (ushort i = 0; i < count; i++)
             {
                 ls.Add(ReadBool(data, index));
                 index++;
@@ -142,10 +142,10 @@ namespace ExcelToByteFile
                 index = ReadInt(data, index);
                 if (index < 0) return new List<sbyte>();
             }
-            int count = ReadUShort(data, index);
+            ushort count = ReadUShort(data, index);
             index += 2;
             List<sbyte> ls = new List<sbyte>(count);
-            for (int i = 0; i < count; i++)
+            for (ushort i = 0; i < count; i++)
             {
                 ls.Add(ReadSByte(data, index));
                 index++;
@@ -159,10 +159,10 @@ namespace ExcelToByteFile
                 index = ReadInt(data, index);
                 if (index < 0) return new List<byte>();
             }
-            int count = ReadUShort(data, index);
+            ushort count = ReadUShort(data, index);
             index += 2;
             List<byte> ls = new List<byte>(count);
-            for (int i = 0; i < count; i++)
+            for (ushort i = 0; i < count; i++)
             {
                 ls.Add(ReadByte(data, index));
                 index++;
@@ -176,10 +176,10 @@ namespace ExcelToByteFile
                 index = ReadInt(data, index);
                 if (index < 0) return new List<ushort>();
             }
-            int count = ReadUShort(data, index);
+            ushort count = ReadUShort(data, index);
             index += 2;
             List<ushort> ls = new List<ushort>(count);
-            for (int i = 0; i < count; i++)
+            for (ushort i = 0; i < count; i++)
             {
                 ls.Add(ReadUShort(data, index));
                 index += 2;
@@ -193,10 +193,10 @@ namespace ExcelToByteFile
                 index = ReadInt(data, index);
                 if (index < 0) return new List<short>();
             }
-            int count = ReadUShort(data, index);
+            ushort count = ReadUShort(data, index);
             index += 2;
             List<short> ls = new List<short>(count);
-            for (int i = 0; i < count; i++)
+            for (ushort i = 0; i < count; i++)
             {
                 ls.Add(ReadShort(data, index));
                 index += 2;
@@ -210,10 +210,10 @@ namespace ExcelToByteFile
                 index = ReadInt(data, index);
                 if (index < 0) return new List<uint>();
             }
-            int count = ReadUShort(data, index);
+            ushort count = ReadUShort(data, index);
             index += 2;
             List<uint> ls = new List<uint>(count);
-            for (int i = 0; i < count; i++)
+            for (ushort i = 0; i < count; i++)
             {
                 ls.Add(ReadUInt(data, index));
                 index += 4;
@@ -227,10 +227,10 @@ namespace ExcelToByteFile
                 index = ReadInt(data, index);
                 if (index < 0) return new List<int>();
             }
-            int count = ReadUShort(data, index);
+            ushort count = ReadUShort(data, index);
             index += 2;
             List<int> ls = new List<int>(count);
-            for (int i = 0; i < count; i++)
+            for (ushort i = 0; i < count; i++)
             {
                 ls.Add(ReadInt(data, index));
                 index += 4;
@@ -244,10 +244,10 @@ namespace ExcelToByteFile
                 index = ReadInt(data, index);
                 if (index < 0) return new List<float>();
             }
-            int count = ReadUShort(data, index);
+            ushort count = ReadUShort(data, index);
             index += 2;
             List<float> ls = new List<float>(count);
-            for (int i = 0; i < count; i++)
+            for (ushort i = 0; i < count; i++)
             {
                 ls.Add(ReadFloat(data, index));
                 index += 4;
@@ -261,10 +261,10 @@ namespace ExcelToByteFile
                 index = ReadInt(data, index);
                 if (index < 0) return new List<ulong>();
             }
-            int count = ReadUShort(data, index);
+            ushort count = ReadUShort(data, index);
             index += 2;
             List<ulong> ls = new List<ulong>(count);
-            for (int i = 0; i < count; i++)
+            for (ushort i = 0; i < count; i++)
             {
                 ls.Add(ReadULong(data, index));
                 index += 8;
@@ -278,10 +278,10 @@ namespace ExcelToByteFile
                 index = ReadInt(data, index);
                 if (index < 0) return new List<long>();
             }
-            int count = ReadUShort(data, index);
+            ushort count = ReadUShort(data, index);
             index += 2;
             List<long> ls = new List<long>(count);
-            for (int i = 0; i < count; i++)
+            for (ushort i = 0; i < count; i++)
             {
                 ls.Add(ReadLong(data, index));
                 index += 8;
@@ -295,10 +295,10 @@ namespace ExcelToByteFile
                 index = ReadInt(data, index);
                 if (index < 0) return new List<double>();
             }
-            int count = ReadUShort(data, index);
+            ushort count = ReadUShort(data, index);
             index += 2;
             List<double> ls = new List<double>(count);
-            for (int i = 0; i < count; i++)
+            for (ushort i = 0; i < count; i++)
             {
                 ls.Add(ReadDouble(data, index));
                 index += 8;
@@ -312,12 +312,12 @@ namespace ExcelToByteFile
                 index = ReadInt(data, index);
                 if (index < 0) return new List<string>();
             }
-            int count = ReadUShort(data, index);
+            ushort count = ReadUShort(data, index);
             index += 2;
             List<string> ls = new List<string>(count);
-            for (int i = 0; i < count; i++)
+            for (ushort i = 0; i < count; i++)
             {
-                int len = ReadUShort(data, index);
+                ushort len = ReadUShort(data, index);
                 ls.Add(ReadString(data, index, false));
                 index += len + 2;
             }
