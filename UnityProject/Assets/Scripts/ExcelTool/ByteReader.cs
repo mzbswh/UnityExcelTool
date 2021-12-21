@@ -326,7 +326,6 @@ namespace ExcelToByteFile
 
         public static Dictionary<K, V> ReadDict<K, V>(byte[] data, int index, TypeToken keyToken, TypeToken valToken, bool indexIsAddr = true)
         {
-            Dictionary<K, V> dict = new Dictionary<K, V>();
             if (indexIsAddr)
             {
                 index = ReadInt(data, index);
@@ -334,6 +333,7 @@ namespace ExcelToByteFile
             }
             int count = ReadUShort(data, index);
             index += 2;
+            Dictionary<K, V> dict = new Dictionary<K, V>(count);
             for (int i = 0; i < count; i++)
             {
                 K key = keyToken == TypeToken.String ? (K)(object)ReadString(data, index, false) : ReadHelper<K>.Read(data, index);
