@@ -68,7 +68,7 @@ namespace ExcelToByteFile
         public static void ExportStructInfoCsCode(string path, List<ManifestData> data)
         {
             Log.LogConsole("正在生成 ExcelDataStruct.cs ...");
-            using (StreamWriter sw = new StreamWriter(path + Path.DirectorySeparatorChar + "Def" + Path.DirectorySeparatorChar + "ExcelStructDef" + ".cs",
+            using (StreamWriter sw = new StreamWriter(path + Path.DirectorySeparatorChar + "ExcelStructDef" + ".cs",
                 false,
                 new UTF8Encoding(false)))
             {

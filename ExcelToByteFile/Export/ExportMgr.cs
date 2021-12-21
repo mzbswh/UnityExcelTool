@@ -63,12 +63,14 @@ namespace ExcelToByteFile
             }
             // 导出Manifest信息 *必须
             ExportByteFiles.ExportManifest(fileManifests);
+            string defDir = GlobalConfig.Ins.codeFileOutputDir + Path.DirectorySeparatorChar + "Def";
+            if (!Directory.Exists(defDir)) Directory.CreateDirectory(defDir);
             // 导出cs定义文件 *必须
-            ExportCSharpCode.ExportVariableDefCSCode(GlobalConfig.Ins.codeFileOutputDir, fileManifests);
+            ExportCSharpCode.ExportVariableDefCSCode(defDir, fileManifests);
             // 导出数据结构信息文件 *可选
             if (GlobalConfig.Ins.generateStructInfoCode)
             {
-                ExportCSharpCode.ExportStructInfoCsCode(GlobalConfig.Ins.codeFileOutputDir, fileManifests);
+                ExportCSharpCode.ExportStructInfoCsCode(defDir, fileManifests);
             }
         }  
 	}
