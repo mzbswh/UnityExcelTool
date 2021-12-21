@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\AutoGen\ExcelVariableDefine.cs" />
+    <Compile Include="Assets\Scripts\AutoGen\TT.cs" />
     <Compile Include="Assets\Scripts\ExcelTool\ByteFileInfo.cs" />
     <Compile Include="Assets\Scripts\ExcelTool\ByteReader.cs" />
     <Compile Include="Assets\Scripts\ExcelTool\ExcelDataMgr.cs" />

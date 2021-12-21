@@ -41,7 +41,7 @@ public static class EVD_Test
     /// <summary>[Double] </summary>
     public const int douType = 1245279;
 }
-public enum ExcelName
+public enum ExcelName : short
 {
     ///<summary>主列: id [Int]</summary>
     Test = 0,

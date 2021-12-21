@@ -14,7 +14,7 @@ public static class ExcelDataMgr
             int index = 0;
             int fileCnt = ByteReader.ReadInt(data, index);
             index += 4;
-            for (int i = 0; i < fileCnt; i++)
+            for (short i = 0; i < fileCnt; i++)
             {
                 ByteFileParam param = new ByteFileParam();
                 param.fileName = ByteReader.ReadString(data, index, false);
@@ -63,7 +63,7 @@ public static class ExcelDataMgr
         }
     }
 
-    private static readonly Dictionary<int, object> byteFilefileInfoDict = new Dictionary<int, object>();
+    private static readonly Dictionary<short, object> byteFilefileInfoDict = new Dictionary<short, object>();
 
     private static int GetListStringLen(List<string> ls)
     {
@@ -111,9 +111,14 @@ public static class ExcelDataMgr
         }
     }
 
+    public static ByteFileInfo<IdType> GetByteFileInfo<IdType>(ExcelName excelName)
+    {
+        return byteFilefileInfoDict.TryGetValue((short)excelName, out var ret) ? (ByteFileInfo<IdType>)ret : null;
+    }
+
     public static T Get<T, IdType>(ExcelName excelName, IdType id, int variableName)
     {
-        if (byteFilefileInfoDict.TryGetValue((int)excelName, out object fileInfo))
+        if (byteFilefileInfoDict.TryGetValue((short)excelName, out object fileInfo))
         {
             return ((ByteFileInfo<IdType>)fileInfo).Get<T>(id, variableName);
         }
@@ -126,7 +131,7 @@ public static class ExcelDataMgr
 
     public static Dictionary<K, V> GetDict<K, V, IdType>(ExcelName excelName, IdType id, int variableName)
     {
-        if (byteFilefileInfoDict.TryGetValue((int)excelName, out object fileInfo))
+        if (byteFilefileInfoDict.TryGetValue((short)excelName, out object fileInfo))
         {
             return ((ByteFileInfo<IdType>)fileInfo).GetDict<K, V>(id, variableName);
         }

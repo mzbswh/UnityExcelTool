@@ -1,19 +1,22 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
+
 using ExcelToByteFile;
 using UnityEngine;
 
 public sealed class ByteFileInfo<TIdType>
 {
-    bool parsed = false;
+    
     byte[] data;
-
     const int filter = 0xffff;
-
+    const string byteDataPathPrefix = "ByteData/";
+    
     /// <summary>
     /// 当优化类型为None时是所有的主列数据，为PartialContinuity时是不连续部分的主列数据，为其它优化类型时此值为空<br/>
     /// 可通过GetOptimizeInfo_得到相应的优化信息以获取所有的主列数据
     /// </summary>
     public TIdType[] Ids { get; private set; }
+    public bool ByteDataLoaded { get; private set; }
     public string Name { get; }
     public int IdColIndex { get; }
     public int RowCount { get; }
@@ -26,6 +29,8 @@ public sealed class ByteFileInfo<TIdType>
     private readonly List<int> colOff;
     private readonly List<string> varNames;
     Dictionary<TIdType, int> id2RowStartOff;    // id对应行起始偏移
+
+    readonly int idColOff;
 
     /* ------ 优化 ------- */
     // 连续类型
@@ -52,6 +57,7 @@ public sealed class ByteFileInfo<TIdType>
         this.varNames = param.varNames;
         this.OptimizeType = param.optimizeType;
         this.Cache = param.cache;
+        this.idColOff = colOff[IdColIndex];
         if (OptimizeType == OptimizeType.Continuity)
         {
             this.step = param.step;
@@ -70,8 +76,7 @@ public sealed class ByteFileInfo<TIdType>
 
     public void Parse()
     {
-        if (parsed) return;
-        parsed = true;
+        ByteDataLoaded = true;
         data = Resources.Load<TextAsset>("ByteData/" + Name).bytes;
         if (data.Length > 0)
         {
@@ -80,7 +85,6 @@ public sealed class ByteFileInfo<TIdType>
                 case OptimizeType.None:
                 {
                     id2RowStartOff = new Dictionary<TIdType, int>();
-                    int idColOff = colOff[IdColIndex];
                     Ids = new TIdType[RowCount];
                     for (int i = 0; i < RowCount; i++)
                     {
@@ -95,7 +99,6 @@ public sealed class ByteFileInfo<TIdType>
                     break;
                 case OptimizeType.Segment:
                 {
-                    int idColOff = colOff[IdColIndex];
                     segmentStartOff = new List<int>(segmentList.Count);
                     segmentStartList = new List<TIdType>(segmentList.Count);
                     segmentStartOff.Add(0);
@@ -110,7 +113,6 @@ public sealed class ByteFileInfo<TIdType>
                 case OptimizeType.PartialContinuity:
                 {
                     id2RowStartOff = new Dictionary<TIdType, int>();
-                    int idColOff = colOff[IdColIndex];
                     int preCnt = continuityStartOff / RowLength;
                     Ids = new TIdType[RowCount - preCnt - continuityCnt];
                     for (int i = 0; i < preCnt; i++)
@@ -131,6 +133,19 @@ public sealed class ByteFileInfo<TIdType>
                 }
             }
         }
+    }
+
+    public void UnloadByteData()
+    {
+        ByteDataLoaded = false;
+        data = null;
+    }
+
+    public void LoadByteData()
+    {
+        if (ByteDataLoaded) return;
+        ByteDataLoaded = true;
+        data = Resources.Load<TextAsset>(byteDataPathPrefix + Name).bytes;
     }
 
     /// <summary>
@@ -235,6 +250,38 @@ public sealed class ByteFileInfo<TIdType>
         }
         Debug.LogError($"{Name} 内不存在此id: {id}");
         return default(T);
+    }
+
+    /// <summary>
+    /// 通过行数和列数获取数据：0 based
+    /// </summary>
+    public T GetByRowAndIndex<T>(int rowNum, int index)
+    {
+        // 此处主要用于缓存数据使用，就暂时不做有效验证了
+        return ByteReader.Read<T>(data, rowNum * RowLength + colOff[index]);
+    }
+
+    /// <summary>
+    /// 通过行数和列数获取数据：0 based
+    /// </summary>
+    public Dictionary<K, V> GetDictByRowAndIndex<K, V>(int rowNum, int index)
+    {
+        // 此处主要用于缓存数据使用，就暂时不做有效验证了
+        return ByteReader.ReadDict<K, V>(data, rowNum * RowLength + colOff[index]);
+    }
+
+    /// <summary>
+    /// 获取第x行的主列值
+    /// </summary>
+    /// <param name="rowNum">行数（0 based）</param>
+    public TIdType GetKey(int rowNum)
+    {
+        if (rowNum >= 0 && rowNum < RowLength)
+        {
+            return ByteReader.Read<TIdType>(data, rowNum * RowLength + idColOff);
+        }
+        Debug.LogError($"行数{rowNum}超出范围，必须属于{0}-{RowLength - 1}");
+        return default(TIdType);
     }
 
     public List<T> GetOneCol<T>(int variableOff)
