@@ -488,38 +488,42 @@ namespace ExcelToByteFile
 			WriteFloat(vec.w);
 		}
 
-		public void WriteDict(Dictionary<string, string> dict, string keyType, string valType)
+		public void WriteDict(Dictionary<string, string> dict, string keyType, string valType, bool onlywriteToNonAlign = false)
         {
 			int count = 0;
 			if (dict != null) count = dict.Count;
-			if (count == 0) WriteInt(-1);
-			else
+            if (!onlywriteToNonAlign)
             {
-				WriteInt(nonAlignIndex);
-				WriteUShort((ushort)count, true);   // 先写入长度
-				//int keyLen = DataTypeHelper.GetBaseTypeLen(keyType);
-				//int valLen = DataTypeHelper.GetBaseTypeLen(valType);
-				//int KeyStart = _heapIndex;
-				//int valStart = KeyStart + keyLen * count;
-				//int realIndex = valStart + valLen * count;
-				//int num = 0;
-				foreach (var pair in dict)
-				{
-					//_heapIndex = KeyStart + num * keyLen;
-					WriteBaseTypeToHeap(pair.Key, keyType);
-					//_heapIndex = valStart + num * valLen;
-					WriteBaseTypeToHeap(pair.Value, valType);
-					//num++;
-				}
-			}
-		}
+                if (count == 0)
+                {
+                    WriteInt(-1);
+                    return;
+                }
+                WriteInt(nonAlignIndex);
+            }
+            WriteUShort((ushort)count, true);   // 先写入长度
+            //int keyLen = DataTypeHelper.GetBaseTypeLen(keyType);
+            //int valLen = DataTypeHelper.GetBaseTypeLen(valType);
+            //int KeyStart = _heapIndex;
+            //int valStart = KeyStart + keyLen * count;
+            //int realIndex = valStart + valLen * count;
+            //int num = 0;
+            foreach (var pair in dict)
+            {
+                //_heapIndex = KeyStart + num * keyLen;
+                WriteBaseTypeToNonAlign(pair.Key, keyType);
+                //_heapIndex = valStart + num * valLen;
+                WriteBaseTypeToNonAlign(pair.Value, valType);
+                //num++;
+            }
+        }
 
-		private void WriteBaseTypeToHeap(string value, string type)
+		private void WriteBaseTypeToNonAlign(string value, string type)
         {
 			switch (type)
 			{
 				case TypeDef.boolType:
-					WriteBool(Convert.ToBoolean(value), true);
+					WriteBool(StringConvert.ToBool(value), true);
 					break;
 				case TypeDef.sbyteType:
 					WriteSbyte(Convert.ToSByte(value), true);

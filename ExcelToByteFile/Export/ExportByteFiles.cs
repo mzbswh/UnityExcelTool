@@ -86,6 +86,7 @@ namespace ExcelToByteFile
                         //fileBuffer.WriteLong(optimize.PartialContinuityStart, true);
                         break;
                 }
+                fileBuffer.WriteDict(data.SheetConfig.ExtraInfo, TypeDef.stringType, TypeDef.stringType);
             }
 
             // 创建文件
@@ -110,40 +111,40 @@ namespace ExcelToByteFile
             switch (head.MainType)
             {
                 case TypeDef.sbyteType:
-                    buffer.WriteSbyte(StringConvert.StringToValue<sbyte>(value));
+                    buffer.WriteSbyte(StringConvert.ToValue<sbyte>(value));
                     break;
                 case TypeDef.uintType:
-                    buffer.WriteUInt(StringConvert.StringToValue<uint>(value));
+                    buffer.WriteUInt(StringConvert.ToValue<uint>(value));
                     break;
                 case TypeDef.ulongType:
-                    buffer.WriteULong(StringConvert.StringToValue<ulong>(value));
+                    buffer.WriteULong(StringConvert.ToValue<ulong>(value));
                     break;
                 case TypeDef.ushortType:
-                    buffer.WriteUShort(StringConvert.StringToValue<ushort>(value));
+                    buffer.WriteUShort(StringConvert.ToValue<ushort>(value));
                     break;
                 case TypeDef.boolType:
-                    buffer.WriteBool(StringConvert.StringToBool(value));
+                    buffer.WriteBool(StringConvert.ToBool(value));
                     break;
                 case TypeDef.byteType:
-                    buffer.WriteByte(StringConvert.StringToValue<byte>(value));
+                    buffer.WriteByte(StringConvert.ToValue<byte>(value));
                     break;
                 case TypeDef.shortType:
-                    buffer.WriteShort(StringConvert.StringToValue<short>(value));
+                    buffer.WriteShort(StringConvert.ToValue<short>(value));
                     break;
                 case TypeDef.intType:
-                    buffer.WriteInt(StringConvert.StringToValue<int>(value));
+                    buffer.WriteInt(StringConvert.ToValue<int>(value));
                     break;
                 case TypeDef.floatType:
-                    buffer.WriteFloat(StringConvert.StringToValue<float>(value));
+                    buffer.WriteFloat(StringConvert.ToValue<float>(value));
                     break;
                 case TypeDef.stringType:
                     buffer.WriteString(value);
                     break;
                 case TypeDef.longType:
-                    buffer.WriteLong(StringConvert.StringToValue<long>(value));
+                    buffer.WriteLong(StringConvert.ToValue<long>(value));
                     break;
                 case TypeDef.doubleType:
-                    buffer.WriteDouble(StringConvert.StringToValue<double>(value));
+                    buffer.WriteDouble(StringConvert.ToValue<double>(value));
                     break;
                 case TypeDef.listType:
                     WriteList(buffer, head.SubType[0], value);
@@ -165,43 +166,43 @@ namespace ExcelToByteFile
             switch (subType)
             {
                 case TypeDef.sbyteType:
-                    buffer.WriteListSbyte(StringConvert.StringToList<sbyte>(value, SymbolDef.splitChar));
+                    buffer.WriteListSbyte(StringConvert.ToList<sbyte>(value, SymbolDef.splitChar));
                     break;
                 case TypeDef.uintType:
-                    buffer.WriteListUInt(StringConvert.StringToList<uint>(value, SymbolDef.splitChar));
+                    buffer.WriteListUInt(StringConvert.ToList<uint>(value, SymbolDef.splitChar));
                     break;
                 case TypeDef.ulongType:
-                    buffer.WriteListULong(StringConvert.StringToList<ulong>(value, SymbolDef.splitChar));
+                    buffer.WriteListULong(StringConvert.ToList<ulong>(value, SymbolDef.splitChar));
                     break;
                 case TypeDef.ushortType:
-                    buffer.WriteListUShort(StringConvert.StringToList<ushort>(value, SymbolDef.splitChar));
+                    buffer.WriteListUShort(StringConvert.ToList<ushort>(value, SymbolDef.splitChar));
                     break;
                 case TypeDef.boolType:
-                    buffer.WriteListBool(StringConvert.StringToList<bool>(value, SymbolDef.splitChar));
+                    buffer.WriteListBool(StringConvert.ToList<bool>(value, SymbolDef.splitChar));
                     break;
                 case TypeDef.byteType:
-                    buffer.WriteListByte(StringConvert.StringToList<byte>(value, SymbolDef.splitChar));
+                    buffer.WriteListByte(StringConvert.ToList<byte>(value, SymbolDef.splitChar));
                     break;
                 case TypeDef.shortType:
-                    buffer.WriteListShort(StringConvert.StringToList<short>(value, SymbolDef.splitChar));
+                    buffer.WriteListShort(StringConvert.ToList<short>(value, SymbolDef.splitChar));
                     break;
                 case TypeDef.intType:
-                    buffer.WriteListInt(StringConvert.StringToList<int>(value, SymbolDef.splitChar));
+                    buffer.WriteListInt(StringConvert.ToList<int>(value, SymbolDef.splitChar));
                     break;
                 case TypeDef.floatType:
-                    buffer.WriteListFloat(StringConvert.StringToList<float>(value, SymbolDef.splitChar)); break;
+                    buffer.WriteListFloat(StringConvert.ToList<float>(value, SymbolDef.splitChar)); break;
                 case TypeDef.stringType:
-                    buffer.WriteListString(StringConvert.StringToStringList(value)); break;
+                    buffer.WriteListString(StringConvert.ToStringList(value)); break;
                 case TypeDef.longType:
-                    buffer.WriteListLong(StringConvert.StringToList<long>(value, SymbolDef.splitChar)); break;
+                    buffer.WriteListLong(StringConvert.ToList<long>(value, SymbolDef.splitChar)); break;
                 case TypeDef.doubleType:
-                    buffer.WriteListDouble(StringConvert.StringToList<double>(value, SymbolDef.splitChar)); break;
+                    buffer.WriteListDouble(StringConvert.ToList<double>(value, SymbolDef.splitChar)); break;
             }
         }
 
         private static void WriteDict(ByteWriterBuffer buffer, string[] subType, string value)
         {
-            var dict = StringConvert.StringToDict<string, string>(value);
+            var dict = StringConvert.ToDict<string, string>(value);
             buffer.WriteDict(dict, subType[0], subType[1]);
         }
 
@@ -212,12 +213,12 @@ namespace ExcelToByteFile
             {
                 if (subType[1] == TypeDef.intType)
                 {
-                    Vector2Int vec = StringConvert.StringToVec2Int(value);
+                    Vector2Int vec = StringConvert.ToVec2Int(value);
                     buffer.WriteVec2Int(vec);
                 }
                 else
                 {
-                    Vector2 vec = StringConvert.StringToVec2(value);
+                    Vector2 vec = StringConvert.ToVec2(value);
                     buffer.WriteVec2(vec);
                 }
             }
@@ -225,12 +226,12 @@ namespace ExcelToByteFile
             {
                 if (subType[1] == TypeDef.intType)
                 {
-                    Vector3Int vec = StringConvert.StringToVec3Int(value);
+                    Vector3Int vec = StringConvert.ToVec3Int(value);
                     buffer.WriteVec3Int(vec);
                 }
                 else
                 {
-                    Vector3 vec = StringConvert.StringToVec3(value);
+                    Vector3 vec = StringConvert.ToVec3(value);
                     buffer.WriteVec3(vec);
                 }
             }
@@ -238,12 +239,12 @@ namespace ExcelToByteFile
             {
                 if (subType[1] == TypeDef.intType)
                 {
-                    Vector4Int vec = StringConvert.StringToVec4Int(value);
+                    Vector4Int vec = StringConvert.ToVec4Int(value);
                     buffer.WriteVec4Int(vec);
                 }
                 else
                 {
-                    Vector4 vec = StringConvert.StringToVec4(value);
+                    Vector4 vec = StringConvert.ToVec4(value);
                     buffer.WriteVec4(vec);
                 }
             }

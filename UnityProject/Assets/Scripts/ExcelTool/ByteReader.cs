@@ -324,11 +324,14 @@ namespace ExcelToByteFile
             return ls;
         }
 
-        public static Dictionary<K, V> ReadDict<K, V>(byte[] data, int index, TypeToken keyToken, TypeToken valToken)
+        public static Dictionary<K, V> ReadDict<K, V>(byte[] data, int index, TypeToken keyToken, TypeToken valToken, bool indexIsAddr = true)
         {
             Dictionary<K, V> dict = new Dictionary<K, V>();
-            index = ReadInt(data, index);
-            if (index < 0) return new Dictionary<K, V>();
+            if (indexIsAddr)
+            {
+                index = ReadInt(data, index);
+                if (index < 0) return new Dictionary<K, V>();
+            }
             int count = ReadUShort(data, index);
             index += 2;
             for (int i = 0; i < count; i++)
@@ -341,11 +344,11 @@ namespace ExcelToByteFile
             }
             return dict;
         }
-        public static Dictionary<K, V> ReadDict<K, V>(byte[] data, int index)
+        public static Dictionary<K, V> ReadDict<K, V>(byte[] data, int index, bool indexIsAddr = true)
         {
             TypeToken keyToken = GetTypeToken<K>();
             TypeToken valToken = GetTypeToken<V>();
-            return ReadDict<K, V>(data, index, keyToken, valToken);
+            return ReadDict<K, V>(data, index, keyToken, valToken, indexIsAddr);
         }
 
         public static Vector2 ReadVector2(byte[] data, int index)

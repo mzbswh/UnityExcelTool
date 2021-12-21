@@ -216,7 +216,7 @@ namespace ExcelToByteFile
                 int dimen = (type - (int)TypeToken.Vector) / 100;
                 int valToken = (type - (int)TypeToken.Vector) % 100;
                 return "public " + csType + " " + varName +
-                    " { get { return ExcelDataAccess.Get" + csType + "<" +
+                    " { get { return ExcelDataMgr.Get" + csType + "<" +
                       PrimaryColCsType +
                     ">(ExcelName." + ByteFileName + ", primaryColVal, " + off.ToString() + "); } }";
             }
@@ -227,7 +227,7 @@ namespace ExcelToByteFile
                 string keyType = ((TypeToken)keyToken).ToString().ToLower();
                 string valType = ((TypeToken)valToken).ToString().ToLower();
                 return "public Dictionary<" + keyType + ", " + valType + "> " + varName +
-                    " { get { return ExcelDataAccess.GetDict<" +
+                    " { get { return ExcelDataMgr.GetDict<" +
                     keyType + ", " + valType + ", " + PrimaryColCsType +
                     ">(ExcelName." + ByteFileName + ", primaryColVal, " + off.ToString() + "); } }";
             }
@@ -235,14 +235,14 @@ namespace ExcelToByteFile
             {
                 int subToken = type - (int)TypeToken.List;
                 return "public " + csType + " " + varName +
-                    " { get { return ExcelDataAccess.GetList<" +
+                    " { get { return ExcelDataMgr.GetList<" +
                     ((TypeToken)subToken).ToString().ToLower() + ", " + PrimaryColCsType +
                     ">(ExcelName." + ByteFileName + ", primaryColVal, " + off.ToString() + "); } }";
             }
             else
             {
                 return "public " + csType + " " + varName +
-                    " { get { return ExcelDataAccess.Get<" + 
+                    " { get { return ExcelDataMgr.Get<" + 
                     csType + ", " + PrimaryColCsType + 
                     ">(ExcelName." + ByteFileName + ", primaryColVal, " + off.ToString() + "); } }";
             }

@@ -11,7 +11,7 @@ public class Test : MonoBehaviour
     {
         Stopwatch sw = new Stopwatch();
         sw.Start();
-        ExcelDataAccess.Init();
+        ExcelDataMgr.Init();
         sw.Stop();
 
         //foreach (var i in t.lss)

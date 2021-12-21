@@ -126,8 +126,15 @@ namespace ExcelToByteFile
                 heads.Add(head);
                 if (primary)
                 {
-                    primaryColIndex = idx;
-                    PrimaryColIndex = heads.Count - 1;
+                    if (DataTypeHelper.IsBaseType(type) || DataTypeHelper.IsVectorType(type))
+                    {
+                        primaryColIndex = idx;
+                        PrimaryColIndex = heads.Count - 1;
+                    }
+                    else
+                    {
+                        Log.Error($"错误，此类型不能用于主列{type} {ExcelName}_{Name} 第{idx}列");
+                    }
                 }
             }
 
