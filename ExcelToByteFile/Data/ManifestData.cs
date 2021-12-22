@@ -205,47 +205,5 @@ namespace ExcelToByteFile
                 default: return (int)TypeToken.Null;
             }
         }
-       
-        public string GetPropertyStr(int index, string varName)
-        {
-            string csType = DataTypeHelper.GetType(Tokens[index]);
-            int type = Tokens[index];
-            int off = (index << 16) + ColOffset[index]; 
-            if (type >= (int)TypeToken.Vector)
-            {
-                int dimen = (type - (int)TypeToken.Vector) / 100;
-                int valToken = (type - (int)TypeToken.Vector) % 100;
-                return "public " + csType + " " + varName +
-                    " { get { return ExcelDataMgr.Get" + csType + "<" +
-                      PrimaryColCsType +
-                    ">(ExcelName." + ByteFileName + ", primaryColVal, " + off.ToString() + "); } }";
-            }
-            else if (type >= (int)TypeToken.Dictionary)
-            {
-                int keyToken = (type - (int)TypeToken.Dictionary) / 100;
-                int valToken = (type - (int)TypeToken.Dictionary) % 100;
-                string keyType = ((TypeToken)keyToken).ToString().ToLower();
-                string valType = ((TypeToken)valToken).ToString().ToLower();
-                return "public Dictionary<" + keyType + ", " + valType + "> " + varName +
-                    " { get { return ExcelDataMgr.GetDict<" +
-                    keyType + ", " + valType + ", " + PrimaryColCsType +
-                    ">(ExcelName." + ByteFileName + ", primaryColVal, " + off.ToString() + "); } }";
-            }
-            else if (type >= (int)TypeToken.List)
-            {
-                int subToken = type - (int)TypeToken.List;
-                return "public " + csType + " " + varName +
-                    " { get { return ExcelDataMgr.GetList<" +
-                    ((TypeToken)subToken).ToString().ToLower() + ", " + PrimaryColCsType +
-                    ">(ExcelName." + ByteFileName + ", primaryColVal, " + off.ToString() + "); } }";
-            }
-            else
-            {
-                return "public " + csType + " " + varName +
-                    " { get { return ExcelDataMgr.Get<" + 
-                    csType + ", " + PrimaryColCsType + 
-                    ">(ExcelName." + ByteFileName + ", primaryColVal, " + off.ToString() + "); } }";
-            }
-        }
     }
 }

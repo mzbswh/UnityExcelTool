@@ -72,6 +72,9 @@ namespace ExcelToByteFile
             {
                 ExportCSharpCode.ExportStructInfoCsCode(defDir, fileManifests);
             }
+            string cacheDir = GlobalConfig.Ins.codeFileOutputDir + Path.DirectorySeparatorChar + "DataCache";
+            if (!Directory.Exists(cacheDir)) Directory.CreateDirectory(cacheDir);
+            ExportCSharpCode.ExportCacheCsCode(cacheDir, fileManifests);
         }  
 	}
 }

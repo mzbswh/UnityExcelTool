@@ -25,11 +25,11 @@ public static class ExcelDataMgr
                 index += 4;
                 param.rowLen = ByteReader.ReadInt(data, index);
                 index += 4;
-                param.colOff = ByteReader.ReadList<int>(data, index, false);
+                param.colOff = ByteReader.ReadListInt(data, index, false);
                 index += 4 * param.colOff.Count + 2;
-                param.types = ByteReader.ReadList<int>(data, index, false);
+                param.types = ByteReader.ReadListInt(data, index, false);
                 index += 4 * param.types.Count + 2;
-                param.varNames = ByteReader.ReadList<string>(data, index, false);
+                param.varNames = ByteReader.ReadListString(data, index, false);
                 index += GetListStringLen(param.varNames);
                 param.cache = ByteReader.ReadBool(data, index);
                 index++;

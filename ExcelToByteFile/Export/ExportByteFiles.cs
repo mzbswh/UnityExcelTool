@@ -52,7 +52,7 @@ namespace ExcelToByteFile
             fileBuffer.Clear();
             // 写入信息
             fileBuffer.SetNonAlignStartPos(0);
-            fileBuffer.WriteInt(fileDatas.Count, true);   // 先写入总个数
+            fileBuffer.WriteShort((short)fileDatas.Count, true);   // 先写入总个数
             for (int i = 0, len = fileDatas.Count; i < len; i++)
             {
                 ManifestData data = fileDatas[i];

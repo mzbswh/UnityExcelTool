@@ -6,13 +6,8 @@ using UnityEngine;
 
 namespace ExcelToByteFile
 {
-    public static class ByteReader
+    public class ByteReader
     {
-        public static class ReadHelper<T>
-        {
-            public static Func<byte[], int, T> Read;
-        }
-
         static ByteReader()
         {
             ReadHelper<bool>.Read = (data, index) => ReadBool(data, index);
@@ -48,60 +43,29 @@ namespace ExcelToByteFile
             ReadHelper<Vector3Int>.Read = (data, index) => ReadVector3Int(data, index);
         }
 
-        public static T Read<T>(byte[] data, int index)
+        public static class ReadHelper<T>
         {
-            return ReadHelper<T>.Read(data, index);
+            public static Func<byte[], int, T> Read;
         }
-        public static bool ReadBool(byte[] data, int index)
-        {
-            return data[index] >= 1;
-        }
-        public static byte ReadByte(byte[] data, int index)
-        {
-            return data[index];
-        }
-        public static sbyte ReadSByte(byte[] data, int index)
-        {
-            return (sbyte)data[index];
-        }
+
+        public static T Read<T>(byte[] data, int index) => ReadHelper<T>.Read(data, index);
+        public static bool ReadBool(byte[] data, int index) => data[index] > 0;
+        public static byte ReadByte(byte[] data, int index) => data[index];
+        public static sbyte ReadSByte(byte[] data, int index) => (sbyte)data[index];
         public static byte[] ReadBytes(byte[] data, int index, int count)
         {
             var ret = new byte[count];
             Buffer.BlockCopy(data, index, ret, 0, count);
             return ret;
         }
-        public static short ReadShort(byte[] data, int index)
-        {
-            return BitConverter.ToInt16(data, index);
-        }
-        public static ushort ReadUShort(byte[] data, int index)
-        {
-            return BitConverter.ToUInt16(data, index);
-        }
-        public static int ReadInt(byte[] data, int index)
-        {
-            return BitConverter.ToInt32(data, index);
-        }
-        public static uint ReadUInt(byte[] data, int index)
-        {
-            return BitConverter.ToUInt32(data, index);
-        }
-        public static long ReadLong(byte[] data, int index)
-        {
-            return BitConverter.ToInt64(data, index);
-        }
-        public static ulong ReadULong(byte[] data, int index)
-        {
-            return BitConverter.ToUInt64(data, index);
-        }
-        public static float ReadFloat(byte[] data, int index)
-        {
-            return BitConverter.ToSingle(data, index);
-        }
-        public static double ReadDouble(byte[] data, int index)
-        {
-            return BitConverter.ToDouble(data, index);
-        }
+        public static short ReadShort(byte[] data, int index) => BitConverter.ToInt16(data, index);
+        public static ushort ReadUShort(byte[] data, int index) => BitConverter.ToUInt16(data, index);
+        public static int ReadInt(byte[] data, int index) => BitConverter.ToInt32(data, index);
+        public static uint ReadUInt(byte[] data, int index) => BitConverter.ToUInt32(data, index);
+        public static long ReadLong(byte[] data, int index) => BitConverter.ToInt64(data, index);
+        public static ulong ReadULong(byte[] data, int index) => BitConverter.ToUInt64(data, index);
+        public static float ReadFloat(byte[] data, int index) => BitConverter.ToSingle(data, index);
+        public static double ReadDouble(byte[] data, int index) => BitConverter.ToDouble(data, index);
         public static string ReadString(byte[] data, int index, bool indexIsAddr = true)
         {
             if (indexIsAddr)
@@ -114,7 +78,7 @@ namespace ExcelToByteFile
             return Encoding.UTF8.GetString(data, index, count);
         }
 
-        public static List<T> ReadList<T>(byte[] data, int index, bool indexIsAddr = true)
+        public static List<T> ReadList<T>(byte[] data, int index)
         {
             return ReadHelper<List<T>>.Read(data, index);
         }
