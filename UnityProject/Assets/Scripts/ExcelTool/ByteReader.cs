@@ -10,6 +10,7 @@ namespace ExcelToByteFile
     {
         static ByteReader()
         {
+            utf8 = Encoding.UTF8;
             ReadHelper<bool>.Read = (data, index) => ReadBool(data, index);
             ReadHelper<sbyte>.Read = (data, index) => ReadSByte(data, index);
             ReadHelper<byte>.Read = (data, index) => ReadByte(data, index);
@@ -42,6 +43,7 @@ namespace ExcelToByteFile
             ReadHelper<Vector2Int>.Read = (data, index) => ReadVector2Int(data, index);
             ReadHelper<Vector3Int>.Read = (data, index) => ReadVector3Int(data, index);
         }
+        static readonly Encoding utf8;
 
         public static class ReadHelper<T>
         {
@@ -58,14 +60,14 @@ namespace ExcelToByteFile
             Buffer.BlockCopy(data, index, ret, 0, count);
             return ret;
         }
-        public static short ReadShort(byte[] data, int index) => BitConverter.ToInt16(data, index);
-        public static ushort ReadUShort(byte[] data, int index) => BitConverter.ToUInt16(data, index);
-        public static int ReadInt(byte[] data, int index) => BitConverter.ToInt32(data, index);
-        public static uint ReadUInt(byte[] data, int index) => BitConverter.ToUInt32(data, index);
-        public static long ReadLong(byte[] data, int index) => BitConverter.ToInt64(data, index);
-        public static ulong ReadULong(byte[] data, int index) => BitConverter.ToUInt64(data, index);
-        public static float ReadFloat(byte[] data, int index) => BitConverter.ToSingle(data, index);
-        public static double ReadDouble(byte[] data, int index) => BitConverter.ToDouble(data, index);
+        public static short ReadShort(byte[] data, int index) => FastBitConverter.ToInt16(data, index);
+        public static ushort ReadUShort(byte[] data, int index) => FastBitConverter.ToUInt16(data, index);
+        public static int ReadInt(byte[] data, int index) => FastBitConverter.ToInt32(data, index); 
+        public static uint ReadUInt(byte[] data, int index) => FastBitConverter.ToUInt32(data, index);
+        public static long ReadLong(byte[] data, int index) => FastBitConverter.ToInt64(data, index);
+        public static ulong ReadULong(byte[] data, int index) => FastBitConverter.ToUInt64(data, index);
+        public static float ReadFloat(byte[] data, int index) => FastBitConverter.ToSingle(data, index);
+        public static double ReadDouble(byte[] data, int index) => FastBitConverter.ToDouble(data, index);
         public static string ReadString(byte[] data, int index, bool indexIsAddr = true)
         {
             if (indexIsAddr)
@@ -75,7 +77,8 @@ namespace ExcelToByteFile
             }
             var count = ReadUShort(data, index);
             index += 2;
-            return Encoding.UTF8.GetString(data, index, count);
+            return utf8.GetString(data, index, count);
+            //return FastBitConverter.ToString(data, index, count);
         }
 
         public static List<T> ReadList<T>(byte[] data, int index)

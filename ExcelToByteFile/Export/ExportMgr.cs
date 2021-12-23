@@ -20,7 +20,9 @@ namespace ExcelToByteFile
             // 每次导出都存储一次配置文件
             GlobalConfig.Ins.SaveConfig();
             fileManifests.Clear();
-            // 加载选择的Excel文件列表
+
+            // 加载选择的Excel文件列表并导出字节文件
+            CreateOrClearDir(GlobalConfig.Ins.byteFileOutputDir);
             for (int i = 0; i < fileList.Count; i++)
             {
                 string filePath = fileList[i];
@@ -61,20 +63,53 @@ namespace ExcelToByteFile
                 }
                 
             }
-            // 导出Manifest信息 *必须
             ExportByteFiles.ExportManifest(fileManifests);
+
+            CreateOrClearDir(GlobalConfig.Ins.codeFileOutputDir);
+            // 导出cs定义文件 *必须
             string defDir = GlobalConfig.Ins.codeFileOutputDir + Path.DirectorySeparatorChar + "Def";
             if (!Directory.Exists(defDir)) Directory.CreateDirectory(defDir);
-            // 导出cs定义文件 *必须
             ExportCSharpCode.ExportVariableDefCSCode(defDir, fileManifests);
-            // 导出数据结构信息文件 *可选
+            // 导出数据结构定义文件 *可选
             if (GlobalConfig.Ins.generateStructInfoCode)
             {
                 ExportCSharpCode.ExportStructInfoCsCode(defDir, fileManifests);
             }
-            string cacheDir = GlobalConfig.Ins.codeFileOutputDir + Path.DirectorySeparatorChar + "DataCache";
+            string cacheDir = GlobalConfig.Ins.codeFileOutputDir + Path.DirectorySeparatorChar + "ExcelDataCache";
             if (!Directory.Exists(cacheDir)) Directory.CreateDirectory(cacheDir);
             ExportCSharpCode.ExportCacheCsCode(cacheDir, fileManifests);
-        }  
-	}
+        }
+
+        public static void CreateOrClearDir(string srcPath)
+        {
+            if (!Directory.Exists(srcPath))
+            {
+                Directory.CreateDirectory(srcPath);
+            }
+            else
+            {
+                try
+                {
+                    DirectoryInfo dir = new DirectoryInfo(srcPath);
+                    FileSystemInfo[] fileinfo = dir.GetFileSystemInfos();  //返回目录中所有文件和子目录
+                    foreach (FileSystemInfo i in fileinfo)
+                    {
+                        if (i is DirectoryInfo)            //判断是否文件夹
+                        {
+                            DirectoryInfo subdir = new DirectoryInfo(i.FullName);
+                            subdir.Delete(true);          //删除子目录和文件
+                        }
+                        else
+                        {
+                            File.Delete(i.FullName);      //删除指定文件
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
+            }
+        }
+    }
 }

@@ -103,10 +103,12 @@ public sealed class ByteFileInfo<TIdType>
                     segmentStartList = new List<TIdType>(segmentList.Count);
                     segmentStartOff.Add(0);
                     segmentStartList.Add(ByteReader.Read<TIdType>(data, idColOff));
+                    int preCnt = segmentList[0];
                     for (int i = 1; i < segmentList.Count; i++)
                     {
-                        segmentStartOff.Add(i * RowLength * segmentList[i - 1]);
-                        segmentStartList.Add(ByteReader.Read<TIdType>(data, i * RowLength + idColOff));
+                        segmentStartOff.Add(RowLength * preCnt);
+                        segmentStartList.Add(ByteReader.Read<TIdType>(data, preCnt * RowLength + idColOff));
+                        preCnt += segmentList[i];
                     }
                     break;
                 }
@@ -114,7 +116,7 @@ public sealed class ByteFileInfo<TIdType>
                 {
                     id2RowStartOff = new Dictionary<TIdType, int>();
                     int preCnt = continuityStartOff / RowLength;
-                    Ids = new TIdType[RowCount - preCnt - continuityCnt];
+                    Ids = new TIdType[RowCount - continuityCnt];
                     for (int i = 0; i < preCnt; i++)
                     {
                         TIdType id = ByteReader.Read<TIdType>(data, i * RowLength + idColOff);
@@ -229,17 +231,21 @@ public sealed class ByteFileInfo<TIdType>
                     int cnt = segmentList[i];
                     int diff = GenericCalc.SubToInt(id, segmentStartList[i]);
                     if (diff >= cnt) continue; // diff最大值为cnt - 1
+                    if (diff < 0) break;
                     return ByteReader.Read<T>(data, segmentStartOff[i] + diff * RowLength + off);
                 }
                 break;
             }
             case OptimizeType.PartialContinuity:
             {
+                Debug.LogError(id);
+                Debug.LogError(continuityStartVal);
+                Debug.LogError(continuityCnt);
                 int diff = GenericCalc.SubToInt(id, continuityStartVal);
                 // 优先判断是否在连续范围内，因为至少80%概率是在连续范围内
                 if (diff >= 0 && diff < continuityCnt) // 在连续范围内
                 {
-                    return ByteReader.Read<T>(data, continuityStartOff + diff * RowLength + variableOff);
+                    return ByteReader.Read<T>(data, continuityStartOff + diff * RowLength + off);
                 }
                 if (id2RowStartOff.TryGetValue(id, out int rowStart))
                 {
@@ -276,11 +282,11 @@ public sealed class ByteFileInfo<TIdType>
     /// <param name="rowNum">行数（0 based）</param>
     public TIdType GetKey(int rowNum)
     {
-        if (rowNum >= 0 && rowNum < RowLength)
+        if (rowNum >= 0 && rowNum < RowCount)
         {
             return ByteReader.Read<TIdType>(data, rowNum * RowLength + idColOff);
         }
-        Debug.LogError($"行数{rowNum}超出范围，必须属于{0}-{RowLength - 1}");
+        Debug.LogError($"行数{rowNum}超出范围，必须属于{0}-{RowCount - 1}");
         return default(TIdType);
     }
 

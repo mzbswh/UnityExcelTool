@@ -77,6 +77,8 @@ namespace ExcelToByteFile
                 sb.AppendLine(@"using System.Collections.Generic;");
                 sb.AppendLine(@"using UnityEngine;");
                 sb.AppendLine();
+                sb.AppendLine(@"#pragma warning disable");
+                sb.AppendLine();
 
                 for (int i = 0; i < data.Count; i++)
                 {
@@ -87,7 +89,7 @@ namespace ExcelToByteFile
                     sb.AppendLine(@"{");
                     // 字段
                     sb.AppendLine(@"    " + idType + @" primaryColVal;");
-                    sb.AppendLine(@"    ByteFileInfo<" + idType + @"> byteFileInfo;");
+                    sb.AppendLine(@"    readonly ByteFileInfo<" + idType + @"> byteFileInfo;");
                     // 构造方法
                     sb.AppendLine(@"    public " + fileName + @"(" + idType + @" val)");
                     sb.AppendLine(@"    {");
@@ -95,7 +97,7 @@ namespace ExcelToByteFile
                     sb.AppendLine(@"        this.byteFileInfo = ExcelDataMgr.GetByteFileInfo<" + idType + @">(ExcelName." + info.ByteFileName + @");");
                     sb.AppendLine(@"    }");
                     // 重新设置主列值
-                    sb.AppendLine(@"    public void SetPrimary(" + idType + @" id) { this.primaryColVal = val; } ");
+                    sb.AppendLine(@"    public void SetPrimary(" + idType + @" id) { this.primaryColVal = id; } ");
                     // 属性
                     for (int j = 0; j < info.VariableNames.Count; j++)
                     {
@@ -127,18 +129,18 @@ namespace ExcelToByteFile
                 sw.Flush();
             }
 
-            string GetPropertyStr(ManifestData info, int index, string varName)
+            static string GetPropertyStr(ManifestData info, int index, string varName)
             {
                 string csType = DataTypeHelper.GetType(info.Tokens[index]);
                 int type = info.Tokens[index];
                 int off = (index << 16) + info.ColOffset[index];
-                if (type >= (int)TypeToken.Dictionary)
+                if (type >= (int)TypeToken.Dictionary && type < (int)TypeToken.Vector)
                 {
                     int keyToken = (type - (int)TypeToken.Dictionary) / 100;
                     int valToken = (type - (int)TypeToken.Dictionary) % 100;
                     string keyType = ((TypeToken)keyToken).ToString().ToLower();
                     string valType = ((TypeToken)valToken).ToString().ToLower();
-                    return $"public Dictionary<{keyType}, {valType}> {varName} => byteFileInfo.GetDict<{keyType}, {valType}>(ExcelName.{info.ByteFileName}, primaryColVal, {off});";
+                    return $"public Dictionary<{keyType}, {valType}> {varName} => byteFileInfo.GetDict<{keyType}, {valType}>(primaryColVal, {off});";
                 }
                 else
                 {
@@ -162,7 +164,9 @@ namespace ExcelToByteFile
             {
                 foreach (var info in cacheInfo)
                 {
-                    using (StreamWriter sw = new StreamWriter(path + Path.DirectorySeparatorChar + $"{info.ByteFileName}Cache.cs",
+                    string fileName = "EDC_" + info.ByteFileName;
+                    fileNames.Add(fileName);
+                    using (StreamWriter sw = new StreamWriter(path + Path.DirectorySeparatorChar + $"{fileName}.cs",
                     false,
                     new UTF8Encoding(false)))
                     {
@@ -173,15 +177,13 @@ namespace ExcelToByteFile
                         sb.AppendLine();
                         sb.AppendLine(@"#pragma warning disable");
                         sb.AppendLine();
-                        string fileName = info.ByteFileName + "Cache";
-                        fileNames.Add(fileName);
                         string idType = DataTypeHelper.GetType(info.Tokens[info.IdColIndex]);
                         sb.AppendLine(@"public class " + fileName);
                         sb.AppendLine(@"{");
                         // 静态字段
                         sb.AppendLine(@"    static bool cached = false;");
-                        sb.AppendLine(@"    static ByteFileInfo<int> byteFileInfo;");
-                        sb.AppendLine($"    static Dictionary<{idType}, fileName> cacheDict = new Dictionary<{idType}, {fileName}>();");
+                        sb.AppendLine($"    static ByteFileInfo<{idType}> byteFileInfo;");
+                        sb.AppendLine($"    static Dictionary<{idType}, {fileName}> cacheDict = new Dictionary<{idType}, {fileName}>();");
                         sb.AppendLine();
                         // 属性
                         for (int j = 0; j < info.VariableNames.Count; j++)
@@ -209,17 +211,21 @@ namespace ExcelToByteFile
                             sb.AppendLine($"    public {csType} {varName} {{ get; }}");
                             if (j == info.IdColIndex)
                             {
-                                sb2.AppendLine($"       this.{varName} = id");
+                                sb2.AppendLine($"       this.{varName} = id;");
                             }
                             else
                             {
                                 if (csType.StartsWith("Dict"))
                                 {
-                                    sb2.AppendLine($"       this.{varName} = byteFileInfo.GetDictByRowAndIndex<int>(row, {j});");
+                                    int keyToken = (info.Tokens[j] - (int)TypeToken.Dictionary) / 100;
+                                    int valToken = (info.Tokens[j] - (int)TypeToken.Dictionary) % 100;
+                                    var keyType = ((TypeToken)keyToken).ToString().ToLower();
+                                    var valType = ((TypeToken)valToken).ToString().ToLower();
+                                    sb2.AppendLine($"       this.{varName} = byteFileInfo.GetDictByRowAndIndex<{keyType}, {valType}>(row, {j});");
                                 }
                                 else
                                 {
-                                    sb2.AppendLine($"       this.{varName} = byteFileInfo.GetByRowAndIndex<int>(row, {j});");
+                                    sb2.AppendLine($"       this.{varName} = byteFileInfo.GetByRowAndIndex<{csType}>(row, {j});");
                                 }
                             }
                         }
@@ -262,11 +268,13 @@ namespace ExcelToByteFile
                 }
 
                 // 导出缓存管理器脚本
-                using (StreamWriter sw = new StreamWriter(path + Path.DirectorySeparatorChar + $"ExcelDataCacheMgr.cs",
+                using (StreamWriter sw = new StreamWriter(GlobalConfig.Ins.codeFileOutputDir + Path.DirectorySeparatorChar + $"ExcelDataCacheMgr.cs",
                     false,
                     new UTF8Encoding(false)))
                 {
                     StringBuilder sb = new StringBuilder();
+                    sb.AppendLine(@"#pragma warning disable");
+                    sb.AppendLine();
                     sb.AppendLine(@"public class ExcelDataCacheMgr");
                     sb.AppendLine(@"{");
                     sb.AppendLine(@"    public static void CacheData()");

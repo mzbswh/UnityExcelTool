@@ -12,13 +12,13 @@ public static class ExcelDataMgr
         if (data.Length > 0)
         {
             int index = 0;
-            int fileCnt = ByteReader.ReadInt(data, index);
-            index += 4;
+            short fileCnt = ByteReader.ReadShort(data, index);
+            index += 2;
             for (short i = 0; i < fileCnt; i++)
             {
                 ByteFileParam param = new ByteFileParam();
                 param.fileName = ByteReader.ReadString(data, index, false);
-                index += param.fileName.Length;
+                index += param.fileName.Length + 2;
                 param.idColIndex = ByteReader.ReadInt(data, index);
                 index += 4;
                 param.rowCount = ByteReader.ReadInt(data, index);
@@ -53,7 +53,7 @@ public static class ExcelDataMgr
                         index += 4;
                         break;
                 }
-
+                Debug.LogError(param.optimizeType.ToString());
                 param.extraInfo = ByteReader.ReadDict<string, string>(data, index, false);
                 index += GetDictStringLen(param.extraInfo);
 
@@ -113,7 +113,12 @@ public static class ExcelDataMgr
 
     public static ByteFileInfo<IdType> GetByteFileInfo<IdType>(ExcelName excelName)
     {
-        return byteFilefileInfoDict.TryGetValue((short)excelName, out var ret) ? (ByteFileInfo<IdType>)ret : null;
+        if (byteFilefileInfoDict.TryGetValue((short)excelName, out var ret))
+        {
+            return (ByteFileInfo<IdType>)ret;
+        }
+        Debug.LogError($"未查找到{excelName}对应的ByteFileInfo信息");
+        return null;
     }
 
     public static T Get<T, IdType>(ExcelName excelName, IdType id, int variableName)

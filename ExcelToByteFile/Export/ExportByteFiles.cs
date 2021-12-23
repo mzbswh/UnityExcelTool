@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
@@ -86,9 +87,8 @@ namespace ExcelToByteFile
                         //fileBuffer.WriteLong(optimize.PartialContinuityStart, true);
                         break;
                 }
-                fileBuffer.WriteDict(data.SheetConfig.ExtraInfo, TypeDef.stringType, TypeDef.stringType);
+                fileBuffer.WriteDict(data.SheetConfig.ExtraInfo, TypeDef.stringType, TypeDef.stringType, true);
             }
-
             // 创建文件
             string filePath = StringHelper.MakeFullPath(path + Path.DirectorySeparatorChar, "manifest.bytes");
             try
