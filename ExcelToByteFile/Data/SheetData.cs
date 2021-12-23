@@ -100,7 +100,7 @@ namespace ExcelToByteFile
 
                 // 检测重复的列
                 string type = GetCellValue(typeCell).ToLowerAndRemoveWhiteSpace();
-                string name = GetCellValue(nameCell).ToLowerAndRemoveWhiteSpace();
+                string name = GetCellValue(nameCell); //.ToLowerAndRemoveWhiteSpace();
                 string comment = GetCellValue(commentCell);
 
                 if (string.IsNullOrWhiteSpace(type)) break; // 如果类型是空就认为是到末尾了

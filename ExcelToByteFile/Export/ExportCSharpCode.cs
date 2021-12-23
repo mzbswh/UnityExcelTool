@@ -94,7 +94,7 @@ namespace ExcelToByteFile
                     sb.AppendLine(@"    public " + fileName + @"(" + idType + @" val)");
                     sb.AppendLine(@"    {");
                     sb.AppendLine(@"        this.primaryColVal = val;");
-                    sb.AppendLine(@"        this.byteFileInfo = ExcelDataMgr.GetByteFileInfo<" + idType + @">(ExcelName." + info.ByteFileName + @");");
+                    sb.AppendLine(@"        this.byteFileInfo = ExcelDataMgr.GetByteFileInfo<" + idType + @">((short)ExcelName." + info.ByteFileName + @");");
                     sb.AppendLine(@"    }");
                     // 重新设置主列值
                     sb.AppendLine(@"    public void SetPrimary(" + idType + @" id) { this.primaryColVal = id; } ");
@@ -243,7 +243,7 @@ namespace ExcelToByteFile
                         sb.AppendLine(@"        if (cached) return;");
                         sb.AppendLine(@"        if (byteFileInfo == null)");
                         sb.AppendLine(@"        {");
-                        sb.AppendLine($"            byteFileInfo = ExcelDataMgr.GetByteFileInfo<{idType}>(ExcelName.{info.ByteFileName});");
+                        sb.AppendLine($"            byteFileInfo = ExcelDataMgr.GetByteFileInfo<{idType}>((short)ExcelName.{info.ByteFileName});");
                         sb.AppendLine(@"        }");
                         sb.AppendLine(@"        if (!byteFileInfo.ByteDataLoaded) byteFileInfo.LoadByteData();");
                         sb.AppendLine(@"        for (int i = 0; i < byteFileInfo.RowCount; i++)");

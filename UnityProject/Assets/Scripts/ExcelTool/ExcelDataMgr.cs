@@ -53,7 +53,6 @@ public static class ExcelDataMgr
                         index += 4;
                         break;
                 }
-                Debug.LogError(param.optimizeType.ToString());
                 param.extraInfo = ByteReader.ReadDict<string, string>(data, index, false);
                 index += GetDictStringLen(param.extraInfo);
 
@@ -111,38 +110,38 @@ public static class ExcelDataMgr
         }
     }
 
-    public static ByteFileInfo<IdType> GetByteFileInfo<IdType>(ExcelName excelName)
+    public static ByteFileInfo<IdType> GetByteFileInfo<IdType>(short excel)
     {
-        if (byteFilefileInfoDict.TryGetValue((short)excelName, out var ret))
+        if (byteFilefileInfoDict.TryGetValue(excel, out var ret))
         {
             return (ByteFileInfo<IdType>)ret;
         }
-        Debug.LogError($"未查找到{excelName}对应的ByteFileInfo信息");
+        Debug.LogError($"未查找到excelId={excel}对应的ByteFileInfo信息");
         return null;
     }
 
-    public static T Get<T, IdType>(ExcelName excelName, IdType id, int variableName)
+    public static T Get<T, IdType>(short excel, IdType id, int variableName)
     {
-        if (byteFilefileInfoDict.TryGetValue((short)excelName, out object fileInfo))
+        if (byteFilefileInfoDict.TryGetValue(excel, out object fileInfo))
         {
             return ((ByteFileInfo<IdType>)fileInfo).Get<T>(id, variableName);
         }
         else
         {
-            Debug.LogError($"{excelName} 文件不存在");
+            Debug.LogError($"excelId={excel} 文件不存在");
             return default(T);
         }
     }
 
-    public static Dictionary<K, V> GetDict<K, V, IdType>(ExcelName excelName, IdType id, int variableName)
+    public static Dictionary<K, V> GetDict<K, V, IdType>(short excel, IdType id, int variableName)
     {
-        if (byteFilefileInfoDict.TryGetValue((short)excelName, out object fileInfo))
+        if (byteFilefileInfoDict.TryGetValue(excel, out object fileInfo))
         {
             return ((ByteFileInfo<IdType>)fileInfo).GetDict<K, V>(id, variableName);
         }
         else
         {
-            Debug.LogError($"{excelName} 文件不存在");
+            Debug.LogError($"excelId={excel} 文件不存在");
             return null;
         }
     }
