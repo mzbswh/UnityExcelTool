@@ -27,7 +27,8 @@ namespace ExcelToByteFile
             {
                 string filePath = fileList[i];
                 ExcelData excelData = new ExcelData(filePath);
-                Program.mainForm?.Invoke(new Action(() => Program.mainForm.SetProgress(i + 1, "正在生成：" + excelData.Name)));
+                //Program.mainForm?.Invoke(new Action(() => Program.mainForm.SetProgress(i + 1, "正在生成：" + excelData.Name)));
+                Console.WriteLine("正在生成：" + excelData.Name);
                 try
                 {
                     if (excelData.Load())
@@ -64,20 +65,18 @@ namespace ExcelToByteFile
                 
             }
             ExportByteFiles.ExportManifest(fileManifests);
-
+            Console.WriteLine("正在生成代码文件...");
             CreateOrClearDir(GlobalConfig.Ins.codeFileOutputDir);
             // 导出cs定义文件 *必须
-            string defDir = GlobalConfig.Ins.codeFileOutputDir + Path.DirectorySeparatorChar + "Def";
-            if (!Directory.Exists(defDir)) Directory.CreateDirectory(defDir);
-            ExportCSharpCode.ExportVariableDefCSCode(defDir, fileManifests);
+            ExportCSharpCode.ExportVariableDefCSCode(GlobalConfig.Ins.codeFileOutputDir, fileManifests);
             // 导出数据结构定义文件 *可选
-            if (GlobalConfig.Ins.generateStructInfoCode)
+            if (true)
             {
-                ExportCSharpCode.ExportStructInfoCsCode(defDir, fileManifests);
+                ExportCSharpCode.ExportStructInfoCsCode(GlobalConfig.Ins.codeFileOutputDir, fileManifests);
             }
-            string cacheDir = GlobalConfig.Ins.codeFileOutputDir + Path.DirectorySeparatorChar + "ExcelDataCache";
-            if (!Directory.Exists(cacheDir)) Directory.CreateDirectory(cacheDir);
+            string cacheDir = GlobalConfig.Ins.codeFileOutputDir;
             ExportCSharpCode.ExportCacheCsCode(cacheDir, fileManifests);
+            Console.WriteLine("生成结束，按任意键退出");
         }
 
         public static void CreateOrClearDir(string srcPath)
@@ -96,8 +95,8 @@ namespace ExcelToByteFile
                     {
                         if (i is DirectoryInfo)            //判断是否文件夹
                         {
-                            DirectoryInfo subdir = new DirectoryInfo(i.FullName);
-                            subdir.Delete(true);          //删除子目录和文件
+                            //DirectoryInfo subdir = new DirectoryInfo(i.FullName);
+                            //subdir.Delete(true);          //删除子目录和文件
                         }
                         else
                         {

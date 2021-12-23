@@ -68,7 +68,7 @@ namespace ExcelToByteFile
                 }
                 
 
-                for (int i = 0; i < Workbook.NumberOfSheets; i++)
+                for (int i = 0; i < 1; i++)
                 {
                     ISheet sheet = Workbook.GetSheetAt(i);
                     SheetData sheetData = new SheetData(sheet, Name, Evaluator);

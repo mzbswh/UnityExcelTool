@@ -32,10 +32,11 @@ namespace ExcelToByteFile
             ExtraInfo = new Dictionary<string, string>();
             /******* default *******/
             ExportName = string.Empty;
-            CacheData = false;
+            CacheData = true;
             Export = true;
             Optimize = true;
             /***********************/
+            return;
             //config = config.ToLowerAndRemoveWhiteSpace();
             if (string.IsNullOrWhiteSpace(config)) return;
             var configs = config.Split(Environment.NewLine);

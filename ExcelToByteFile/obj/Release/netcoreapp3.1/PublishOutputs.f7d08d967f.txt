@@ -1,0 +1,11 @@
+C:\Users\Administrator\Desktop\新建文件夹\ExcelToByteFile.exe
+C:\Users\Administrator\Desktop\新建文件夹\ExcelToByteFile.dll
+C:\Users\Administrator\Desktop\新建文件夹\ExcelToByteFile.deps.json
+C:\Users\Administrator\Desktop\新建文件夹\ExcelToByteFile.runtimeconfig.json
+C:\Users\Administrator\Desktop\新建文件夹\ExcelToByteFile.pdb
+C:\Users\Administrator\Desktop\新建文件夹\NPOI.OOXML.dll
+C:\Users\Administrator\Desktop\新建文件夹\NPOI.OpenXml4Net.dll
+C:\Users\Administrator\Desktop\新建文件夹\NPOI.OpenXmlFormats.dll
+C:\Users\Administrator\Desktop\新建文件夹\NPOI.dll
+C:\Users\Administrator\Desktop\新建文件夹\BouncyCastle.Crypto.dll
+C:\Users\Administrator\Desktop\新建文件夹\ICSharpCode.SharpZipLib.dll

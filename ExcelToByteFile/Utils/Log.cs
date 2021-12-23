@@ -8,7 +8,6 @@ namespace ExcelToByteFile
 {
     class Log
     {
-
         public static void LogConsole(string msg)
         {
             Console.WriteLine(msg);
@@ -16,15 +15,14 @@ namespace ExcelToByteFile
 
         public static void Info(string msg, string caption = null)
         {
-            System.Windows.Forms.MessageBox.Show(msg, caption);
+            LogConsole(msg);
         }
 
         public static void Error(string msg)
         {
-            if (Program.IsCommandLine) Console.WriteLine(msg);
-            else System.Windows.Forms.MessageBox.Show(msg + Environment.NewLine + Environment.NewLine
-                + "按确定键退出...", "错误", MessageBoxButtons.OK);
-            Environment.Exit(1);
+            LogConsole("错误：" + msg);
+            Console.WriteLine("按任意键退出");
+            Console.ReadKey();
         }
     }
 }

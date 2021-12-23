@@ -1,0 +1,2 @@
+C:\Users\Administrator\Desktop\ExcelTest\UnityExcelTool\UnityProject\obj\Debug\Assembly-CSharp.csproj.AssemblyReference.cache
+C:\Users\Administrator\Desktop\ExcelTest\UnityExcelTool\UnityProject\obj\Debug\Assembly-CSharp.csproj.CoreCompileInputs.cache

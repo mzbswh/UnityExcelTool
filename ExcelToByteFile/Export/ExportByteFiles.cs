@@ -48,7 +48,8 @@ namespace ExcelToByteFile
         public static void ExportManifest(List<ManifestData> fileDatas)
         {
             var fileBuffer = ExportMgr.fileBuffer;
-            Program.mainForm?.Invoke(new Action(() => Program.mainForm.SetProgress(1, "正在生成：manifest.bytess")));
+            //Program.mainForm?.Invoke(new Action(() => Program.mainForm.SetProgress(1, "正在生成：manifest.bytess")));
+            Console.WriteLine("正在生成：manifest.bytess");
             string path = GlobalConfig.Ins.byteFileOutputDir;
             fileBuffer.Clear();
             // 写入信息

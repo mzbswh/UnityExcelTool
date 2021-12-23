@@ -624,25 +624,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\mzbswh\\.nuget\\packages\\": {},
-    "D:\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\Administrator\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\mzbswh\\Desktop\\新建文件夹\\ExcelToByteFile\\ExcelToByteFile\\ExcelToByteFile.csproj",
+      "projectUniqueName": "C:\\Users\\Administrator\\Desktop\\ExcelTest\\UnityExcelTool\\ExcelToByteFile\\ExcelToByteFile.csproj",
       "projectName": "ExcelToByteFile",
-      "projectPath": "C:\\Users\\mzbswh\\Desktop\\新建文件夹\\ExcelToByteFile\\ExcelToByteFile\\ExcelToByteFile.csproj",
-      "packagesPath": "C:\\Users\\mzbswh\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\mzbswh\\Desktop\\新建文件夹\\ExcelToByteFile\\ExcelToByteFile\\obj\\publish\\win-x64\\",
+      "projectPath": "C:\\Users\\Administrator\\Desktop\\ExcelTest\\UnityExcelTool\\ExcelToByteFile\\ExcelToByteFile.csproj",
+      "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Administrator\\Desktop\\ExcelTest\\UnityExcelTool\\ExcelToByteFile\\obj\\publish\\win-x64\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "D:\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
       ],
       "configFilePaths": [
-        "C:\\Users\\mzbswh\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp3.1"
@@ -682,6 +682,12 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.NETCore.App.Host.win-x64",
+            "version": "[3.1.22, 3.1.22]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
@@ -690,7 +696,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.201\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.101\\RuntimeIdentifierGraph.json"
       }
     },
     "runtimes": {

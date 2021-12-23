@@ -60,47 +60,24 @@ namespace ExcelToByteFile
 
             // 先解析第一个单元格，获取此sheet的导出信息
             IRow row = sheet.GetRow(0);
-            ICell cell = row.GetCell(0);
-            SheetConfig = new SheetConfigData(GetCellValue(cell), $"{ExcelName}_{Name}");
+            //ICell cell = row.GetCell(0);
+            SheetConfig = new SheetConfigData(string.Empty, $"{ExcelName}_{Name}");
 
             if (!SheetConfig.Export) return;
 
             // 获取类型行，名字行以及可能存在的注释行
-            IRow commentRow = null, typeRow = null, nameRow = null;
-            byte ok = 0;
-			for (int i = 1; i <= ConstDef.sheetDefRowMax; i++)
-            {
-                row = sheet.GetRow(i);
-                if (row == null) break;
-                RowLabel lab = GetRowLabel(row);
-                switch (lab)
-                {
-                    case RowLabel.Type: typeRow = row; ok |= 1; break;
-                    case RowLabel.Name: nameRow = row; ok |= 2; break;
-                    case RowLabel.Comment: commentRow = row; ok |= 4; break;
-                }
-                if (ok == 7) break;
-            }
-            if (typeRow == null || nameRow == null)
-            {
-                Log.Error($"{ExcelName}_{Name}: 没有检测到类型行或变量名字行");
-            }
-
+            IRow commentRow = sheet.GetRow(0), typeRow = sheet.GetRow(1), nameRow = sheet.GetRow(2);
             // 获取数据类型名字信息
             bool existIdCol = false;
-            for (int idx = 1; idx < typeRow.LastCellNum; idx++)
+            for (int idx = 0; idx < typeRow.LastCellNum; idx++)
 			{
-                ColLabel lab = GetColLabel(idx);
-                // 最后一个有效列前面要么是有效列要么标记为注释列，不能是None且类型为空
-                if (lab == ColLabel.Note) continue;
-
 				ICell typeCell = typeRow.GetCell(idx);
 				ICell nameCell = nameRow.GetCell(idx);
 				ICell commentCell = commentRow?.GetCell(idx);
 
                 // 检测重复的列
                 string type = GetCellValue(typeCell).ToLowerAndRemoveWhiteSpace();
-                string name = GetCellValue(nameCell).ToLowerAndRemoveWhiteSpace();
+                string name = GetCellValue(nameCell); //.ToLowerAndRemoveWhiteSpace();
                 string comment = GetCellValue(commentCell);
 
                 if (string.IsNullOrWhiteSpace(type)) break; // 如果类型是空就认为是到末尾了
@@ -120,7 +97,7 @@ namespace ExcelToByteFile
                 // 添加到heads数据里
                 string mainType = DataTypeHelper.GetMainType(type);
                 string[] subType = DataTypeHelper.GetSubType(type);
-                bool primary = lab == ColLabel.Primary;
+                bool primary = idx == 0;
                 existIdCol |= primary;
                 HeadData head = new HeadData(name, mainType, subType, comment, idx, primary);
                 heads.Add(head);
@@ -144,11 +121,11 @@ namespace ExcelToByteFile
 			}
 
 			// 读取所有数据行
-			for (int i = 1; i <= sheet.LastRowNum; i++)
+			for (int i = 4; i <= sheet.LastRowNum; i++)
 			{
 				row = sheet.GetRow(i);
-                var lab = GetRowLabel(row);
-				if (lab != RowLabel.None) continue;
+                //var lab = GetRowLabel(row);
+				//if (lab != RowLabel.None) continue;
                 if (IsEndRow(row)) break; 
 
                 List<string> vals = GetOneRowData(row); 
@@ -185,6 +162,7 @@ namespace ExcelToByteFile
 
         private RowLabel GetRowLabel(IRow row)
         {
+            return RowLabel.None;
             ICell cell = row.GetCell(0);
             if (cell == null) return RowLabel.None;
             string s = GetCellValue(cell).ToLowerAndRemoveWhiteSpace();
@@ -213,6 +191,7 @@ namespace ExcelToByteFile
 
         private ColLabel GetColLabel(int col)
         {
+            return ColLabel.None;
             IRow row = sheet.GetRow(0);
             ICell cell = row.GetCell(col);
             if (cell == null) return ColLabel.None;
