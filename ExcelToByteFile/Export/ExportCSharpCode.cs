@@ -60,6 +60,8 @@ namespace ExcelToByteFile
                     sb1.AppendLine(@"}");
                 }
                 sb2.Append(@"}");
+                sw.WriteLine(@"#pragma warning disable");
+                sw.WriteLine(@"using ExcelTool;");
                 sw.Write(sb1.ToString());
                 sw.Write(sb2.ToString());
                 sw.Flush();
@@ -76,6 +78,7 @@ namespace ExcelToByteFile
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine(@"using System.Collections.Generic;");
                 sb.AppendLine(@"using UnityEngine;");
+                sb.AppendLine(@"using ExcelTool;");
                 sb.AppendLine();
                 sb.AppendLine(@"#pragma warning disable");
                 sb.AppendLine();
@@ -174,6 +177,7 @@ namespace ExcelToByteFile
                         StringBuilder sb2 = new StringBuilder();
                         sb.AppendLine(@"using System.Collections.Generic;");
                         sb.AppendLine(@"using UnityEngine;");
+                        sb.AppendLine(@"using ExcelTool;");
                         sb.AppendLine();
                         sb.AppendLine(@"#pragma warning disable");
                         sb.AppendLine();
