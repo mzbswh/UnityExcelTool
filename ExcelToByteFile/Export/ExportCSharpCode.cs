@@ -193,6 +193,7 @@ namespace ExcelToByteFile
                         // 静态字段
                         sb.AppendLine(@"    static bool cached = false;");
                         sb.AppendLine($"    static ByteFileInfo<{idType}> byteFileInfo;");
+                        //sb.AppendLine(@"    static ByteFileReader byteFileReader;");
                         sb.AppendLine($"    Dictionary<{idType}, Model> m_dict = new Dictionary<{idType}, Model>();");
                         sb.AppendLine($"    public Dictionary<{idType}, Model> Dict => m_dict;");
                         sb.AppendLine($"    public {idType}[] Ids => byteFileInfo.Ids;");
@@ -201,6 +202,7 @@ namespace ExcelToByteFile
                         sb.AppendLine(@"    public class Model");
                         sb.AppendLine(@"    {");
                         // 字段
+                        //sb2.AppendLine(@"           var bf = byteFileReader;  // ILRuntime环境下，使用局部变量会有相当大的性能提升");
                         for (int j = 0; j < info.VariableNames.Count; j++)
                         {
                             string varName = info.VariableNames[j];
@@ -227,6 +229,7 @@ namespace ExcelToByteFile
                             if (j == info.IdColIndex)
                             {
                                 sb2.AppendLine($"           this.{varName} = id;");
+                                sb2.AppendLine(@"           ByteFileReader.SkipOne();");
                             }
                             else
                             {
@@ -236,17 +239,17 @@ namespace ExcelToByteFile
                                     int valToken = (info.Tokens[j] - (int)TypeToken.Dictionary) % 100;
                                     var keyType = ((TypeToken)keyToken).ToString().ToLower();
                                     var valType = ((TypeToken)valToken).ToString().ToLower();
-                                    sb2.AppendLine($"           this.{varName} = byteFileInfo.GetDictByRowAndIndex<{keyType}, {valType}>(row, {j});");
+                                    sb2.AppendLine($"           this.{varName} = ByteFileReader.GetDict<{keyType}, {valType}>();");
                                 }
                                 else
                                 {
-                                    sb2.AppendLine($"           this.{varName} = byteFileInfo.GetByRowAndIndex<{csType}>(row, {j});");
+                                    sb2.AppendLine($"           this.{varName} = ByteFileReader.Get<{csType}>();");
                                 }
                             }
                         }
                         sb.AppendLine();
                         // 构造方法
-                        sb.AppendLine($"        public Model({idType} id, int row)");
+                        sb.AppendLine($"        public Model({idType} id)");
                         sb.AppendLine(@"        {");
                         sb.AppendLine(sb2.ToString());
                         sb2.Clear();
@@ -262,10 +265,12 @@ namespace ExcelToByteFile
                         sb.AppendLine($"            byteFileInfo = ExcelDataMgr.GetByteFileInfo<{idType}>((short)ExcelName.{info.ByteFileName});");
                         sb.AppendLine(@"        }");
                         sb.AppendLine(@"        if (!byteFileInfo.ByteDataLoaded) byteFileInfo.LoadByteData();");
+                        //sb.AppendLine(@"        byteFileReader = byteFileInfo.GetByteFileReader();");
+                        sb.AppendLine(@"        ByteFileReader.Reset(byteFileInfo.GetData(), byteFileInfo.RowLength, byteFileInfo.GetColOff());");
                         sb.AppendLine(@"        for (int i = 0; i < byteFileInfo.RowCount; i++)");
                         sb.AppendLine(@"        {");
                         sb.AppendLine($"            {idType} id = byteFileInfo.GetKey(i);");
-                        sb.AppendLine($"            Model cache = new Model(id, i);");
+                        sb.AppendLine($"            Model cache = new Model(id);");
                         sb.AppendLine(@"            m_dict.Add(id, cache);");
                         sb.AppendLine(@"        }");
                         sb.AppendLine(@"    }");

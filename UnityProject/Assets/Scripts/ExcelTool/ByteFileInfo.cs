@@ -77,8 +77,7 @@ namespace ExcelToByteFile
 
         public void Parse()
         {
-            ByteDataLoaded = true;
-            data = (Assets.LoadAsset($"Assets/Bundles/data/{Name}.bytes", typeof(TextAsset)).asset as TextAsset).bytes;
+            LoadByteData();
             if (data.Length > 0)
             {
                 switch (OptimizeType)
@@ -148,7 +147,7 @@ namespace ExcelToByteFile
         {
             if (ByteDataLoaded) return;
             ByteDataLoaded = true;
-            data = Resources.Load<TextAsset>(byteDataPathPrefix + Name).bytes;
+            data = (Assets.LoadAsset($"Assets/Bundles/data/{Name}.bytes", typeof(TextAsset)).asset as TextAsset).bytes;
         }
 
         /// <summary>
@@ -258,6 +257,12 @@ namespace ExcelToByteFile
             Debug.LogError($"{Name} 内不存在此id: {id}");
             return default(T);
         }
+
+        //public ByteFileReader GetByteFileReader() => new ByteFileReader(data, RowLength, colOff);
+
+        public byte[] GetData() => data;
+
+        public List<int> GetColOff() => colOff;
 
         /// <summary>
         /// 通过行数和列数获取数据：0 based

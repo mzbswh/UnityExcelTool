@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Administrator\\Desktop\\ExcelTest\\UnityExcelTool\\ExcelToByteFile\\ExcelToByteFile.csproj": {}
+    "C:\\Users\\Administrator\\Desktop\\UnityExcelTool-pasture\\ExcelToByteFile\\ExcelToByteFile.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Administrator\\Desktop\\ExcelTest\\UnityExcelTool\\ExcelToByteFile\\ExcelToByteFile.csproj": {
+    "C:\\Users\\Administrator\\Desktop\\UnityExcelTool-pasture\\ExcelToByteFile\\ExcelToByteFile.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Administrator\\Desktop\\ExcelTest\\UnityExcelTool\\ExcelToByteFile\\ExcelToByteFile.csproj",
+        "projectUniqueName": "C:\\Users\\Administrator\\Desktop\\UnityExcelTool-pasture\\ExcelToByteFile\\ExcelToByteFile.csproj",
         "projectName": "ExcelToByteFile",
-        "projectPath": "C:\\Users\\Administrator\\Desktop\\ExcelTest\\UnityExcelTool\\ExcelToByteFile\\ExcelToByteFile.csproj",
+        "projectPath": "C:\\Users\\Administrator\\Desktop\\UnityExcelTool-pasture\\ExcelToByteFile\\ExcelToByteFile.csproj",
         "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Administrator\\Desktop\\ExcelTest\\UnityExcelTool\\ExcelToByteFile\\obj\\",
+        "outputPath": "C:\\Users\\Administrator\\Desktop\\UnityExcelTool-pasture\\ExcelToByteFile\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
