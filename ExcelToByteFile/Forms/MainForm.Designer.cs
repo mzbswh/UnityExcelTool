@@ -1,5 +1,5 @@
 ﻿
-namespace ExcelToByteFile
+namespace ExcelTool
 {
     partial class MainForm
     {

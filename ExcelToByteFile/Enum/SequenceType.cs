@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ExcelToByteFile
+namespace ExcelTool
 {
     internal enum SequenceType
     {

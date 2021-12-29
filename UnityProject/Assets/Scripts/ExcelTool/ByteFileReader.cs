@@ -4,9 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using ICSharpCode.NRefactory.Ast;
-
-namespace ExcelToByteFile
+namespace ExcelTool
 {
     /// <summary>
     /// 用于读取所有的数据，自动增长
@@ -60,6 +58,24 @@ namespace ExcelToByteFile
                 row++;
             }
             return ret;
+        }
+
+        /// <summary>
+        /// 通过行数和列数获取数据：0 based
+        /// </summary>
+        public T GetByRowAndIndex<T>(int rowNum, int index)
+        {
+            // 此处主要用于缓存数据使用，就暂时不做有效验证了
+            return ByteReader.Read<T>(data, rowNum * rowLength + colOff[index]);
+        }
+
+        /// <summary>
+        /// 通过行数和列数获取数据：0 based
+        /// </summary>
+        public Dictionary<K, V> GetDictByRowAndIndex<K, V>(int rowNum, int index)
+        {
+            // 此处主要用于缓存数据使用，就暂时不做有效验证了
+            return ByteReader.ReadDict<K, V>(data, rowNum * rowLength + colOff[index]);
         }
 
         public static void SkipOne()

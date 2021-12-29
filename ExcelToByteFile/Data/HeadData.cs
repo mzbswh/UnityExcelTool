@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ExcelToByteFile
+namespace ExcelTool
 {
 	/// <summary>
 	/// 保存列信息：列名、类型等

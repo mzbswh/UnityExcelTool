@@ -2,7 +2,7 @@
 using System;
 using System.IO;
 
-namespace ExcelToByteFile
+namespace ExcelTool
 {
     static class FastBitConverter
     {

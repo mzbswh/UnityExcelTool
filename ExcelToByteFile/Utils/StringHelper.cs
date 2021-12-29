@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace ExcelToByteFile
+namespace ExcelTool
 {
 	public static class StringHelper
 	{

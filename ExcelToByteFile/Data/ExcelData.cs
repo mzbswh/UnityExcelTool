@@ -11,7 +11,7 @@ using NPOI.XSSF.UserModel;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.Formula;
 
-namespace ExcelToByteFile
+namespace ExcelTool
 {
     /// <summary>
     /// excel数据类

@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
-namespace ExcelToByteFile
+namespace ExcelTool
 {
     internal class ExportByteFiles
     {

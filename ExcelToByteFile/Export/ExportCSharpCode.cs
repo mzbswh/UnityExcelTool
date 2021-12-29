@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 
-namespace ExcelToByteFile
+namespace ExcelTool
 {
     internal class ExportCSharpCode
     {
@@ -61,7 +61,7 @@ namespace ExcelToByteFile
                     sb1.AppendLine(@"}");
                 }
                 sb2.Append(@"}");
-                sw.WriteLine(@"using ExcelToByteFile;");
+                sw.WriteLine(@"using ExcelTool;");
                 sw.Write(sb1.ToString());
                 sw.Write(sb2.ToString());
                 sw.Flush();
@@ -78,7 +78,7 @@ namespace ExcelToByteFile
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine(@"using System.Collections.Generic;");
                 sb.AppendLine(@"using UnityEngine;");
-                sb.AppendLine(@"using ExcelToByteFile;");
+                sb.AppendLine(@"using ExcelTool;");
                 sb.AppendLine();
                 sb.AppendLine(@"#pragma warning disable");
                 sb.AppendLine();
@@ -152,6 +152,7 @@ namespace ExcelToByteFile
             }
         }
 
+        // 方案一：缓存所有的数据
         public static void ExportCacheCsCode(string path, List<ManifestData> data)
         {
             List<ManifestData> cacheInfo = new List<ManifestData>();
@@ -183,7 +184,7 @@ namespace ExcelToByteFile
                         StringBuilder sb2 = new StringBuilder();
                         sb.AppendLine(@"using System.Collections.Generic;");
                         sb.AppendLine(@"using UnityEngine;");
-                        sb.AppendLine(@"using ExcelToByteFile;");
+                        sb.AppendLine(@"using ExcelTool;");
                         sb.AppendLine();
                         sb.AppendLine(@"#pragma warning disable");
                         sb.AppendLine();
@@ -222,14 +223,14 @@ namespace ExcelToByteFile
                                     else a++;
                                 }
                             }
-                            sb.Append(@"        // <summary>");
+                            sb.Append(@"        /// <summary>");
                             sb.Append(info.Comments[j]);
                             sb.AppendLine(@"</summary>");
                             sb.AppendLine($"        public {csType} {varName};");
                             if (j == info.IdColIndex)
                             {
-                                sb2.AppendLine($"           this.{varName} = id;");
-                                sb2.AppendLine(@"           ByteFileReader.SkipOne();");
+                                sb2.AppendLine($"            this.{varName} = id;");
+                                sb2.AppendLine(@"            ByteFileReader.SkipOne();");
                             }
                             else
                             {
@@ -239,11 +240,11 @@ namespace ExcelToByteFile
                                     int valToken = (info.Tokens[j] - (int)TypeToken.Dictionary) % 100;
                                     var keyType = ((TypeToken)keyToken).ToString().ToLower();
                                     var valType = ((TypeToken)valToken).ToString().ToLower();
-                                    sb2.AppendLine($"           this.{varName} = ByteFileReader.GetDict<{keyType}, {valType}>();");
+                                    sb2.AppendLine($"            this.{varName} = ByteFileReader.GetDict<{keyType}, {valType}>();");
                                 }
                                 else
                                 {
-                                    sb2.AppendLine($"           this.{varName} = ByteFileReader.Get<{csType}>();");
+                                    sb2.AppendLine($"            this.{varName} = ByteFileReader.Get<{csType}>();");
                                 }
                             }
                         }
@@ -251,6 +252,7 @@ namespace ExcelToByteFile
                         // 构造方法
                         sb.AppendLine($"        public Model({idType} id)");
                         sb.AppendLine(@"        {");
+                        sb2.Remove(sb2.Length - 2, 2);
                         sb.AppendLine(sb2.ToString());
                         sb2.Clear();
                         sb.AppendLine(@"        }");
@@ -266,11 +268,207 @@ namespace ExcelToByteFile
                         sb.AppendLine(@"        }");
                         sb.AppendLine(@"        if (!byteFileInfo.ByteDataLoaded) byteFileInfo.LoadByteData();");
                         //sb.AppendLine(@"        byteFileReader = byteFileInfo.GetByteFileReader();");
-                        sb.AppendLine(@"        ByteFileReader.Reset(byteFileInfo.GetData(), byteFileInfo.RowLength, byteFileInfo.GetColOff());");
+                        sb.AppendLine(@"        byteFileInfo.ResetByteFileReader();");
                         sb.AppendLine(@"        for (int i = 0; i < byteFileInfo.RowCount; i++)");
                         sb.AppendLine(@"        {");
                         sb.AppendLine($"            {idType} id = byteFileInfo.GetKey(i);");
                         sb.AppendLine($"            Model cache = new Model(id);");
+                        sb.AppendLine(@"            m_dict.Add(id, cache);");
+                        sb.AppendLine(@"        }");
+                        sb.AppendLine(@"    }");
+                        sb.AppendLine();
+                        // Get 获取某一行缓存数据
+                        sb.AppendLine($"    public Model GetModel({idType} id)");
+                        sb.AppendLine(@"    {");
+                        sb.AppendLine(@"        if (m_dict.TryGetValue(id, out var cache)) return cache;");
+                        sb.AppendLine($"        Debug.LogError($\"{{typeof({fileName}).Name}}不存在主列值{{id.ToString()}}\");");
+                        sb.AppendLine(@"        return null;");
+                        sb.AppendLine(@"    }");
+                        // 索引器
+                        sb.AppendLine($"    public Model this[{idType} id]");
+                        sb.AppendLine(@"    {");
+                        sb.AppendLine(@"        get");
+                        sb.AppendLine(@"        {");
+                        sb.AppendLine(@"            if (m_dict.TryGetValue(id, out var cache)) return cache;");
+                        sb.AppendLine($"            Debug.LogError($\"{{typeof({fileName}).Name}}不存在主列值{{id.ToString()}}\");");
+                        sb.AppendLine(@"            return null;");
+                        sb.AppendLine(@"        }");
+                        sb.AppendLine(@"    }");
+                        // getFileName
+                        sb.AppendLine($"    public string GetFileName() => byteFileInfo.Name + \".bytes\";");
+                        // hasId
+                        sb.AppendLine($"    public bool HasId({idType} id) => m_dict.ContainsKey(id);");
+                        sb.AppendLine(@"}");
+                        sw.Write(sb.ToString());
+                        sw.Flush();
+                    }
+                }
+
+                // 导出缓存管理器脚本
+                using (StreamWriter sw = new StreamWriter(GlobalConfig.Ins.codeFileOutputDir + Path.DirectorySeparatorChar + $"DictDataManager.cs",
+                    false,
+                    new UTF8Encoding(false)))
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.AppendLine(@"#pragma warning disable");
+                    sb.AppendLine();
+                    sb.AppendLine(@"public class DictDataManager");
+                    sb.AppendLine(@"{");
+                    sb.AppendLine(@"    private static DictDataManager m_instance;");
+                    sb.AppendLine(@"    public static DictDataManager Instance");
+                    sb.AppendLine(@"    {");
+                    sb.AppendLine(@"        get");
+                    sb.AppendLine(@"        {");
+                    sb.AppendLine(@"            if(m_instance == null) m_instance = new DictDataManager();");
+                    sb.AppendLine(@"            return m_instance;");
+                    sb.AppendLine(@"        }");
+                    sb.AppendLine(@"    }");
+                    sb.AppendLine();
+                    sb.AppendLine(@"    public void Init()");
+                    sb.AppendLine(@"    {");
+                    for (int i = 0; i < fileNames.Count; i++)
+                    {
+                        sb.AppendLine($"        {fileNames[i].Substring(0, 1).ToLower() + fileNames[i][1..]}.CacheData();");
+                    }
+                    sb.AppendLine(@"    }");
+                    sb.AppendLine();
+                    for (int i = 0; i < fileNames.Count; i++)
+                    {
+                        var name = fileNames[i];
+                        sb.AppendLine($"    public {name} {name.Substring(0, 1).ToLower() + name[1..]} = new {name}();");
+                    }
+                    sb.AppendLine(@"}");
+                    sw.Write(sb.ToString());
+                    sw.Flush();
+                }
+            }
+        }
+
+        // 方案二：依旧生成每一个model类，但仍是实时读取
+        public static void ExportCacheCsCode2(string path, List<ManifestData> data)
+        {
+            List<ManifestData> cacheInfo = new List<ManifestData>();
+            List<string> fileNames = new List<string>();
+            foreach (var info in data)
+            {
+                if (info.SheetConfig.CacheData)
+                {
+                    cacheInfo.Add(info);
+                }
+            }
+            if (cacheInfo.Count > 0)
+            {
+                foreach (var info in cacheInfo)
+                {
+                    string name = string.Empty;
+                    var temp = info.ByteFileName.Split("_");
+                    for (int i = 0; i < temp.Length; i++)
+                    {
+                        name += temp[i].Substring(0, 1).ToUpper() + temp[i].Substring(1).ToLower();
+                    }
+                    string fileName = "Dict" + name;
+                    fileNames.Add(fileName);
+                    using (StreamWriter sw = new StreamWriter(path + Path.DirectorySeparatorChar + $"{fileName}.cs",
+                    false,
+                    new UTF8Encoding(false)))
+                    {
+                        StringBuilder sb = new StringBuilder();
+                        StringBuilder sb2 = new StringBuilder();
+                        sb.AppendLine(@"using System.Collections.Generic;");
+                        sb.AppendLine(@"using UnityEngine;");
+                        sb.AppendLine(@"using ExcelTool;");
+                        sb.AppendLine();
+                        sb.AppendLine(@"#pragma warning disable");
+                        sb.AppendLine();
+                        string idType = DataTypeHelper.GetType(info.Tokens[info.IdColIndex]);
+                        sb.AppendLine(@"public partial class " + fileName);
+                        sb.AppendLine(@"{");
+                        // 静态字段
+                        sb.AppendLine(@"    static bool cached = false;");
+                        sb.AppendLine($"    static ByteFileInfo<{idType}> byteFileInfo;");
+                        //sb.AppendLine(@"    static ByteFileReader byteFileReader;");
+                        sb.AppendLine($"    Dictionary<{idType}, Model> m_dict = new Dictionary<{idType}, Model>();");
+                        sb.AppendLine($"    public Dictionary<{idType}, Model> Dict => m_dict;");
+                        sb.AppendLine($"    public {idType}[] Ids => byteFileInfo.Ids;");
+                        sb.AppendLine();
+                        // Model类
+                        sb.AppendLine(@"    public class Model");
+                        sb.AppendLine(@"    {");
+                        sb.AppendLine(@"        readonly int row;");
+                        // 属性
+                        //sb2.AppendLine(@"           var bf = byteFileReader;  // ILRuntime环境下，使用局部变量会有相当大的性能提升");
+                        for (int j = 0; j < info.VariableNames.Count; j++)
+                        {
+                            string varName = info.VariableNames[j];
+                            string raw = varName;
+                            string csType = DataTypeHelper.GetType(info.Tokens[j]);
+                            if (varName == fileName)
+                            {
+                                bool b = true;
+                                int a = 0;
+                                while (b)
+                                {
+                                    varName = raw + "_c_" + a.ToString();
+                                    if (!info.VariableNames.Contains(varName))
+                                    {
+                                        b = false;
+                                    }
+                                    else a++;
+                                }
+                            }
+                            sb.Append(@"        /// <summary>");
+                            sb.Append(info.Comments[j]);
+                            sb.AppendLine(@"</summary>");
+                            if (j == info.IdColIndex)
+                            {
+                                sb.AppendLine($"        public readonly {csType} {varName};");
+                                //sb2.AppendLine($"           this.{varName} = id;");
+                                //sb2.AppendLine(@"           ByteFileReader.SkipOne();");
+                            }
+                            else
+                            {
+                                //sb.AppendLine($"        public {csType} {varName};");
+                                if (csType.StartsWith("Dict"))
+                                {
+                                    int keyToken = (info.Tokens[j] - (int)TypeToken.Dictionary) / 100;
+                                    int valToken = (info.Tokens[j] - (int)TypeToken.Dictionary) % 100;
+                                    var keyType = ((TypeToken)keyToken).ToString().ToLower();
+                                    var valType = ((TypeToken)valToken).ToString().ToLower();
+                                    sb.AppendLine($"        public {csType} {varName} => byteFileInfo.GetDictByRowAndIndex<{keyType}, {valType}>(row, {j});");
+                                }
+                                else
+                                {
+                                    sb.AppendLine($"        public {csType} {varName} => byteFileInfo.GetByRowAndIndex<{csType}>(row, {j});");
+                                }
+                            }
+                        }
+                        sb.AppendLine();
+                        // 构造方法
+                        sb.AppendLine($"        public Model(int row, {idType} id)");
+                        sb.AppendLine(@"        {");
+                        sb.AppendLine($"            this.{info.VariableNames[info.IdColIndex]} = id;");
+                        sb.AppendLine(@"            this.row = row;");
+                        //sb2.Remove(sb2.Length - 2, 2);
+                        //sb.AppendLine(sb2.ToString());
+                        //sb2.Clear();
+                        sb.AppendLine(@"        }");
+                        sb.AppendLine(@"    }");
+
+                        // 静态方法 CacheData 用于缓存所有数据
+                        sb.AppendLine(@"    public void CacheData()");
+                        sb.AppendLine(@"    {");
+                        sb.AppendLine(@"        if (cached) return;");
+                        sb.AppendLine(@"        if (byteFileInfo == null)");
+                        sb.AppendLine(@"        {");
+                        sb.AppendLine($"            byteFileInfo = ExcelDataMgr.GetByteFileInfo<{idType}>((short)ExcelName.{info.ByteFileName});");
+                        sb.AppendLine(@"        }");
+                        sb.AppendLine(@"        if (!byteFileInfo.ByteDataLoaded) byteFileInfo.LoadByteData();");
+                        //sb.AppendLine(@"        byteFileReader = byteFileInfo.GetByteFileReader();");
+                        //sb.AppendLine(@"        byteFileInfo.ResetByteFileReader();");
+                        sb.AppendLine(@"        for (int i = 0; i < byteFileInfo.RowCount; i++)");
+                        sb.AppendLine(@"        {");
+                        sb.AppendLine($"            {idType} id = byteFileInfo.GetKey(i);");
+                        sb.AppendLine($"            Model cache = new Model(i, id);");
                         sb.AppendLine(@"            m_dict.Add(id, cache);");
                         sb.AppendLine(@"        }");
                         sb.AppendLine(@"    }");

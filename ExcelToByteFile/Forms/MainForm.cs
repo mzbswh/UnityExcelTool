@@ -11,7 +11,7 @@ using System.Threading;
 
 #pragma warning disable IDE1006
 
-namespace ExcelToByteFile
+namespace ExcelTool
 {
     public partial class MainForm : Form
     {

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ExcelToByteFile
+namespace ExcelTool
 {
 	public class RowData
 	{

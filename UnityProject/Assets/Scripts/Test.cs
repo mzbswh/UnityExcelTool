@@ -5,6 +5,7 @@ using System.Diagnostics;
 using Debug = UnityEngine.Debug;
 using System.Numerics;
 using UnityEngine.Rendering;
+using ExcelTool;
 
 public class Test : MonoBehaviour
 {
@@ -23,7 +24,7 @@ public class Test : MonoBehaviour
         Debug.LogError($"缓存={sw.ElapsedMilliseconds}ms.");
 
         //var cache = new ESD_sceneObj_noCache(2640); // EDC_sceneObj_cache.Get(2640);
-        ByteFileInfo<int> fileInfo = ExcelDataMgr.GetByteFileInfo<int>(ExcelName.sceneObj_noCache);
+        ByteFileInfo<int> fileInfo = ExcelDataMgr.GetByteFileInfo<int>((short)ExcelName.sceneObj_noCache);
 
         Debug.LogError(fileInfo.Get<string>(3986, EVD_sceneObj_noCache.path));
 

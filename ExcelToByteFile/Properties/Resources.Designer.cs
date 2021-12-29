@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ExcelToByteFile.Properties {
+namespace ExcelTool.Properties {
     using System;
     
     

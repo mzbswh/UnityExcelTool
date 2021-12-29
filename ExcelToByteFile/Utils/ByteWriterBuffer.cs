@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using System.Runtime.CompilerServices;
 
-namespace ExcelToByteFile
+namespace ExcelTool
 {
 	public static class WriteHelper<T>
     {

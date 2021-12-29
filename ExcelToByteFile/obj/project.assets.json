@@ -496,11 +496,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Administrator\\Desktop\\UnityExcelTool-pasture\\ExcelToByteFile\\ExcelToByteFile.csproj",
+      "projectUniqueName": "C:\\Users\\Administrator\\Desktop\\UnityExcelTool\\ExcelToByteFile\\ExcelToByteFile.csproj",
       "projectName": "ExcelToByteFile",
-      "projectPath": "C:\\Users\\Administrator\\Desktop\\UnityExcelTool-pasture\\ExcelToByteFile\\ExcelToByteFile.csproj",
+      "projectPath": "C:\\Users\\Administrator\\Desktop\\UnityExcelTool\\ExcelToByteFile\\ExcelToByteFile.csproj",
       "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Administrator\\Desktop\\UnityExcelTool-pasture\\ExcelToByteFile\\obj\\",
+      "outputPath": "C:\\Users\\Administrator\\Desktop\\UnityExcelTool\\ExcelToByteFile\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"

@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
+using System.Xml.Serialization;
 using libx;
-
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 
-namespace ExcelToByteFile
+namespace ExcelTool
 {
     public sealed class ByteFileInfo<TIdType>
     {
@@ -12,11 +13,7 @@ namespace ExcelToByteFile
         const int filter = 0xffff;
         const string byteDataPathPrefix = "Assets/Bundles/data/";
 
-        /// <summary>
-        /// 当优化类型为None时是所有的主列数据，为PartialContinuity时是不连续部分的主列数据，为其它优化类型时此值为空<br/>
-        /// 可通过GetOptimizeInfo_得到相应的优化信息以获取所有的主列数据
-        /// </summary>
-        public TIdType[] Ids { get; private set; }
+        public TIdType[] Ids { get { if (cacheIds == null) CacheAllIds(); return cacheIds; } }
         public bool ByteDataLoaded { get; private set; }
         public string Name { get; }
         public int IdColIndex { get; }
@@ -31,6 +28,7 @@ namespace ExcelToByteFile
         private readonly List<string> varNames;
         Dictionary<TIdType, int> id2RowStartOff;    // id对应行起始偏移
 
+        TIdType[] cacheIds;
         readonly int idColOff;
 
         /* ------ 优化 ------- */
@@ -43,7 +41,7 @@ namespace ExcelToByteFile
         List<int> segmentStartOff;      // 每一段开始的偏移值
                                         // 部分连续
         readonly int continuityCnt;  // 连续部分个数
-        readonly int continuityStartOff; // 连续部分起始偏移
+        readonly int continuityStartOff;// 连续部分起始偏移
         TIdType continuityStartVal; // 连续部分起始值
         /**********************/
 
@@ -85,7 +83,7 @@ namespace ExcelToByteFile
                     case OptimizeType.None:
                     {
                         id2RowStartOff = new Dictionary<TIdType, int>();
-                        Ids = new TIdType[RowCount];
+                        cacheIds = new TIdType[RowCount];
                         for (int i = 0; i < RowCount; i++)
                         {
                             TIdType id = ByteReader.Read<TIdType>(data, i * RowLength + idColOff);
@@ -116,12 +114,12 @@ namespace ExcelToByteFile
                     {
                         id2RowStartOff = new Dictionary<TIdType, int>();
                         int preCnt = continuityStartOff / RowLength;
-                        Ids = new TIdType[RowCount - continuityCnt];
+                        //Ids = new TIdType[RowCount - continuityCnt];
                         for (int i = 0; i < preCnt; i++)
                         {
                             TIdType id = ByteReader.Read<TIdType>(data, i * RowLength + idColOff);
                             id2RowStartOff.Add(id, i * RowLength);
-                            Ids[i] = id;
+                            //Ids[i] = id;
                         }
                         continuityStartVal = ByteReader.Read<TIdType>(data, preCnt * RowLength + idColOff);
                         var remainStart = preCnt + continuityCnt;
@@ -129,7 +127,7 @@ namespace ExcelToByteFile
                         {
                             TIdType id = ByteReader.Read<TIdType>(data, remainStart * RowLength + idColOff);
                             id2RowStartOff.Add(id, remainStart * RowLength);
-                            Ids[remainStart - continuityCnt] = id;
+                            //Ids[remainStart - continuityCnt] = id;
                         }
                         break;
                     }
@@ -258,12 +256,8 @@ namespace ExcelToByteFile
             return default(T);
         }
 
-        //public ByteFileReader GetByteFileReader() => new ByteFileReader(data, RowLength, colOff);
-
-        public byte[] GetData() => data;
-
-        public List<int> GetColOff() => colOff;
-
+        public void ResetByteFileReader() => ByteFileReader.Reset(data, RowLength, colOff);
+        
         /// <summary>
         /// 通过行数和列数获取数据：0 based
         /// </summary>
@@ -375,6 +369,16 @@ namespace ExcelToByteFile
             }
             Debug.LogError($"{Name} 内不存在此id: {id}");
             return null;
+        }
+
+        private void CacheAllIds()
+        {
+            if (cacheIds != null) return;
+            cacheIds = new TIdType[RowCount];
+            for (int i = 0; i < RowCount; i++)
+            {
+                cacheIds[i] = ByteReader.Read<TIdType>(data, i * RowLength + idColOff);
+            }
         }
     }
 

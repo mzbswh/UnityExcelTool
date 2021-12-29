@@ -7,9 +7,8 @@ using System.Windows.Forms;
 using System.Threading.Tasks;
 using NPOI.SS.UserModel;
 
-namespace ExcelToByteFile
+namespace ExcelTool
 {
-
 	public class ExportMgr
     {
         public static readonly ByteWriterBuffer fileBuffer = new ByteWriterBuffer(ConstDef.fileStreamMaxLen);
@@ -75,7 +74,7 @@ namespace ExcelToByteFile
                 ExportCSharpCode.ExportStructInfoCsCode(GlobalConfig.Ins.codeFileOutputDir, fileManifests);
             }
             string cacheDir = GlobalConfig.Ins.codeFileOutputDir;
-            ExportCSharpCode.ExportCacheCsCode(cacheDir, fileManifests);
+            ExportCSharpCode.ExportCacheCsCode2(cacheDir, fileManifests);
             Console.WriteLine("生成结束，按任意键退出");
         }
 

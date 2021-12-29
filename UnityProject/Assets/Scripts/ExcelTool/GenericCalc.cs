@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ExcelToByteFile
+namespace ExcelTool
 {
     static class GenericCalc
     {
         public static class MathHelper<T>
         {
             public static Func<T, T, T> Add;
+            public static Func<T, int, T> AddInt;
             public static Func<T, T, T> Sub;
             public static Func<T, T, int> SubToInt;
             public static Func<T, T, T> Mul;
@@ -29,6 +30,15 @@ namespace ExcelToByteFile
             MathHelper<int>.Add = (a, b) => AddInt(a, b);
             MathHelper<ulong>.Add = (a, b) => AddULong(a, b);
             MathHelper<long>.Add = (a, b) => AddLong(a, b);
+
+            MathHelper<sbyte>.AddInt = (a, b) => AddSbyteInt(a, b);
+            MathHelper<byte>.AddInt = (a, b) => AddByteInt(a, b);
+            MathHelper<ushort>.AddInt = (a, b) => AddUShortInt(a, b);
+            MathHelper<short>.AddInt = (a, b) => AddShortInt(a, b);
+            MathHelper<uint>.AddInt = (a, b) => AddUIntInt(a, b);
+            MathHelper<int>.AddInt = (a, b) => AddIntInt(a, b);
+            MathHelper<ulong>.AddInt = (a, b) => AddULongInt(a, b);
+            MathHelper<long>.AddInt = (a, b) => AddLongInt(a, b);
 
             MathHelper<sbyte>.Sub = (a, b) => SubSbyte(a, b);
             MathHelper<byte>.Sub = (a, b) => SubByte(a, b);
@@ -68,6 +78,7 @@ namespace ExcelToByteFile
         }
 
         public static T Add<T>(T a, T b) => MathHelper<T>.Add(a, b);
+        public static T AddInt<T>(T a, int b) => MathHelper<T>.AddInt(a, b);
         public static T Sub<T>(T a, T b) => MathHelper<T>.Sub(a, b);
         public static int SubToInt<T>(T a, T b) => MathHelper<T>.SubToInt(a, b);
         public static int DivToInt<T>(T a, T b) => MathHelper<T>.DivToInt(a, b);
@@ -81,6 +92,15 @@ namespace ExcelToByteFile
         static int AddInt(int a, int b) => a + b;
         static ulong AddULong(ulong a, ulong b) => a + b;
         static long AddLong(long a, long b) => a + b;
+
+        static sbyte AddSbyteInt(sbyte a, int b) => (sbyte)(a + b);
+        static byte AddByteInt(byte a, int b) => (byte)(a + b);
+        static ushort AddUShortInt(ushort a, int b) => (ushort)(a + b);
+        static short AddShortInt(short a, int b) => (short)(a + b);
+        static uint AddUIntInt(uint a, int b) => a + (uint)b;
+        static int AddIntInt(int a, int b) => a + b;
+        static ulong AddULongInt(ulong a, int b) => a + (ulong)b;
+        static long AddLongInt(long a, int b) => a + b;
 
         static sbyte SubSbyte(sbyte a, sbyte b) => (sbyte)(a - b);
         static byte SubByte(byte a, byte b) => (byte)(a - b);

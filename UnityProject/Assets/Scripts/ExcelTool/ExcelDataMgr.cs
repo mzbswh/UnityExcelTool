@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using ExcelToByteFile;
-
 using libx;
-
 using UnityEngine;
 
-namespace ExcelToByteFile
+namespace ExcelTool
 {
     public static class ExcelDataMgr
     {

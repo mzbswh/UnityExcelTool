@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace ExcelToByteFile
+namespace ExcelTool
 {
     /// <summary>
     /// 每个生成的bytes文件对应生成一个ManifestData，最后所有的ManifestData会整体生成一个manifest.bytes文件

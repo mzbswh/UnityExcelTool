@@ -4,7 +4,7 @@ using System.Text;
 
 using NPOI.Util;
 
-namespace ExcelToByteFile
+namespace ExcelTool
 {
     public static class Optimize
     {

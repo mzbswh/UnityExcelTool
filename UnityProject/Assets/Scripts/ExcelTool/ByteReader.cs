@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
 using UnityEngine;
 
-namespace ExcelToByteFile
+namespace ExcelTool
 {
     public class ByteReader
     {
@@ -311,6 +310,7 @@ namespace ExcelToByteFile
             }
             return dict;
         }
+
         public static Dictionary<K, V> ReadDict<K, V>(byte[] data, int index, bool indexIsAddr = true)
         {
             TypeToken keyToken = GetTypeToken<K>();

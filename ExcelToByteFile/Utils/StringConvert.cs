@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 using NPOI.SS.Formula.Functions;
 
-namespace ExcelToByteFile
+namespace ExcelTool
 {
 	public static class StringConvert
 	{
