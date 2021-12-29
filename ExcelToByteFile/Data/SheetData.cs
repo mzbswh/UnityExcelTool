@@ -103,7 +103,7 @@ namespace ExcelTool
                 heads.Add(head);
                 if (primary)
                 {
-                    if (DataTypeHelper.IsBaseType(type) || DataTypeHelper.IsVectorType(type))
+                    if (DataTypeHelper.IsBaseType(type) || DataTypeHelper.IsVectorType(type) || DataTypeHelper.IsListType(type))
                     {
                         primaryColIndex = idx;
                         PrimaryColIndex = heads.Count - 1;
