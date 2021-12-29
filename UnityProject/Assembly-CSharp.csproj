@@ -61,6 +61,7 @@
     <Compile Include="Assets\Scripts\AutoGen\ExcelDataCache\EDC_sceneObj_cache.cs" />
     <Compile Include="Assets\Scripts\AutoGen\ExcelDataCacheMgr.cs" />
     <Compile Include="Assets\Scripts\ExcelTool\ByteFileInfo.cs" />
+    <Compile Include="Assets\Scripts\ExcelTool\ByteFileReader.cs" />
     <Compile Include="Assets\Scripts\ExcelTool\ByteReader.cs" />
     <Compile Include="Assets\Scripts\ExcelTool\ExcelDataMgr.cs" />
     <Compile Include="Assets\Scripts\ExcelTool\FastBitConverter.cs" />

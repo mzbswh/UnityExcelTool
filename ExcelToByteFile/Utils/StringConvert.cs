@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
-using NPOI.SS.Formula.Functions;
-
 namespace ExcelToByteFile
 {
 	public static class StringConvert

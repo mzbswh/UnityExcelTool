@@ -78,3 +78,11 @@ C:\Users\Administrator\Desktop\ExcelTest\UnityExcelTool\ExcelToByteFile\obj\Rele
 C:\Users\Administrator\Desktop\ExcelTest\UnityExcelTool\ExcelToByteFile\obj\Release\netcoreapp3.1\ExcelToByteFile.pdb
 C:\Users\Administrator\Desktop\ExcelTest\UnityExcelTool\ExcelToByteFile\obj\Release\netcoreapp3.1\ExcelToByteFile.genruntimeconfig.cache
 C:\Users\Administrator\Desktop\ExcelTest\UnityExcelTool\ExcelToByteFile\obj\Release\netcoreapp3.1\ExcelToByteFile.csproj.AssemblyReference.cache
+C:\Users\Administrator\Desktop\UnityExcelTool\ExcelToByteFile\obj\Release\netcoreapp3.1\ExcelToByteFile.csproj.AssemblyReference.cache
+C:\Users\Administrator\Desktop\UnityExcelTool\ExcelToByteFile\obj\Release\netcoreapp3.1\ExcelToByteFile.MainForm.resources
+C:\Users\Administrator\Desktop\UnityExcelTool\ExcelToByteFile\obj\Release\netcoreapp3.1\ExcelToByteFile.Properties.Resources.resources
+C:\Users\Administrator\Desktop\UnityExcelTool\ExcelToByteFile\obj\Release\netcoreapp3.1\ExcelToByteFile.csproj.GenerateResource.cache
+C:\Users\Administrator\Desktop\UnityExcelTool\ExcelToByteFile\obj\Release\netcoreapp3.1\ExcelToByteFile.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Administrator\Desktop\UnityExcelTool\ExcelToByteFile\obj\Release\netcoreapp3.1\ExcelToByteFile.AssemblyInfoInputs.cache
+C:\Users\Administrator\Desktop\UnityExcelTool\ExcelToByteFile\obj\Release\netcoreapp3.1\ExcelToByteFile.AssemblyInfo.cs
+C:\Users\Administrator\Desktop\UnityExcelTool\ExcelToByteFile\obj\Release\netcoreapp3.1\ExcelToByteFile.csproj.CoreCompileInputs.cache

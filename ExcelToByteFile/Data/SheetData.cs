@@ -1,14 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.IO;
 using NPOI.SS.UserModel;
-using NPOI.XSSF.UserModel;
-using NPOI.HSSF.UserModel;
-using System.Windows.Forms;
 using NPOI.SS.Formula;
-using System.Text.RegularExpressions;
-using System.Security.Policy;
 
 namespace ExcelToByteFile
 {
@@ -126,7 +119,7 @@ namespace ExcelToByteFile
                 heads.Add(head);
                 if (primary)
                 {
-                    if (DataTypeHelper.IsBaseType(type) || DataTypeHelper.IsVectorType(type))
+                    if (DataTypeHelper.IsBaseType(type) || DataTypeHelper.IsVectorType(type) || DataTypeHelper.IsListType(type))
                     {
                         primaryColIndex = idx;
                         PrimaryColIndex = heads.Count - 1;

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 
-using NPOI.Util;
-
 namespace ExcelToByteFile
 {
     public static class Optimize
