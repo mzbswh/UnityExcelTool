@@ -1,2 +1,7 @@
-# ExcelToByteFile
-Converting excel file data into byte file data
+相较主分支改动
++ 限定类型行，名字行，注释行位置
++ 限定从第5行开始读取数据
++ 限定只读取第一个sheet表
++ 限定主列为第一列
++ 修改生成代码格式
++ 默认缓存所有数据
