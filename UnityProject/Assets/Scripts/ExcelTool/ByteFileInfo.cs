@@ -275,6 +275,7 @@ namespace ExcelTool
         /// <param name="rowNum">行数（0 based）</param>
         public TIdType GetKey(int rowNum)
         {
+            if (OptimizeType == OptimizeType.None) return Ids[rowNum];
             if (rowNum >= 0 && rowNum < RowCount)
             {
                 return ByteReader.Read<TIdType>(data, rowNum * RowLength + idColOff);

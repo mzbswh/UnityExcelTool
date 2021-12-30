@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
+using Microsoft.VisualBasic;
+
 namespace ExcelToByteFile
 {
     internal class ExportCSharpCode
@@ -185,6 +187,7 @@ namespace ExcelToByteFile
                         sb.AppendLine(@"public class " + fileName);
                         sb.AppendLine(@"{");
                         // 静态字段
+                        sb.AppendLine($"    public static {idType}[] Ids => byteFileInfo.Ids;");
                         sb.AppendLine(@"    static bool cached = false;");
                         sb.AppendLine($"    static ByteFileInfo<{idType}> byteFileInfo;");
                         sb.AppendLine($"    static Dictionary<{idType}, {fileName}> cacheDict = new Dictionary<{idType}, {fileName}>();");
@@ -215,7 +218,8 @@ namespace ExcelToByteFile
                             sb.AppendLine($"    public {csType} {varName} {{ get; }}");
                             if (j == info.IdColIndex)
                             {
-                                sb2.AppendLine($"       this.{varName} = id;");
+                                sb2.AppendLine($"        this.{varName} = id;");
+                                sb2.AppendLine($"        ByteFileReader.SkipOne();");
                             }
                             else
                             {
@@ -225,17 +229,19 @@ namespace ExcelToByteFile
                                     int valToken = (info.Tokens[j] - (int)TypeToken.Dictionary) % 100;
                                     var keyType = ((TypeToken)keyToken).ToString().ToLower();
                                     var valType = ((TypeToken)valToken).ToString().ToLower();
-                                    sb2.AppendLine($"       this.{varName} = byteFileInfo.GetDictByRowAndIndex<{keyType}, {valType}>(row, {j});");
+                                    //sb2.AppendLine($"        this.{varName} = byteFileInfo.GetDictByRowAndIndex<{keyType}, {valType}>(row, {j});");
+                                    sb2.AppendLine($"        this.{varName} = ByteFileReader.GetDict<{keyType}, {valType}>();");
                                 }
                                 else
                                 {
-                                    sb2.AppendLine($"       this.{varName} = byteFileInfo.GetByRowAndIndex<{csType}>(row, {j});");
+                                    //sb2.AppendLine($"        this.{varName} = byteFileInfo.GetByRowAndIndex<{csType}>(row, {j});");
+                                    sb2.AppendLine($"        this.{varName} = ByteFileReader.Get<{csType}>();");
                                 }
                             }
                         }
                         sb.AppendLine();
                         // 构造方法
-                        sb.AppendLine($"    public {fileName}({idType} id, int row)");
+                        sb.AppendLine($"    public {fileName}({idType} id)");
                         sb.AppendLine(@"    {");
                         sb.AppendLine(sb2.ToString());
                         sb2.Clear();
@@ -250,10 +256,11 @@ namespace ExcelToByteFile
                         sb.AppendLine($"            byteFileInfo = ExcelDataMgr.GetByteFileInfo<{idType}>((short)ExcelName.{info.ByteFileName});");
                         sb.AppendLine(@"        }");
                         sb.AppendLine(@"        if (!byteFileInfo.ByteDataLoaded) byteFileInfo.LoadByteData();");
+                        sb.AppendLine(@"        byteFileInfo.ResetByteFileReader();");
                         sb.AppendLine(@"        for (int i = 0; i < byteFileInfo.RowCount; i++)");
                         sb.AppendLine(@"        {");
                         sb.AppendLine($"            {idType} id = byteFileInfo.GetKey(i);");
-                        sb.AppendLine($"            {fileName} cache = new {fileName}(id, i);");
+                        sb.AppendLine($"            {fileName} cache = new {fileName}(id);");
                         sb.AppendLine(@"            cacheDict.Add(id, cache);");
                         sb.AppendLine(@"        }");
                         sb.AppendLine(@"    }");

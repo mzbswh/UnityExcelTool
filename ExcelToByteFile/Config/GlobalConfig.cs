@@ -62,10 +62,10 @@ namespace ExcelToByteFile
 				sr.Dispose();
 				sr.Close();
 			}
-			catch (Exception e)
-			{
-				throw e;
-			}
+			catch (Exception)
+            {
+                throw;
+            }
 			finally
 			{
 				fs.Dispose();
@@ -94,10 +94,10 @@ namespace ExcelToByteFile
 				sw.Dispose();
 				sw.Close();
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
-				throw e;
-			}
+                throw;
+            }
 			finally
 			{
 				fs.Dispose();

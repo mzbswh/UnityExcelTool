@@ -105,9 +105,9 @@ namespace ExcelToByteFile
                         }
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    throw e;
+                    throw;
                 }
             }
         }

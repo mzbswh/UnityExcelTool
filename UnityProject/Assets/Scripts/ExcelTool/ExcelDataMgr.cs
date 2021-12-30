@@ -102,11 +102,182 @@ namespace ExcelTool
                 case (int)TypeToken.Long: return new ByteFileInfo<long>(param);
                 case (int)TypeToken.Double: return new ByteFileInfo<double>(param);
                 case (int)TypeToken.String: return new ByteFileInfo<string>(param);
+                // Vector Vector + Dimension * 100 + Type
                 case (int)TypeToken.Vector + 200: return new ByteFileInfo<Vector2>(param);
                 case (int)TypeToken.Vector + 300: return new ByteFileInfo<Vector3>(param);
                 case (int)TypeToken.Vector + 400: return new ByteFileInfo<Vector4>(param);
                 case (int)TypeToken.Vector + 200 + (int)TypeToken.Int: return new ByteFileInfo<Vector2Int>(param);
                 case (int)TypeToken.Vector + 300 + (int)TypeToken.Int: return new ByteFileInfo<Vector3Int>(param);
+                // List
+                case (int)TypeToken.List + (int)TypeToken.Sbyte: return new ByteFileInfo<List<sbyte>>(param);
+                case (int)TypeToken.List + (int)TypeToken.Byte: return new ByteFileInfo<List<byte>>(param);
+                case (int)TypeToken.List + (int)TypeToken.Bool: return new ByteFileInfo<List<bool>>(param);
+                case (int)TypeToken.List + (int)TypeToken.UShort: return new ByteFileInfo<List<ushort>>(param);
+                case (int)TypeToken.List + (int)TypeToken.Short: return new ByteFileInfo<List<short>>(param);
+                case (int)TypeToken.List + (int)TypeToken.UInt: return new ByteFileInfo<List<uint>>(param);
+                case (int)TypeToken.List + (int)TypeToken.Int: return new ByteFileInfo<List<int>>(param);
+                case (int)TypeToken.List + (int)TypeToken.Float: return new ByteFileInfo<List<float>>(param);
+                case (int)TypeToken.List + (int)TypeToken.Double: return new ByteFileInfo<List<double>>(param);
+                case (int)TypeToken.List + (int)TypeToken.ULong: return new ByteFileInfo<List<ulong>>(param);
+                case (int)TypeToken.List + (int)TypeToken.Long: return new ByteFileInfo<List<long>>(param);
+                case (int)TypeToken.List + (int)TypeToken.String: return new ByteFileInfo<List<string>>(param);
+                #region Dict
+                case (int)TypeToken.Dictionary + (int)TypeToken.Sbyte * 100 + (int)TypeToken.Sbyte: return new ByteFileInfo<Dictionary<sbyte, sbyte>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Sbyte * 100 + (int)TypeToken.Byte: return new ByteFileInfo<Dictionary<sbyte, byte>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Sbyte * 100 + (int)TypeToken.Bool: return new ByteFileInfo<Dictionary<sbyte, bool>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Sbyte * 100 + (int)TypeToken.UShort: return new ByteFileInfo<Dictionary<sbyte, ushort>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Sbyte * 100 + (int)TypeToken.Short: return new ByteFileInfo<Dictionary<sbyte, short>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Sbyte * 100 + (int)TypeToken.UInt: return new ByteFileInfo<Dictionary<sbyte, uint>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Sbyte * 100 + (int)TypeToken.Int: return new ByteFileInfo<Dictionary<sbyte, int>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Sbyte * 100 + (int)TypeToken.Float: return new ByteFileInfo<Dictionary<sbyte, float>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Sbyte * 100 + (int)TypeToken.Double: return new ByteFileInfo<Dictionary<sbyte, double>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Sbyte * 100 + (int)TypeToken.ULong: return new ByteFileInfo<Dictionary<sbyte, ulong>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Sbyte * 100 + (int)TypeToken.Long: return new ByteFileInfo<Dictionary<sbyte, long>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Sbyte * 100 + (int)TypeToken.String: return new ByteFileInfo<Dictionary<sbyte, string>>(param);
+
+                case (int)TypeToken.Dictionary + (int)TypeToken.Byte * 100 + (int)TypeToken.Sbyte: return new ByteFileInfo<Dictionary<byte, sbyte>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Byte * 100 + (int)TypeToken.Byte: return new ByteFileInfo<Dictionary<byte, byte>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Byte * 100 + (int)TypeToken.Bool: return new ByteFileInfo<Dictionary<byte, bool>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Byte * 100 + (int)TypeToken.UShort: return new ByteFileInfo<Dictionary<byte, ushort>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Byte * 100 + (int)TypeToken.Short: return new ByteFileInfo<Dictionary<byte, short>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Byte * 100 + (int)TypeToken.UInt: return new ByteFileInfo<Dictionary<byte, uint>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Byte * 100 + (int)TypeToken.Int: return new ByteFileInfo<Dictionary<byte, int>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Byte * 100 + (int)TypeToken.Float: return new ByteFileInfo<Dictionary<byte, float>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Byte * 100 + (int)TypeToken.Double: return new ByteFileInfo<Dictionary<byte, double>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Byte * 100 + (int)TypeToken.ULong: return new ByteFileInfo<Dictionary<byte, ulong>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Byte * 100 + (int)TypeToken.Long: return new ByteFileInfo<Dictionary<byte, long>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Byte * 100 + (int)TypeToken.String: return new ByteFileInfo<Dictionary<byte, string>>(param);
+
+                case (int)TypeToken.Dictionary + (int)TypeToken.Bool * 100 + (int)TypeToken.Sbyte: return new ByteFileInfo<Dictionary<bool, sbyte>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Bool * 100 + (int)TypeToken.Byte: return new ByteFileInfo<Dictionary<bool, byte>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Bool * 100 + (int)TypeToken.Bool: return new ByteFileInfo<Dictionary<bool, bool>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Bool * 100 + (int)TypeToken.UShort: return new ByteFileInfo<Dictionary<bool, ushort>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Bool * 100 + (int)TypeToken.Short: return new ByteFileInfo<Dictionary<bool, short>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Bool * 100 + (int)TypeToken.UInt: return new ByteFileInfo<Dictionary<bool, uint>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Bool * 100 + (int)TypeToken.Int: return new ByteFileInfo<Dictionary<bool, int>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Bool * 100 + (int)TypeToken.Float: return new ByteFileInfo<Dictionary<bool, float>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Bool * 100 + (int)TypeToken.Double: return new ByteFileInfo<Dictionary<bool, double>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Bool * 100 + (int)TypeToken.ULong: return new ByteFileInfo<Dictionary<bool, ulong>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Bool * 100 + (int)TypeToken.Long: return new ByteFileInfo<Dictionary<bool, long>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Bool * 100 + (int)TypeToken.String: return new ByteFileInfo<Dictionary<bool, string>>(param);
+
+                case (int)TypeToken.Dictionary + (int)TypeToken.UShort * 100 + (int)TypeToken.Sbyte: return new ByteFileInfo<Dictionary<ushort, sbyte>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.UShort * 100 + (int)TypeToken.Byte: return new ByteFileInfo<Dictionary<ushort, byte>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.UShort * 100 + (int)TypeToken.Bool: return new ByteFileInfo<Dictionary<ushort, bool>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.UShort * 100 + (int)TypeToken.UShort: return new ByteFileInfo<Dictionary<ushort, ushort>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.UShort * 100 + (int)TypeToken.Short: return new ByteFileInfo<Dictionary<ushort, short>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.UShort * 100 + (int)TypeToken.UInt: return new ByteFileInfo<Dictionary<ushort, uint>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.UShort * 100 + (int)TypeToken.Int: return new ByteFileInfo<Dictionary<ushort, int>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.UShort * 100 + (int)TypeToken.Float: return new ByteFileInfo<Dictionary<ushort, float>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.UShort * 100 + (int)TypeToken.Double: return new ByteFileInfo<Dictionary<ushort, double>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.UShort * 100 + (int)TypeToken.ULong: return new ByteFileInfo<Dictionary<ushort, ulong>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.UShort * 100 + (int)TypeToken.Long: return new ByteFileInfo<Dictionary<ushort, long>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.UShort * 100 + (int)TypeToken.String: return new ByteFileInfo<Dictionary<ushort, string>>(param);
+
+                case (int)TypeToken.Dictionary + (int)TypeToken.Short * 100 + (int)TypeToken.Sbyte: return new ByteFileInfo<Dictionary<short, sbyte>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Short * 100 + (int)TypeToken.Byte: return new ByteFileInfo<Dictionary<short, byte>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Short * 100 + (int)TypeToken.Bool: return new ByteFileInfo<Dictionary<short, bool>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Short * 100 + (int)TypeToken.UShort: return new ByteFileInfo<Dictionary<short, ushort>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Short * 100 + (int)TypeToken.Short: return new ByteFileInfo<Dictionary<short, short>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Short * 100 + (int)TypeToken.UInt: return new ByteFileInfo<Dictionary<short, uint>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Short * 100 + (int)TypeToken.Int: return new ByteFileInfo<Dictionary<short, int>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Short * 100 + (int)TypeToken.Float: return new ByteFileInfo<Dictionary<short, float>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Short * 100 + (int)TypeToken.Double: return new ByteFileInfo<Dictionary<short, double>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Short * 100 + (int)TypeToken.ULong: return new ByteFileInfo<Dictionary<short, ulong>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Short * 100 + (int)TypeToken.Long: return new ByteFileInfo<Dictionary<short, long>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Short * 100 + (int)TypeToken.String: return new ByteFileInfo<Dictionary<short, string>>(param);
+
+                case (int)TypeToken.Dictionary + (int)TypeToken.UInt * 100 + (int)TypeToken.Sbyte: return new ByteFileInfo<Dictionary<uint, sbyte>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.UInt * 100 + (int)TypeToken.Byte: return new ByteFileInfo<Dictionary<uint, byte>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.UInt * 100 + (int)TypeToken.Bool: return new ByteFileInfo<Dictionary<uint, bool>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.UInt * 100 + (int)TypeToken.UShort: return new ByteFileInfo<Dictionary<uint, ushort>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.UInt * 100 + (int)TypeToken.Short: return new ByteFileInfo<Dictionary<uint, short>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.UInt * 100 + (int)TypeToken.UInt: return new ByteFileInfo<Dictionary<uint, uint>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.UInt * 100 + (int)TypeToken.Int: return new ByteFileInfo<Dictionary<uint, int>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.UInt * 100 + (int)TypeToken.Float: return new ByteFileInfo<Dictionary<uint, float>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.UInt * 100 + (int)TypeToken.Double: return new ByteFileInfo<Dictionary<uint, double>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.UInt * 100 + (int)TypeToken.ULong: return new ByteFileInfo<Dictionary<uint, ulong>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.UInt * 100 + (int)TypeToken.Long: return new ByteFileInfo<Dictionary<uint, long>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.UInt * 100 + (int)TypeToken.String: return new ByteFileInfo<Dictionary<uint, string>>(param);
+
+                case (int)TypeToken.Dictionary + (int)TypeToken.Int * 100 + (int)TypeToken.Sbyte: return new ByteFileInfo<Dictionary<int, sbyte>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Int * 100 + (int)TypeToken.Byte: return new ByteFileInfo<Dictionary<int, byte>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Int * 100 + (int)TypeToken.Bool: return new ByteFileInfo<Dictionary<int, bool>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Int * 100 + (int)TypeToken.UShort: return new ByteFileInfo<Dictionary<int, ushort>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Int * 100 + (int)TypeToken.Short: return new ByteFileInfo<Dictionary<int, short>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Int * 100 + (int)TypeToken.UInt: return new ByteFileInfo<Dictionary<int, uint>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Int * 100 + (int)TypeToken.Int: return new ByteFileInfo<Dictionary<int, int>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Int * 100 + (int)TypeToken.Float: return new ByteFileInfo<Dictionary<int, float>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Int * 100 + (int)TypeToken.Double: return new ByteFileInfo<Dictionary<int, double>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Int * 100 + (int)TypeToken.ULong: return new ByteFileInfo<Dictionary<int, ulong>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Int * 100 + (int)TypeToken.Long: return new ByteFileInfo<Dictionary<int, long>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Int * 100 + (int)TypeToken.String: return new ByteFileInfo<Dictionary<int, string>>(param);
+
+                case (int)TypeToken.Dictionary + (int)TypeToken.Float * 100 + (int)TypeToken.Sbyte: return new ByteFileInfo<Dictionary<float, sbyte>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Float * 100 + (int)TypeToken.Byte: return new ByteFileInfo<Dictionary<float, byte>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Float * 100 + (int)TypeToken.Bool: return new ByteFileInfo<Dictionary<float, bool>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Float * 100 + (int)TypeToken.UShort: return new ByteFileInfo<Dictionary<float, ushort>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Float * 100 + (int)TypeToken.Short: return new ByteFileInfo<Dictionary<float, short>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Float * 100 + (int)TypeToken.UInt: return new ByteFileInfo<Dictionary<float, uint>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Float * 100 + (int)TypeToken.Int: return new ByteFileInfo<Dictionary<float, int>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Float * 100 + (int)TypeToken.Float: return new ByteFileInfo<Dictionary<float, float>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Float * 100 + (int)TypeToken.Double: return new ByteFileInfo<Dictionary<float, double>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Float * 100 + (int)TypeToken.ULong: return new ByteFileInfo<Dictionary<float, ulong>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Float * 100 + (int)TypeToken.Long: return new ByteFileInfo<Dictionary<float, long>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Float * 100 + (int)TypeToken.String: return new ByteFileInfo<Dictionary<float, string>>(param);
+
+                case (int)TypeToken.Dictionary + (int)TypeToken.Double * 100 + (int)TypeToken.Sbyte: return new ByteFileInfo<Dictionary<double, sbyte>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Double * 100 + (int)TypeToken.Byte: return new ByteFileInfo<Dictionary<double, byte>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Double * 100 + (int)TypeToken.Bool: return new ByteFileInfo<Dictionary<double, bool>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Double * 100 + (int)TypeToken.UShort: return new ByteFileInfo<Dictionary<double, ushort>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Double * 100 + (int)TypeToken.Short: return new ByteFileInfo<Dictionary<double, short>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Double * 100 + (int)TypeToken.UInt: return new ByteFileInfo<Dictionary<double, uint>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Double * 100 + (int)TypeToken.Int: return new ByteFileInfo<Dictionary<double, int>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Double * 100 + (int)TypeToken.Float: return new ByteFileInfo<Dictionary<double, float>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Double * 100 + (int)TypeToken.Double: return new ByteFileInfo<Dictionary<double, double>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Double * 100 + (int)TypeToken.ULong: return new ByteFileInfo<Dictionary<double, ulong>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Double * 100 + (int)TypeToken.Long: return new ByteFileInfo<Dictionary<double, long>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Double * 100 + (int)TypeToken.String: return new ByteFileInfo<Dictionary<double, string>>(param);
+
+                case (int)TypeToken.Dictionary + (int)TypeToken.ULong * 100 + (int)TypeToken.Sbyte: return new ByteFileInfo<Dictionary<ulong, sbyte>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.ULong * 100 + (int)TypeToken.Byte: return new ByteFileInfo<Dictionary<ulong, byte>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.ULong * 100 + (int)TypeToken.Bool: return new ByteFileInfo<Dictionary<ulong, bool>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.ULong * 100 + (int)TypeToken.UShort: return new ByteFileInfo<Dictionary<ulong, ushort>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.ULong * 100 + (int)TypeToken.Short: return new ByteFileInfo<Dictionary<ulong, short>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.ULong * 100 + (int)TypeToken.UInt: return new ByteFileInfo<Dictionary<ulong, uint>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.ULong * 100 + (int)TypeToken.Int: return new ByteFileInfo<Dictionary<ulong, int>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.ULong * 100 + (int)TypeToken.Float: return new ByteFileInfo<Dictionary<ulong, float>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.ULong * 100 + (int)TypeToken.Double: return new ByteFileInfo<Dictionary<ulong, double>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.ULong * 100 + (int)TypeToken.ULong: return new ByteFileInfo<Dictionary<ulong, ulong>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.ULong * 100 + (int)TypeToken.Long: return new ByteFileInfo<Dictionary<ulong, long>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.ULong * 100 + (int)TypeToken.String: return new ByteFileInfo<Dictionary<ulong, string>>(param);
+
+                case (int)TypeToken.Dictionary + (int)TypeToken.Long * 100 + (int)TypeToken.Sbyte: return new ByteFileInfo<Dictionary<long, sbyte>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Long * 100 + (int)TypeToken.Byte: return new ByteFileInfo<Dictionary<long, byte>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Long * 100 + (int)TypeToken.Bool: return new ByteFileInfo<Dictionary<long, bool>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Long * 100 + (int)TypeToken.UShort: return new ByteFileInfo<Dictionary<long, ushort>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Long * 100 + (int)TypeToken.Short: return new ByteFileInfo<Dictionary<long, short>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Long * 100 + (int)TypeToken.UInt: return new ByteFileInfo<Dictionary<long, uint>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Long * 100 + (int)TypeToken.Int: return new ByteFileInfo<Dictionary<long, int>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Long * 100 + (int)TypeToken.Float: return new ByteFileInfo<Dictionary<long, float>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Long * 100 + (int)TypeToken.Double: return new ByteFileInfo<Dictionary<long, double>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Long * 100 + (int)TypeToken.ULong: return new ByteFileInfo<Dictionary<long, ulong>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Long * 100 + (int)TypeToken.Long: return new ByteFileInfo<Dictionary<long, long>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.Long * 100 + (int)TypeToken.String: return new ByteFileInfo<Dictionary<long, string>>(param);
+
+                case (int)TypeToken.Dictionary + (int)TypeToken.String * 100 + (int)TypeToken.Sbyte: return new ByteFileInfo<Dictionary<string, sbyte>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.String * 100 + (int)TypeToken.Byte: return new ByteFileInfo<Dictionary<string, byte>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.String * 100 + (int)TypeToken.Bool: return new ByteFileInfo<Dictionary<string, bool>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.String * 100 + (int)TypeToken.UShort: return new ByteFileInfo<Dictionary<string, ushort>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.String * 100 + (int)TypeToken.Short: return new ByteFileInfo<Dictionary<string, short>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.String * 100 + (int)TypeToken.UInt: return new ByteFileInfo<Dictionary<string, uint>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.String * 100 + (int)TypeToken.Int: return new ByteFileInfo<Dictionary<string, int>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.String * 100 + (int)TypeToken.Float: return new ByteFileInfo<Dictionary<string, float>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.String * 100 + (int)TypeToken.Double: return new ByteFileInfo<Dictionary<string, double>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.String * 100 + (int)TypeToken.ULong: return new ByteFileInfo<Dictionary<string, ulong>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.String * 100 + (int)TypeToken.Long: return new ByteFileInfo<Dictionary<string, long>>(param);
+                case (int)TypeToken.Dictionary + (int)TypeToken.String * 100 + (int)TypeToken.String: return new ByteFileInfo<Dictionary<string, string>>(param);
+                #endregion
                 default: return null;
             }
         }

@@ -21,8 +21,7 @@ namespace ExcelToByteFile
 
         public static void Error(string msg)
         {
-            if (Program.IsCommandLine) Console.WriteLine(msg);
-            else System.Windows.Forms.MessageBox.Show(msg + Environment.NewLine + Environment.NewLine
+            System.Windows.Forms.MessageBox.Show(msg + Environment.NewLine + Environment.NewLine
                 + "按确定键退出...", "错误", MessageBoxButtons.OK);
             Environment.Exit(1);
         }
