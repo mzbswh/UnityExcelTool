@@ -45,7 +45,6 @@ namespace ExcelToByteFile
             this.label4 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
             this.codeFileOutputDir = new System.Windows.Forms.Label();
-            this.intro = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.progressLab = new System.Windows.Forms.Label();
             this.selectStructDir = new System.Windows.Forms.Panel();
@@ -184,16 +183,6 @@ namespace ExcelToByteFile
             this.codeFileOutputDir.Text = "输出路径";
             this.codeFileOutputDir.MouseHover += new System.EventHandler(this.codeFileOutputDir_MouseHover);
             // 
-            // intro
-            // 
-            this.intro.Location = new System.Drawing.Point(40, 139);
-            this.intro.Name = "intro";
-            this.intro.Size = new System.Drawing.Size(87, 32);
-            this.intro.TabIndex = 23;
-            this.intro.Text = "说明";
-            this.intro.UseVisualStyleBackColor = true;
-            this.intro.Click += new System.EventHandler(this.intro_Click);
-            // 
             // progressBar1
             // 
             this.progressBar1.BackColor = System.Drawing.SystemColors.ButtonFace;
@@ -226,7 +215,6 @@ namespace ExcelToByteFile
             this.selectStructDir.Controls.Add(this.btn_selectFiles);
             this.selectStructDir.Controls.Add(this.button1);
             this.selectStructDir.Controls.Add(this.btn_generate);
-            this.selectStructDir.Controls.Add(this.intro);
             this.selectStructDir.Controls.Add(this.lsBox_selectedFiles);
             this.selectStructDir.Controls.Add(this.label1);
             this.selectStructDir.Controls.Add(this.codeFileOutputDir);
@@ -311,7 +299,6 @@ namespace ExcelToByteFile
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Label codeFileOutputDir;
-        private System.Windows.Forms.Button intro;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Label progressLab;
         private System.Windows.Forms.Panel selectStructDir;
