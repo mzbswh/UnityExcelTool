@@ -12,6 +12,7 @@ namespace ExcelTool
 
         public TIdType[] Ids { get { if (cacheIds == null) CacheAllIds(); return cacheIds; } }
         public bool ByteDataLoaded { get; private set; }
+        public Dictionary<string, string> ExtraInfo { get; }
         public string Name { get; }
         public int IdColIndex { get; }
         public int RowCount { get; }
@@ -54,6 +55,7 @@ namespace ExcelTool
             this.OptimizeType = param.optimizeType;
             this.Cache = param.cache;
             this.idColOff = colOff[IdColIndex];
+            this.ExtraInfo = param.extraInfo;
             if (OptimizeType == OptimizeType.Continuity)
             {
                 this.step = param.step;
