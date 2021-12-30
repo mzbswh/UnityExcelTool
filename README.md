@@ -5,7 +5,7 @@
 
 ## 用法
 1. Excel格式<br/>
-   ![excel示例](https://github.com/mzbswh/UnityExcelTool/tree/master/Image/excelExample.png)
+   ![excel示例](https://github.com/mzbswh/UnityExcelTool/blob/master/Image/excelExample.png)
    * 默认保留第一行第一列
    * 第一个单元格为[Sheet表关键字](#Sheet关键字)，用于控制这个sheet表的导出设置。
    * 第一行为[列标签](#列标签)，用于定义此列的一些属性，为空代表数据列。如果列标签为空且此列的类型为空，则认为前一列为最后
