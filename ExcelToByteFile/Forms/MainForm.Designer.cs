@@ -49,10 +49,10 @@ namespace ExcelToByteFile
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.progressLab = new System.Windows.Forms.Label();
             this.selectStructDir = new System.Windows.Forms.Panel();
+            this.label2 = new System.Windows.Forms.Label();
             this.generateStructCs = new System.Windows.Forms.CheckBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.label2 = new System.Windows.Forms.Label();
             this.contextMenuStrip1.SuspendLayout();
             this.selectStructDir.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -239,6 +239,16 @@ namespace ExcelToByteFile
             this.selectStructDir.Size = new System.Drawing.Size(760, 620);
             this.selectStructDir.TabIndex = 26;
             // 
+            // label2
+            // 
+            this.label2.ForeColor = System.Drawing.Color.Firebrick;
+            this.label2.Location = new System.Drawing.Point(3, 476);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(754, 28);
+            this.label2.TabIndex = 30;
+            this.label2.Text = "※注意：生成byte文件和代码文件会先清空选择的目录，所以确保输出路径不包含其他重要文件！！！";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
+            // 
             // generateStructCs
             // 
             this.generateStructCs.AutoSize = true;
@@ -261,16 +271,6 @@ namespace ExcelToByteFile
             this.panel2.TabIndex = 27;
             this.panel2.Visible = false;
             // 
-            // label2
-            // 
-            this.label2.ForeColor = System.Drawing.Color.Firebrick;
-            this.label2.Location = new System.Drawing.Point(3, 476);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(754, 28);
-            this.label2.TabIndex = 30;
-            this.label2.Text = "※注意：生成byte文件和代码文件会先清空选择的目录，所以确保输出路径不包含其他重要文件！！！";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 21F);
@@ -286,7 +286,7 @@ namespace ExcelToByteFile
             this.MinimumSize = new System.Drawing.Size(800, 750);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Excel转字节文件";
+            this.Text = "Unity导表工具";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.contextMenuStrip1.ResumeLayout(false);
             this.selectStructDir.ResumeLayout(false);
