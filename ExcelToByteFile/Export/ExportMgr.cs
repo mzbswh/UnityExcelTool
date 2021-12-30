@@ -23,6 +23,8 @@ namespace ExcelToByteFile
 
             // 加载选择的Excel文件列表并导出字节文件
             CreateOrClearDir(GlobalConfig.Ins.byteFileOutputDir);
+            CreateOrClearDir(GlobalConfig.Ins.codeFileOutputDir);
+
             for (int i = 0; i < fileList.Count; i++)
             {
                 string filePath = fileList[i];
@@ -65,7 +67,6 @@ namespace ExcelToByteFile
             }
             ExportByteFiles.ExportManifest(fileManifests);
 
-            CreateOrClearDir(GlobalConfig.Ins.codeFileOutputDir);
             // 导出cs定义文件 *必须
             string defDir = GlobalConfig.Ins.codeFileOutputDir + Path.DirectorySeparatorChar + "Def";
             if (!Directory.Exists(defDir)) Directory.CreateDirectory(defDir);

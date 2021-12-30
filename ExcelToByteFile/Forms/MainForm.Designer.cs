@@ -52,6 +52,7 @@ namespace ExcelToByteFile
             this.generateStructCs = new System.Windows.Forms.CheckBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.label2 = new System.Windows.Forms.Label();
             this.contextMenuStrip1.SuspendLayout();
             this.selectStructDir.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -220,6 +221,7 @@ namespace ExcelToByteFile
             // 
             // selectStructDir
             // 
+            this.selectStructDir.Controls.Add(this.label2);
             this.selectStructDir.Controls.Add(this.generateStructCs);
             this.selectStructDir.Controls.Add(this.btn_selectFiles);
             this.selectStructDir.Controls.Add(this.button1);
@@ -240,7 +242,7 @@ namespace ExcelToByteFile
             // generateStructCs
             // 
             this.generateStructCs.AutoSize = true;
-            this.generateStructCs.Location = new System.Drawing.Point(10, 496);
+            this.generateStructCs.Location = new System.Drawing.Point(3, 507);
             this.generateStructCs.Name = "generateStructCs";
             this.generateStructCs.Size = new System.Drawing.Size(141, 25);
             this.generateStructCs.TabIndex = 29;
@@ -258,6 +260,16 @@ namespace ExcelToByteFile
             this.panel2.Size = new System.Drawing.Size(760, 70);
             this.panel2.TabIndex = 27;
             this.panel2.Visible = false;
+            // 
+            // label2
+            // 
+            this.label2.ForeColor = System.Drawing.Color.Firebrick;
+            this.label2.Location = new System.Drawing.Point(3, 476);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(754, 28);
+            this.label2.TabIndex = 30;
+            this.label2.Text = "※注意：生成byte文件和代码文件会先清空选择的目录，所以确保输出路径不包含其他重要文件！！！";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // MainForm
             // 
@@ -308,5 +320,6 @@ namespace ExcelToByteFile
         private System.Windows.Forms.ToolStripMenuItem 删除;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.CheckBox generateStructCs;
+        private System.Windows.Forms.Label label2;
     }
 }
