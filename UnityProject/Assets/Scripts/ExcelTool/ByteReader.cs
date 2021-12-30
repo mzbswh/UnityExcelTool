@@ -41,6 +41,166 @@ namespace ExcelTool
             ReadHelper<Vector4>.Read = (data, index) => ReadVector4(data, index);
             ReadHelper<Vector2Int>.Read = (data, index) => ReadVector2Int(data, index);
             ReadHelper<Vector3Int>.Read = (data, index) => ReadVector3Int(data, index);
+
+            #region Dict
+
+            ReadHelper<Dictionary<bool, bool>>.Read = (data, index) => ReadDict<bool, bool>(data, index);
+            ReadHelper<Dictionary<bool, sbyte>>.Read = (data, index) => ReadDict<bool, sbyte>(data, index);
+            ReadHelper<Dictionary<bool, byte>>.Read = (data, index) => ReadDict<bool, byte>(data, index);
+            ReadHelper<Dictionary<bool, ushort>>.Read = (data, index) => ReadDict<bool, ushort>(data, index);
+            ReadHelper<Dictionary<bool, short>>.Read = (data, index) => ReadDict<bool, short>(data, index);
+            ReadHelper<Dictionary<bool, uint>>.Read = (data, index) => ReadDict<bool, uint>(data, index);
+            ReadHelper<Dictionary<bool, int>>.Read = (data, index) => ReadDict<bool, int>(data, index);
+            ReadHelper<Dictionary<bool, ulong>>.Read = (data, index) => ReadDict<bool, ulong>(data, index);
+            ReadHelper<Dictionary<bool, long>>.Read = (data, index) => ReadDict<bool, long>(data, index);
+            ReadHelper<Dictionary<bool, float>>.Read = (data, index) => ReadDict<bool, float>(data, index);
+            ReadHelper<Dictionary<bool, double>>.Read = (data, index) => ReadDict<bool, double>(data, index);
+            ReadHelper<Dictionary<bool, string>>.Read = (data, index) => ReadDict<bool, string>(data, index);
+
+            ReadHelper<Dictionary<sbyte, bool>>.Read = (data, index) => ReadDict<sbyte, bool>(data, index);
+            ReadHelper<Dictionary<sbyte, sbyte>>.Read = (data, index) => ReadDict<sbyte, sbyte>(data, index);
+            ReadHelper<Dictionary<sbyte, byte>>.Read = (data, index) => ReadDict<sbyte, byte>(data, index);
+            ReadHelper<Dictionary<sbyte, ushort>>.Read = (data, index) => ReadDict<sbyte, ushort>(data, index);
+            ReadHelper<Dictionary<sbyte, short>>.Read = (data, index) => ReadDict<sbyte, short>(data, index);
+            ReadHelper<Dictionary<sbyte, uint>>.Read = (data, index) => ReadDict<sbyte, uint>(data, index);
+            ReadHelper<Dictionary<sbyte, int>>.Read = (data, index) => ReadDict<sbyte, int>(data, index);
+            ReadHelper<Dictionary<sbyte, ulong>>.Read = (data, index) => ReadDict<sbyte, ulong>(data, index);
+            ReadHelper<Dictionary<sbyte, long>>.Read = (data, index) => ReadDict<sbyte, long>(data, index);
+            ReadHelper<Dictionary<sbyte, float>>.Read = (data, index) => ReadDict<sbyte, float>(data, index);
+            ReadHelper<Dictionary<sbyte, double>>.Read = (data, index) => ReadDict<sbyte, double>(data, index);
+            ReadHelper<Dictionary<sbyte, string>>.Read = (data, index) => ReadDict<sbyte, string>(data, index);
+
+            ReadHelper<Dictionary<byte, bool>>.Read = (data, index) => ReadDict<byte, bool>(data, index);
+            ReadHelper<Dictionary<byte, sbyte>>.Read = (data, index) => ReadDict<byte, sbyte>(data, index);
+            ReadHelper<Dictionary<byte, byte>>.Read = (data, index) => ReadDict<byte, byte>(data, index);
+            ReadHelper<Dictionary<byte, ushort>>.Read = (data, index) => ReadDict<byte, ushort>(data, index);
+            ReadHelper<Dictionary<byte, short>>.Read = (data, index) => ReadDict<byte, short>(data, index);
+            ReadHelper<Dictionary<byte, uint>>.Read = (data, index) => ReadDict<byte, uint>(data, index);
+            ReadHelper<Dictionary<byte, int>>.Read = (data, index) => ReadDict<byte, int>(data, index);
+            ReadHelper<Dictionary<byte, ulong>>.Read = (data, index) => ReadDict<byte, ulong>(data, index);
+            ReadHelper<Dictionary<byte, long>>.Read = (data, index) => ReadDict<byte, long>(data, index);
+            ReadHelper<Dictionary<byte, float>>.Read = (data, index) => ReadDict<byte, float>(data, index);
+            ReadHelper<Dictionary<byte, double>>.Read = (data, index) => ReadDict<byte, double>(data, index);
+            ReadHelper<Dictionary<byte, string>>.Read = (data, index) => ReadDict<byte, string>(data, index);
+
+            ReadHelper<Dictionary<ushort, bool>>.Read = (data, index) => ReadDict<ushort, bool>(data, index);
+            ReadHelper<Dictionary<ushort, sbyte>>.Read = (data, index) => ReadDict<ushort, sbyte>(data, index);
+            ReadHelper<Dictionary<ushort, byte>>.Read = (data, index) => ReadDict<ushort, byte>(data, index);
+            ReadHelper<Dictionary<ushort, ushort>>.Read = (data, index) => ReadDict<ushort, ushort>(data, index);
+            ReadHelper<Dictionary<ushort, short>>.Read = (data, index) => ReadDict<ushort, short>(data, index);
+            ReadHelper<Dictionary<ushort, uint>>.Read = (data, index) => ReadDict<ushort, uint>(data, index);
+            ReadHelper<Dictionary<ushort, int>>.Read = (data, index) => ReadDict<ushort, int>(data, index);
+            ReadHelper<Dictionary<ushort, ulong>>.Read = (data, index) => ReadDict<ushort, ulong>(data, index);
+            ReadHelper<Dictionary<ushort, long>>.Read = (data, index) => ReadDict<ushort, long>(data, index);
+            ReadHelper<Dictionary<ushort, float>>.Read = (data, index) => ReadDict<ushort, float>(data, index);
+            ReadHelper<Dictionary<ushort, double>>.Read = (data, index) => ReadDict<ushort, double>(data, index);
+            ReadHelper<Dictionary<ushort, string>>.Read = (data, index) => ReadDict<ushort, string>(data, index);
+
+            ReadHelper<Dictionary<short, bool>>.Read = (data, index) => ReadDict<short, bool>(data, index);
+            ReadHelper<Dictionary<short, sbyte>>.Read = (data, index) => ReadDict<short, sbyte>(data, index);
+            ReadHelper<Dictionary<short, byte>>.Read = (data, index) => ReadDict<short, byte>(data, index);
+            ReadHelper<Dictionary<short, ushort>>.Read = (data, index) => ReadDict<short, ushort>(data, index);
+            ReadHelper<Dictionary<short, short>>.Read = (data, index) => ReadDict<short, short>(data, index);
+            ReadHelper<Dictionary<short, uint>>.Read = (data, index) => ReadDict<short, uint>(data, index);
+            ReadHelper<Dictionary<short, int>>.Read = (data, index) => ReadDict<short, int>(data, index);
+            ReadHelper<Dictionary<short, ulong>>.Read = (data, index) => ReadDict<short, ulong>(data, index);
+            ReadHelper<Dictionary<short, long>>.Read = (data, index) => ReadDict<short, long>(data, index);
+            ReadHelper<Dictionary<short, float>>.Read = (data, index) => ReadDict<short, float>(data, index);
+            ReadHelper<Dictionary<short, double>>.Read = (data, index) => ReadDict<short, double>(data, index);
+            ReadHelper<Dictionary<short, string>>.Read = (data, index) => ReadDict<short, string>(data, index);
+
+            ReadHelper<Dictionary<uint, bool>>.Read = (data, index) => ReadDict<uint, bool>(data, index);
+            ReadHelper<Dictionary<uint, sbyte>>.Read = (data, index) => ReadDict<uint, sbyte>(data, index);
+            ReadHelper<Dictionary<uint, byte>>.Read = (data, index) => ReadDict<uint, byte>(data, index);
+            ReadHelper<Dictionary<uint, ushort>>.Read = (data, index) => ReadDict<uint, ushort>(data, index);
+            ReadHelper<Dictionary<uint, short>>.Read = (data, index) => ReadDict<uint, short>(data, index);
+            ReadHelper<Dictionary<uint, uint>>.Read = (data, index) => ReadDict<uint, uint>(data, index);
+            ReadHelper<Dictionary<uint, int>>.Read = (data, index) => ReadDict<uint, int>(data, index);
+            ReadHelper<Dictionary<uint, ulong>>.Read = (data, index) => ReadDict<uint, ulong>(data, index);
+            ReadHelper<Dictionary<uint, long>>.Read = (data, index) => ReadDict<uint, long>(data, index);
+            ReadHelper<Dictionary<uint, float>>.Read = (data, index) => ReadDict<uint, float>(data, index);
+            ReadHelper<Dictionary<uint, double>>.Read = (data, index) => ReadDict<uint, double>(data, index);
+            ReadHelper<Dictionary<uint, string>>.Read = (data, index) => ReadDict<uint, string>(data, index);
+
+            ReadHelper<Dictionary<int, bool>>.Read = (data, index) => ReadDict<int, bool>(data, index);
+            ReadHelper<Dictionary<int, sbyte>>.Read = (data, index) => ReadDict<int, sbyte>(data, index);
+            ReadHelper<Dictionary<int, byte>>.Read = (data, index) => ReadDict<int, byte>(data, index);
+            ReadHelper<Dictionary<int, ushort>>.Read = (data, index) => ReadDict<int, ushort>(data, index);
+            ReadHelper<Dictionary<int, short>>.Read = (data, index) => ReadDict<int, short>(data, index);
+            ReadHelper<Dictionary<int, uint>>.Read = (data, index) => ReadDict<int, uint>(data, index);
+            ReadHelper<Dictionary<int, int>>.Read = (data, index) => ReadDict<int, int>(data, index);
+            ReadHelper<Dictionary<int, ulong>>.Read = (data, index) => ReadDict<int, ulong>(data, index);
+            ReadHelper<Dictionary<int, long>>.Read = (data, index) => ReadDict<int, long>(data, index);
+            ReadHelper<Dictionary<int, float>>.Read = (data, index) => ReadDict<int, float>(data, index);
+            ReadHelper<Dictionary<int, double>>.Read = (data, index) => ReadDict<int, double>(data, index);
+            ReadHelper<Dictionary<int, string>>.Read = (data, index) => ReadDict<int, string>(data, index);
+
+            ReadHelper<Dictionary<ulong, bool>>.Read = (data, index) => ReadDict<ulong, bool>(data, index);
+            ReadHelper<Dictionary<ulong, sbyte>>.Read = (data, index) => ReadDict<ulong, sbyte>(data, index);
+            ReadHelper<Dictionary<ulong, byte>>.Read = (data, index) => ReadDict<ulong, byte>(data, index);
+            ReadHelper<Dictionary<ulong, ushort>>.Read = (data, index) => ReadDict<ulong, ushort>(data, index);
+            ReadHelper<Dictionary<ulong, short>>.Read = (data, index) => ReadDict<ulong, short>(data, index);
+            ReadHelper<Dictionary<ulong, uint>>.Read = (data, index) => ReadDict<ulong, uint>(data, index);
+            ReadHelper<Dictionary<ulong, int>>.Read = (data, index) => ReadDict<ulong, int>(data, index);
+            ReadHelper<Dictionary<ulong, ulong>>.Read = (data, index) => ReadDict<ulong, ulong>(data, index);
+            ReadHelper<Dictionary<ulong, long>>.Read = (data, index) => ReadDict<ulong, long>(data, index);
+            ReadHelper<Dictionary<ulong, float>>.Read = (data, index) => ReadDict<ulong, float>(data, index);
+            ReadHelper<Dictionary<ulong, double>>.Read = (data, index) => ReadDict<ulong, double>(data, index);
+            ReadHelper<Dictionary<ulong, string>>.Read = (data, index) => ReadDict<ulong, string>(data, index);
+
+            ReadHelper<Dictionary<long, bool>>.Read = (data, index) => ReadDict<long, bool>(data, index);
+            ReadHelper<Dictionary<long, sbyte>>.Read = (data, index) => ReadDict<long, sbyte>(data, index);
+            ReadHelper<Dictionary<long, byte>>.Read = (data, index) => ReadDict<long, byte>(data, index);
+            ReadHelper<Dictionary<long, ushort>>.Read = (data, index) => ReadDict<long, ushort>(data, index);
+            ReadHelper<Dictionary<long, short>>.Read = (data, index) => ReadDict<long, short>(data, index);
+            ReadHelper<Dictionary<long, uint>>.Read = (data, index) => ReadDict<long, uint>(data, index);
+            ReadHelper<Dictionary<long, int>>.Read = (data, index) => ReadDict<long, int>(data, index);
+            ReadHelper<Dictionary<long, ulong>>.Read = (data, index) => ReadDict<long, ulong>(data, index);
+            ReadHelper<Dictionary<long, long>>.Read = (data, index) => ReadDict<long, long>(data, index);
+            ReadHelper<Dictionary<long, float>>.Read = (data, index) => ReadDict<long, float>(data, index);
+            ReadHelper<Dictionary<long, double>>.Read = (data, index) => ReadDict<long, double>(data, index);
+            ReadHelper<Dictionary<long, string>>.Read = (data, index) => ReadDict<long, string>(data, index);
+
+            ReadHelper<Dictionary<float, bool>>.Read = (data, index) => ReadDict<float, bool>(data, index);
+            ReadHelper<Dictionary<float, sbyte>>.Read = (data, index) => ReadDict<float, sbyte>(data, index);
+            ReadHelper<Dictionary<float, byte>>.Read = (data, index) => ReadDict<float, byte>(data, index);
+            ReadHelper<Dictionary<float, ushort>>.Read = (data, index) => ReadDict<float, ushort>(data, index);
+            ReadHelper<Dictionary<float, short>>.Read = (data, index) => ReadDict<float, short>(data, index);
+            ReadHelper<Dictionary<float, uint>>.Read = (data, index) => ReadDict<float, uint>(data, index);
+            ReadHelper<Dictionary<float, int>>.Read = (data, index) => ReadDict<float, int>(data, index);
+            ReadHelper<Dictionary<float, ulong>>.Read = (data, index) => ReadDict<float, ulong>(data, index);
+            ReadHelper<Dictionary<float, long>>.Read = (data, index) => ReadDict<float, long>(data, index);
+            ReadHelper<Dictionary<float, float>>.Read = (data, index) => ReadDict<float, float>(data, index);
+            ReadHelper<Dictionary<float, double>>.Read = (data, index) => ReadDict<float, double>(data, index);
+            ReadHelper<Dictionary<float, string>>.Read = (data, index) => ReadDict<float, string>(data, index);
+
+            ReadHelper<Dictionary<double, bool>>.Read = (data, index) => ReadDict<double, bool>(data, index);
+            ReadHelper<Dictionary<double, sbyte>>.Read = (data, index) => ReadDict<double, sbyte>(data, index);
+            ReadHelper<Dictionary<double, byte>>.Read = (data, index) => ReadDict<double, byte>(data, index);
+            ReadHelper<Dictionary<double, ushort>>.Read = (data, index) => ReadDict<double, ushort>(data, index);
+            ReadHelper<Dictionary<double, short>>.Read = (data, index) => ReadDict<double, short>(data, index);
+            ReadHelper<Dictionary<double, uint>>.Read = (data, index) => ReadDict<double, uint>(data, index);
+            ReadHelper<Dictionary<double, int>>.Read = (data, index) => ReadDict<double, int>(data, index);
+            ReadHelper<Dictionary<double, ulong>>.Read = (data, index) => ReadDict<double, ulong>(data, index);
+            ReadHelper<Dictionary<double, long>>.Read = (data, index) => ReadDict<double, long>(data, index);
+            ReadHelper<Dictionary<double, float>>.Read = (data, index) => ReadDict<double, float>(data, index);
+            ReadHelper<Dictionary<double, double>>.Read = (data, index) => ReadDict<double, double>(data, index);
+            ReadHelper<Dictionary<double, string>>.Read = (data, index) => ReadDict<double, string>(data, index);
+
+            ReadHelper<Dictionary<string, bool>>.Read = (data, index) => ReadDict<string, bool>(data, index);
+            ReadHelper<Dictionary<string, sbyte>>.Read = (data, index) => ReadDict<string, sbyte>(data, index);
+            ReadHelper<Dictionary<string, byte>>.Read = (data, index) => ReadDict<string, byte>(data, index);
+            ReadHelper<Dictionary<string, ushort>>.Read = (data, index) => ReadDict<string, ushort>(data, index);
+            ReadHelper<Dictionary<string, short>>.Read = (data, index) => ReadDict<string, short>(data, index);
+            ReadHelper<Dictionary<string, uint>>.Read = (data, index) => ReadDict<string, uint>(data, index);
+            ReadHelper<Dictionary<string, int>>.Read = (data, index) => ReadDict<string, int>(data, index);
+            ReadHelper<Dictionary<string, ulong>>.Read = (data, index) => ReadDict<string, ulong>(data, index);
+            ReadHelper<Dictionary<string, long>>.Read = (data, index) => ReadDict<string, long>(data, index);
+            ReadHelper<Dictionary<string, float>>.Read = (data, index) => ReadDict<string, float>(data, index);
+            ReadHelper<Dictionary<string, double>>.Read = (data, index) => ReadDict<string, double>(data, index);
+            ReadHelper<Dictionary<string, string>>.Read = (data, index) => ReadDict<string, string>(data, index);
+
+            #endregion
         }
         static readonly Encoding utf8;
 
@@ -310,7 +470,6 @@ namespace ExcelTool
             }
             return dict;
         }
-
         public static Dictionary<K, V> ReadDict<K, V>(byte[] data, int index, bool indexIsAddr = true)
         {
             TypeToken keyToken = GetTypeToken<K>();
