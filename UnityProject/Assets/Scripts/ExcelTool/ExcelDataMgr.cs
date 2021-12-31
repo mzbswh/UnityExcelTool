@@ -9,7 +9,7 @@ namespace ExcelTool
     {
         public static void Init()
         {
-            byte[] data = Resources.Load<TextAsset>("ByteData/manifest").bytes;
+            byte[] data = (Assets.LoadAsset($"Assets/Bundles/data/manifest.bytes", typeof(TextAsset)).asset as TextAsset).bytes;
             if (data.Length > 0)
             {
                 int index = 0;
