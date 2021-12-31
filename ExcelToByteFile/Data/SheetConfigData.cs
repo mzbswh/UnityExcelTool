@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 using NPOI.SS.UserModel;
 
@@ -38,7 +39,7 @@ namespace ExcelToByteFile
             /***********************/
             //config = config.ToLowerAndRemoveWhiteSpace();
             if (string.IsNullOrWhiteSpace(config)) return;
-            var configs = config.Split(Environment.NewLine);
+            var configs = config.Split("\n"); // Environment.NewLine
             bool reverse = false;
             string key;
             string value;
