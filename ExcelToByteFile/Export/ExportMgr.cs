@@ -74,7 +74,7 @@ namespace ExcelTool
                 ExportCSharpCode.ExportStructInfoCsCode(GlobalConfig.Ins.codeFileOutputDir, fileManifests);
             }
             string cacheDir = GlobalConfig.Ins.codeFileOutputDir;
-            ExportCSharpCode.ExportCacheCsCode(cacheDir, fileManifests);
+            ExportCSharpCode.ExportCacheCsCode2(cacheDir, fileManifests);
             Console.WriteLine("生成结束，按任意键退出");
         }
 
