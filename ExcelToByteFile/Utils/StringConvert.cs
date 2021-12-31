@@ -108,12 +108,14 @@ namespace ExcelToByteFile
             {
                 Dictionary<T1, T2> dict = new Dictionary<T1, T2>();
 
-                string pat = @"(?<=\}\s*),";
-                string[] elems = Regex.Split(str, pat);
+                //string pat = @"(?<=\}\s*),";
+                string pat = @"({.*?(?<!\\),.*?})";
+                //string[] elems = Regex.Split(str, pat);
+                var elems = Regex.Matches(str, pat);
                 string pat2 = @"(?<!\\),";
                 foreach (var elem in elems)
                 {
-                    string s = elem.Trim();
+                    string s = elem.ToString().Trim();
                     s = s[1..^1];   // 去两边大括号
                     string[] keyValPair = Regex.Split(s, pat2);   // 分隔key value
                     string key = keyValPair[0].Trim();
