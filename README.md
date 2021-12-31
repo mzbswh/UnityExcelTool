@@ -13,7 +13,7 @@
    * 第一列为[行标签](#行标签)，用于定义此行的一些属性，为空代表数据列。如果行标签为空且主列对应的单元格为空，则认为前一行行为最后一行并忽略此行及之后所有行。因此如果最后一个有效行前如果有空行必须标记为注释行。
 2. Unity数据读取
    * 核心代码位于UnityProject/Assets/Scripts/ExcelTool。
-   * ExcelDataMgr用于控制所有的字节数据读取，可通过此类的一些静态方法直接读取数据，Init()方法进行数据初始化。
+   * ExcelDataMgr用于控制所有的字节数据读取，可通过此类的一些静态方法直接读取数据，必须先调用Init()方法进行数据初始化。
    * 如果有设置为需要缓存的sheet表，会生成一个ExcelDataCacheMgr，一定要先执行ExcelDataMgr.Init()，再执行ExcelDataCacheMgr.CacheData()缓存数据。
 
 ## Sheet关键字
