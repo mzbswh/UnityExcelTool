@@ -53,7 +53,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;本工具支持的元素类型有：bool, sbyte, byte, ushort, short, uint, int, ulong, long, float, double, string, vector2, vector2Int, vector3, vector3Int, vector4, list以及dictionaty。
 
 
-&nbsp;&nbsp;&nbsp;&nbsp; 如果类型为string，默认会去除前后空格。如果字符串被英文双引号包裹，则认为字符串的值是被双引号包裹的所有内容。因此如果有前后空格，必须用双引号包裹字符串。如果是字符串，建议使用双引号包裹内容。
+&nbsp;&nbsp;&nbsp;&nbsp; 如果类型为string，默认会去除前后空格。如果字符串被英文双引号包裹，则认为字符串的值是被双引号包裹的所有内容。因此如果有前后空格，必须用双引号包裹字符串，如果字符串本身被双引号包裹，要在最外层多加一层双引号，即写成 ""xxx""。如果是字符串，建议使用双引号包裹内容。
 
 &nbsp;&nbsp;&nbsp;&nbsp; 对于list和dictionary类型，其元素类型可以是除vector, list, dictionay外的所有基本类型。如果元素类型为string，适用上面的string规则。list以英文逗号分割，两个元素间可添加任意多的空格，如果元素值包含分割符，需要在分隔符前加 \ 字符，可类比为c#的转义字符。dictionary写法也与c#写法相似，一个键值对被{}包裹，键值对被逗号分割，各个元素也以逗号分割。如果元素值包含逗号，需要在分隔符前加 \ 字符，如果字符串包含 { 或 } 不需要在前面添加 \。
 
