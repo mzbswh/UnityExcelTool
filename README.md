@@ -36,7 +36,7 @@
 ## 行标签
 &nbsp;&nbsp;&nbsp;&nbsp;所有行标签不区分大小写并忽略空格
 + None：最后一个有效行前代表是有效数据行
-+ Type：[元素类型](#元素类型)行，必须存在。
++ Type：[数据类型](#数据类型)行，必须存在。
 + Name：必须存在，定义变量名称，单个sheet内不可重复。
 + Comment：可选，生成的代码中将此行用作变量注释。
 + #/Note：代表此行为注释行，生成工具会自动忽略此行。
@@ -49,8 +49,8 @@
 + Primary/Key：主列，必须存在，获取数据是通过主列值获取的，主列可以为任意数据类型。
 + #/Note：代表此列为注释列，生成工具会自动忽略此列。
 
-## 元素类型
-&nbsp;&nbsp;&nbsp;&nbsp;本工具支持的元素类型有：bool, sbyte, byte, ushort, short, uint, int, ulong, long, float, double, string, vector2, vector2Int, vector3, vector3Int, vector4, list以及dictionaty。写法与c#相同，不区分大小写并忽略空格。
+## 数据类型
+&nbsp;&nbsp;&nbsp;&nbsp;本工具支持的数据类型有：bool, sbyte, byte, ushort, short, uint, int, ulong, long, float, double, string, vector2, vector2Int, vector3, vector3Int, vector4, list以及dictionaty。写法与c#相同，不区分大小写并忽略空格。
 
 
 &nbsp;&nbsp;&nbsp;&nbsp; 如果类型为string，默认会先去除前后空格。如果去前后空格得到的字符串被英文双引号包裹，则认为字符串的值是被双引号包裹的所有内容（即去除最外层双引号）。因此如果有前后空格，必须用双引号包裹字符串，如果字符串本身有被双引号包裹，则需要在最外层多加一层双引号，即写成 ""xxx""。建议一律使用双引号包裹字符串内容以避免前后空格问题。
