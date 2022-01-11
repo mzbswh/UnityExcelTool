@@ -59,7 +59,7 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp; 例：<br/>
 vector3: 1,2,3<br/>
-list<float>: 2.4, 2.3, 6.5, 7.7
+list<float>: 2.4, 2.3, 6.5, 7.7<br/>
 dictionary<int, string>: {2, "asw"}, {45, "wdsaq"}, {23, "iofdgdf"}
 
 ## 数据加载优化
